@@ -57,6 +57,13 @@
             border: 2px solid green;
             background-color: #e5ffe5;
         }
+        .btn-delete {
+            color: red;
+            font-weight: bold;
+        }
+        .btn-delete:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -117,11 +124,8 @@
         {% if paziente.sesso == 'M' %}Maschio{% elif paziente.sesso == 'F' %}Femmina{% else %}-{% endif %}
     </p>
     <p><strong>Età:</strong> {{ paziente.eta }} anni</p>
-    <p><strong>Iperteso:</strong> 
-        {% if paziente.iperteso %}✅ Sì{% else %}❌ No{% endif %}
-    </p>
     <p>
-    <a href="{% url 'modifica_paziente' paziente.id %}">✏️ Modifica dati anagrafici</a>
+        <a href="{% url 'modifica_paziente' paziente.id %}">✏️ Modifica dati anagrafici</a>
     </p>
 
     <hr>
@@ -135,7 +139,7 @@
             <li>
                 <strong>{{ visita.data_visita }}</strong> — Creatinina: {{ visita.creatinina }} mg/dL |
                 <a href="{% url 'modifica_visita' paziente.id visita.id %}">✏️ Modifica</a> |
-                <a href="{% url 'elimina_visita' paziente.id visita.id %}">🗑️ Elimina</a> |
+                <a href="{% url 'elimina_visita' paziente.id visita.id %}" onclick="return confirm('Vuoi davvero eliminare questa visita?');">🗑️ Elimina</a> |
                 <a href="{% url 'calcola_eskd' paziente.id visita.id %}">🧠 Calcola ESKD</a>
             </li>
         {% endfor %}
@@ -150,16 +154,40 @@
     <p><a href="{% url 'nuovo_mestc' paziente.id %}">➕ Aggiungi un nuovo referto MEST-C</a></p>
 
     {% if mestc_records %}
-        <ul>
-        {% for record in mestc_records %}
-            <li>
-                <strong>{{ record.data_rilevazione }}</strong> — 
-                M:{{ record.M }} E:{{ record.E }} S:{{ record.S }} T:{{ record.T }} C:{{ record.C }} |
-                <a href="{% url 'modifica_mestc' paziente.id record.id %}">✏️ Modifica</a> |
-                <a href="{% url 'elimina_mestc' paziente.id record.id %}">🗑️ Elimina</a>
-            </li>
-        {% endfor %}
-        </ul>   
+        <table>
+            <thead>
+                <tr>
+                    <th>Data rilevazione</th>
+                    <th>M</th>
+                    <th>E</th>
+                    <th>S</th>
+                    <th>T</th>
+                    <th>C</th>
+                    <th>Azioni</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for record in mestc_records %}
+                <tr>
+                    <td>{{ record.data_rilevazione|date:"d/m/Y" }}</td>
+                    <td>{{ record.M }}</td>
+                    <td>{{ record.E }}</td>
+                    <td>{{ record.S }}</td>
+                    <td>{{ record.T }}</td>
+                    <td>{{ record.C }}</td>
+                    <td>
+                        <a href="{% url 'modifica_mestc' paziente.id record.id %}">✏️ Modifica</a> |
+                        <a href="{% url 'delete_mestc' record.id %}"
+                            class="btn-delete"
+                            onclick="return confirm('Sei sicuro di voler eliminare questo referto MEST-C?');">
+                            🗑️ Elimina
+                            </a>
+
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>   
     {% else %}
         <p>Nessun referto MEST-C registrato.</p>
     {% endif %}
@@ -169,12 +197,16 @@
     <h2>📈 Andamento Predizioni ESKD</h2>
     {% if predizioni %}
         <table>
-            <tr>
-                <th>Data</th>
-                <th>Probabilità (%)</th>
-                <th>Esito</th>
-                <th>Visita associata</th>
-            </tr>
+            <thead>
+                <tr>
+                    <th>Data</th>
+                    <th>Probabilità (%)</th>
+                    <th>Esito</th>
+                    <th>Visita associata</th>
+                    <th>Azioni</th>
+                </tr>
+            </thead>
+            <tbody>
             {% for pred in predizioni %}
                 <tr>
                     <td>{{ pred.data_predizione|date:"d/m/Y H:i" }}</td>
@@ -193,12 +225,21 @@
                             -
                         {% endif %}
                     </td>
+                    <td>
+                        <a href="{% url 'delete_predizione' pred.id %}" 
+                        class="btn-delete" 
+                        onclick="return confirm('Vuoi davvero eliminare questa predizione ESKD?');">
+                        🗑️ Elimina
+                        </a>
+                    </td>
                 </tr>
             {% endfor %}
+            </tbody>
         </table>
     {% else %}
         <p>Nessuna predizione ancora registrata per questo paziente.</p>
     {% endif %}
+
 
     <hr>
     <p><a href="{% url 'lista_pazienti' %}">⬅️ Torna alla lista pazienti</a></p>

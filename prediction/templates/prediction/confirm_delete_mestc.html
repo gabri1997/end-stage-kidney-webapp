@@ -1,0 +1,19 @@
+
+{% block content %}
+<div class="container mt-4">
+    <h3>Conferma eliminazione</h3>
+    <p>Sei sicuro di voler eliminare questa voce dello storico MEST-C?</p>
+
+    <ul>
+        <li><strong>Data rilevazione:</strong> {{ mestc.data_rilevazione }}</li>
+        <li><strong>M:</strong> {{ mestc.M }}, <strong>E:</strong> {{ mestc.E }},
+            <strong>S:</strong> {{ mestc.S }}, <strong>T:</strong> {{ mestc.T }}, <strong>C:</strong> {{ mestc.C }}</li>
+    </ul>
+
+    <form method="POST">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Elimina</button>
+        <a href="{% url 'dettaglio_paziente' mestc.paziente.id %}" class="btn btn-secondary">Annulla</a>
+    </form>
+</div>
+{% endblock %}

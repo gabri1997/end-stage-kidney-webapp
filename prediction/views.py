@@ -8,11 +8,14 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .forms import PazienteForm, VisitaForm, MESTCForm
 from django.utils import timezone
-from .model_loader import run_inference_from_data
-from .models import Predizione, Visita, MestcRecord
+from .model_loader import predict_risk
+from .models import Predizione, Visita, MESTC
 from .forms import CalcolaESKDForm
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
+from django.contrib import messages
+from django.shortcuts import redirect, get_object_or_404
+from .models import MESTC
 
 
 def home(request):
@@ -43,14 +46,14 @@ def dettaglio_paziente(request, paziente_id):
     mestc_records = MESTC.objects.filter(paziente=paziente).order_by("data_rilevazione")
     predizioni = Predizione.objects.filter(paziente=paziente).order_by("-data_predizione")
 
-    ultima_predizione = predizioni.first()  # 👈 prendi la più recente
+    ultima_predizione = predizioni.first()  
 
     return render(request, "prediction/dettaglio_paziente.html", {
         "paziente": paziente,
         "visite": visite,
         "mestc_records": mestc_records,
         "predizioni": predizioni,
-        "ultima_predizione": ultima_predizione,  # 👈 passala al template
+        "ultima_predizione": ultima_predizione,  
     })
 
 
@@ -151,42 +154,139 @@ def elimina_mestc(request, paziente_id, mestc_id):
 def calcola_eskd(request, paziente_id, visita_id):
     paziente = get_object_or_404(Paziente, id=paziente_id)
     visita = get_object_or_404(Visita, id=visita_id)
-    mestc = MestcRecord.objects.filter(paziente=paziente).order_by('-data_rilevazione').first()
+    mestc = MESTC.objects.filter(paziente=paziente).order_by('-data_rilevazione').first()
 
     if request.method == "POST":
         form = CalcolaESKDForm(request.POST)
         if form.is_valid():
-            data = form.cleaned_data
+            form_data = form.cleaned_data
 
-            data["Therapy"] = max(
-                int(data.get("Antihypertensive", False)),
-                int(data.get("Immunosuppressants", False)),
-                int(data.get("FishOil", False)),
-            )
+            # --- Recupera i valori dal form, con fallback al DB ---
+            sesso = form_data.get("sesso") or getattr(paziente, "sesso", "M") or "M"
+            eta = form_data.get("eta") or getattr(paziente, "eta", 50) or 50
+            
+            iperteso = form_data.get("iperteso")
+            if iperteso is None:
+                iperteso = int(getattr(paziente, "iperteso", False))
+            else:
+                iperteso = int(iperteso)
 
-            prob = run_inference_from_data(data)
-            esito = "Positivo" if prob >= 0.5 else "Negativo"
+            # --- VALORI MEST-C: usa il form, fallback al DB ---
+            M_val = form_data.get("M")
+            if M_val is None:
+                M_val = getattr(mestc, "M", 0) if mestc else 0
+            
+            E_val = form_data.get("E")
+            if E_val is None:
+                E_val = getattr(mestc, "E", 0) if mestc else 0
+            
+            S_val = form_data.get("S")
+            if S_val is None:
+                S_val = getattr(mestc, "S", 0) if mestc else 0
+            
+            T_val = form_data.get("T")
+            if T_val is None:
+                T_val = getattr(mestc, "T", 0) if mestc else 0
+            
+            C_val = form_data.get("C")
+            if C_val is None:
+                C_val = getattr(mestc, "C", 0) if mestc else 0
 
+            # --- VALORI VISITA: usa il form, fallback al DB ---
+            proteinuria_val = form_data.get("proteinuria")
+            if proteinuria_val is None:
+                proteinuria_val = getattr(visita, "proteinuria", 0) or 0
+            
+            creatinina_val = form_data.get("creatinina")
+            if creatinina_val is None:
+                creatinina_val = getattr(visita, "creatinina", 0) or 0
+
+            # --- TERAPIE: dal form ---
+            anti = form_data.get("Antihypertensive", 0)
+            immuno = form_data.get("Immunosuppressants", 0)
+            fish = form_data.get("FishOil", 0)
+            
+            # Converti a int
+            anti_int = int(anti) if anti else 0
+            immuno_int = int(immuno) if immuno else 0
+            fish_int = int(fish) if fish else 0
+
+            # --- Costruzione dizionario dati per il modello ---
+            data = {
+                "sesso": sesso,
+                "eta": float(eta),
+                "iperteso": iperteso,
+
+                # Dati MEST-C (dal form o DB)
+                "M": int(M_val),
+                "E": int(E_val),
+                "S": int(S_val),
+                "T": int(T_val),
+                "C": int(C_val),
+
+                # Dati visita (dal form o DB)
+                "proteinuria": float(proteinuria_val),
+                "creatinina": float(creatinina_val),
+
+                # Terapie
+                "Antihypertensive": anti_int,
+                "Immunosuppressants": immuno_int,
+                "FishOil": fish_int,
+            }
+
+            print("\n" + "="*60)
+            print("📋 VERIFICA ORIGINE DATI:")
+            print("="*60)
+            print(f"M: {M_val} (form: {form_data.get('M')}, DB: {getattr(mestc, 'M', None) if mestc else None})")
+            print(f"E: {E_val} (form: {form_data.get('E')}, DB: {getattr(mestc, 'E', None) if mestc else None})")
+            print(f"S: {S_val} (form: {form_data.get('S')}, DB: {getattr(mestc, 'S', None) if mestc else None})")
+            print(f"T: {T_val} (form: {form_data.get('T')}, DB: {getattr(mestc, 'T', None) if mestc else None})")
+            print(f"C: {C_val} (form: {form_data.get('C')}, DB: {getattr(mestc, 'C', None) if mestc else None})")
+            print(f"Proteinuria: {proteinuria_val} (form: {form_data.get('proteinuria')}, DB: {getattr(visita, 'proteinuria', None)})")
+            print(f"Creatinina: {creatinina_val} (form: {form_data.get('creatinina')}, DB: {getattr(visita, 'creatinina', None)})")
+            print("="*60)
+
+            print("\n Dati completi passati al modello:")
+            for k, v in data.items():
+                print(f"{k:20s} = {v}")
+            print("="*60 + "\n")
+
+            # --- Predizione ---
+            result = predict_risk(data)
+            probabilita = result["probabilita"]
+            esito = result["esito"]
+
+            # --- Salva nel DB ---
             Predizione.objects.create(
                 paziente=paziente,
                 visita=visita,
-                medico=request.user,
-                probabilita_eskd=prob * 100,
+                probabilita_eskd=probabilita,
                 esito=esito
             )
 
+            messages.success(request, f"Predizione completata: rischio {esito} ({probabilita:.2f}%)")
             return redirect("dettaglio_paziente", paziente_id=paziente.id)
+
     else:
+        # Precompila form con dati noti
         initial = {
             "sesso": getattr(paziente, "sesso", ""),
             "eta": getattr(paziente, "eta", ""),
+            "iperteso": getattr(paziente, "iperteso", False),
             "creatinina": getattr(visita, "creatinina", ""),
-            "pressione_sistolica": getattr(visita, "pressione_sistolica", ""),
-            "pressione_diastolica": getattr(visita, "pressione_diastolica", ""),
+            "proteinuria": getattr(visita, "proteinuria", ""),
+            "Antihypertensive": False,
+            "Immunosuppressants": False,
+            "FishOil": False,
         }
+
         if mestc:
             initial.update({
-                "M": mestc.M, "E": mestc.E, "S": mestc.S, "T": mestc.T, "C": mestc.C
+                "M": mestc.M, 
+                "E": mestc.E, 
+                "S": mestc.S, 
+                "T": mestc.T, 
+                "C": mestc.C
             })
 
         form = CalcolaESKDForm(initial=initial)
@@ -196,7 +296,6 @@ def calcola_eskd(request, paziente_id, visita_id):
         "visita": visita,
         "form": form
     })
-
 
 @login_required
 def modifica_paziente(request, paziente_id):
@@ -234,3 +333,25 @@ def modifica_paziente(request, paziente_id):
         "paziente": paziente,
         "form": form
     })
+
+
+@login_required
+def delete_mestc(request, mestc_id):
+    mestc = get_object_or_404(MESTC, id=mestc_id)
+    paziente_id = mestc.paziente.id
+
+    # Eliminazione diretta
+    mestc.delete()
+
+    messages.success(request, "Referto MEST-C eliminato con successo.")
+    return redirect("dettaglio_paziente", paziente_id=paziente_id)
+
+
+@login_required
+def delete_predizione(request, predizione_id):
+    predizione = get_object_or_404(Predizione, id=predizione_id)
+    paziente_id = predizione.paziente.id
+
+    predizione.delete()
+    messages.success(request, "Predizione ESKD eliminata con successo.")
+    return redirect("dettaglio_paziente", paziente_id=paziente_id)

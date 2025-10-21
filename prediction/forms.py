@@ -5,7 +5,16 @@ from .models import Paziente, Visita, MESTC
 class PazienteForm(forms.ModelForm):
     class Meta:
         model = Paziente
-        fields = ['nome', 'cognome', 'data_nascita', 'codice_fiscale', 'email', 'telefono', 'indirizzo']
+        fields = [
+            'nome',
+            'cognome',
+            'codice_fiscale',
+            'email',
+            'telefono',
+            'indirizzo',
+            'sesso',
+            'eta',
+        ]
 
 
 class VisitaForm(forms.ModelForm):

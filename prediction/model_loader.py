@@ -5,7 +5,7 @@ import joblib
 import os
 import json
 
-# --- MODELLO ---
+
 class MySimpleBinaryNet(nn.Module):
     def __init__(self, input_size, dropout=0.1):
         super(MySimpleBinaryNet, self).__init__()
@@ -18,14 +18,22 @@ class MySimpleBinaryNet(nn.Module):
             nn.BatchNorm1d(100),
             nn.ELU(),
             nn.Dropout(dropout),
+            nn.Linear(100, 100),
+            nn.BatchNorm1d(100),
+            nn.ELU(),
+            nn.Dropout(dropout),
+            nn.Linear(100, 100),
+            nn.BatchNorm1d(100),
+            nn.ELU(),
+            nn.Dropout(dropout),
             nn.Linear(100, 1)
         )
-
+        
     def forward(self, x):
         return self.layers(x)
 
 
-# --- FUNZIONE DI PREDIZIONE ---
+
 def predict_risk(data):
     """
     Esegue la predizione del rischio ESKD su un singolo paziente.
@@ -37,7 +45,7 @@ def predict_risk(data):
     base_dir = os.path.dirname(os.path.abspath(__file__))
     save_pth = os.path.join(base_dir, "models")
     if not os.path.isdir(save_pth):
-        raise FileNotFoundError(f"⚠️ Cartella modelli non trovata: {save_pth}")
+        raise FileNotFoundError(f"Cartella modelli non trovata: {save_pth}")
 
 
     # Carica scaler
@@ -45,7 +53,7 @@ def predict_risk(data):
     model_file = os.path.join(save_pth, f"best_model_fold_8.pth")
 
     if not os.path.exists(scaler_file) or not os.path.exists(model_file):
-        raise FileNotFoundError("⚠️ File del modello o scaler non trovati")
+        raise FileNotFoundError("File del modello o scaler non trovati")
 
     scaler = joblib.load(scaler_file)
 
@@ -53,25 +61,47 @@ def predict_risk(data):
 
     # --- Prepara i dati in input ---
     sesso_val = 0 if data.get("sesso") == "M" else 1  # M=0, F=1
-    therapy = max(data.get("Antihypertensive", 0), data.get("Immunosuppressants", 0), data.get("FishOil", 0))
+    therapy_val = max(
+        data.get("Antihypertensive", 0),
+        data.get("Immunosuppressants", 0),
+        data.get("FishOil", 0)
+    )
 
     values = [
-        data.get("creatinina", 0),
-        data.get("proteinuria", 0),
-        data.get("pressione_sistolica", 0),
-        data.get("pressione_diastolica", 0),
-        data.get("M", 0),
-        data.get("E", 0),
-        data.get("S", 0),
-        data.get("T", 0),
-        data.get("C", 0),
-        data.get("iperteso", 0),
-        sesso_val,
-        data.get("eta", 0),
-        therapy
+        sesso_val,                              # 1. Gender
+        float(data.get("eta", 0)),              # 2. Age
+        float(data.get("iperteso", 0)),         # 3. Hypertension
+        float(data.get("M", 0)),                # 4. M
+        float(data.get("E", 0)),                # 5. E
+        float(data.get("S", 0)),                # 6. S
+        float(data.get("T", 0)),                # 7. T
+        float(data.get("C", 0)),                # 8. C
+        float(data.get("proteinuria", 0)),      # 9. Proteinuria
+        float(data.get("creatinina", 0)),       # 10. Creatinine
+        float(therapy_val)                      # 11. Therapy
     ]
 
+    print("\n✅ Valori finali passati allo scaler e al modello:")
+    for i, name in enumerate(["Gender", "Age", "Hypertension", "M", "E", "S", "T", "C", "Proteinuria", "Creatinine", "Therapy"]):
+        print(f"{i+1:02d}. {name:12s} = {values[i]}")
+
+
+    # Se nei valori ci sono None, sostituiscili con 0
+    values = [0 if v is None else v for v in values]
+    # Voglio togliere pressione_diastolica e pressione_sistolica per evitare ridondanza
     X = np.array(values, dtype=np.float32).reshape(1, -1)
+    # Controllo che il numero di features sia corretto
+    if X.shape[1] != scaler.mean_.shape[0]:
+        print("\nFEATURE MISMATCH DETECTED")
+        print(f"→ Model expects {scaler.mean_.shape[0]} features, but received {X.shape[1]}")
+        print("Values provided:")
+        for name, val in zip(
+            ["Gender", "Age", "Hypertension", "M", "E", "S", "T", "C", "Proteinuria", "Creatinine", "Therapy"],
+            values
+        ):
+            print(f"{name:12s} = {val}")
+        raise ValueError("Feature count mismatch between input and scaler.")
+
     X_scaled = scaler.transform(X)
 
     # --- Inference ---

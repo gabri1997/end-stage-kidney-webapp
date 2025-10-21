@@ -12,6 +12,7 @@ class Paziente(models.Model):
     email = models.EmailField(blank=True, null=True)
     telefono = models.CharField(max_length=20, blank=True, null=True)
     indirizzo = models.CharField(max_length=255, blank=True, null=True)
+    eta = models.PositiveIntegerField(null=True, blank=True)
 
     sesso = models.CharField(
         max_length=1,
@@ -20,7 +21,6 @@ class Paziente(models.Model):
         null=True
     )
     eta = models.PositiveIntegerField(blank=True, null=True)
-    iperteso = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.cognome} {self.nome} ({self.codice_fiscale})"
