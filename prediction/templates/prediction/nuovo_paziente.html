@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Nuovo Paziente</title>
+</head>
+<body>
+    <h1>Aggiungi un nuovo paziente</h1>
+
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Salva</button>
+    </form>
+
+    <p><a href="{% url 'lista_pazienti' %}">Torna alla lista pazienti</a></p>
+</body>
+</html>

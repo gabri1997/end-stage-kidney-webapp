@@ -1,0 +1,4 @@
+django
+pytorch
+numpy
+pandas

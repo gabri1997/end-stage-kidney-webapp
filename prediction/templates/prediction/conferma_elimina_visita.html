@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Elimina Visita</title>
+</head>
+<body>
+    <h1>Conferma eliminazione</h1>
+    <p>Vuoi davvero eliminare la visita del {{ visita.data_visita }} per {{ paziente.nome }} {{ paziente.cognome }}?</p>
+
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">✅ Sì, elimina</button>
+        <a href="{% url 'dettaglio_paziente' paziente.id %}">❌ Annulla</a>
+    </form>
+</body>
+</html>

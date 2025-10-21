@@ -1,0 +1,11 @@
+<h2>🧠 Calcola Rischio ESKD per {{ paziente.nome }} {{ paziente.cognome }}</h2>
+
+<form method="post">
+    {% csrf_token %}
+    <table>
+        {{ form.as_table }}
+    </table>
+    <button type="submit">Calcola rischio</button>
+</form>
+
+<p><a href="{% url 'dettaglio_paziente' paziente.id %}">⬅️ Torna al dettaglio</a></p>

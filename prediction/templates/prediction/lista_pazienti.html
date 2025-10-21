@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Elenco Pazienti</title>
+</head>
+<body>
+    <h1>Elenco dei Pazienti</h1>
+
+    <p><a href="{% url 'nuovo_paziente' %}">➕ Aggiungi un nuovo paziente</a></p>
+
+    {% if pazienti %}
+        <ul>
+        {% for p in pazienti %}
+            <li>
+                <a href="{% url 'dettaglio_paziente' p.id %}">
+                    {{ p.cognome }} {{ p.nome }}
+                </a>
+                — {{ p.codice_fiscale }}
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>Nessun paziente registrato.</p>
+    {% endif %}
+</body>
+</html>

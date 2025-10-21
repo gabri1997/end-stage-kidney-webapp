@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+
+# Virtual env
+myenv/
+venv/
+env/
+
+# Django
+db.sqlite3
+/static/
+*.log
+
+# Models / pesi / dati sensibili
+*.pth
+*.pkl
+*.pt
+*.json
+*.csv
+*.xlsx
+
+# OS / IDE
+.DS_Store
+.vscode/
+.idea/

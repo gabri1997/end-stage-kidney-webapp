@@ -1,0 +1,11 @@
+<h2>Predizione rischio ESKD per {{ paziente.nome }} {{ paziente.cognome }}</h2>
+
+<p><strong>Visita del:</strong> {{ visita.data_visita }}</p>
+{% if mestc %}
+  <p><strong>Referto MEST-C:</strong> M{{ mestc.M }} E{{ mestc.E }} S{{ mestc.S }} T{{ mestc.T }} C{{ mestc.C }}</p>
+{% endif %}
+
+<p><strong>Probabilità:</strong> {{ rischio|floatformat:2 }}%</p>
+<p><strong>Esito:</strong> {{ esito }}</p>
+
+<a href="{% url 'dettaglio_paziente' paziente.id %}">⬅️ Torna al paziente</a>

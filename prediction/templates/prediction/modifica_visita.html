@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Modifica Visita</title>
+</head>
+<body>
+    <h1>Modifica visita per {{ paziente.nome }} {{ paziente.cognome }}</h1>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Salva modifiche</button>
+    </form>
+
+    <p><a href="{% url 'dettaglio_paziente' paziente.id %}">⬅️ Torna al dettaglio paziente</a></p>
+</body>
+</html>
