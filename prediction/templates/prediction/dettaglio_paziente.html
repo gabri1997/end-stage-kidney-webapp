@@ -187,12 +187,20 @@
                         </h3>
 
                         <div class="has-text-centered my-6">
-                            <div class="{% if ultima_predizione.esito == 'Positivo' %}has-text-danger{% else %}has-text-success{% endif %}">
+                            <div class="{% if ultima_predizione.esito == 'ALTO' %}has-text-danger{% elif ultima_predizione.esito == 'MEDIO' %}has-text-warning{% else %}has-text-success{% endif %}">
                                 <span class="icon is-large">
-                                    <i class="fas fa-2x {% if ultima_predizione.esito == 'Positivo' %}fa-exclamation-triangle{% else %}fa-check-circle{% endif %}"></i>
+                                    <i class="fas fa-2x {% if ultima_predizione.esito == 'ALTO' %}fa-exclamation-triangle{% elif ultima_predizione.esito == 'MEDIO' %}fa-exclamation-circle{% else %}fa-check-circle{% endif %}"></i>
                                 </span>
                                 <p class="title is-2 mb-2">{{ ultima_predizione.probabilita_eskd|floatformat:2 }}%</p>
-                                <p class="subtitle is-4">{{ ultima_predizione.esito }}</p>
+                                <p class="subtitle is-4">
+                                    {% if ultima_predizione.esito == 'ALTO' %}
+                                        Rischio Alto
+                                    {% elif ultima_predizione.esito == 'MEDIO' %}
+                                        Rischio Medio
+                                    {% else %}
+                                        Rischio Basso
+                                    {% endif %}
+                                </p>
                             </div>
                         </div>
 
@@ -426,10 +434,12 @@
                             <td>{{ pred.data_predizione|date:"d/m/Y H:i" }}</td>
                             <td>{{ pred.probabilita_eskd|floatformat:2 }}</td>
                             <td>
-                                {% if pred.esito == 'Positivo' %}
-                                    <span class="tag is-danger">{{ pred.esito }}</span>
+                                {% if pred.esito == 'ALTO' %}
+                                    <span class="tag is-danger">Rischio Alto</span>
+                                {% elif pred.esito == 'MEDIO' %}
+                                    <span class="tag is-warning">Rischio Medio</span>
                                 {% else %}
-                                    <span class="tag is-success">{{ pred.esito }}</span>
+                                    <span class="tag is-success">Rischio Basso</span>
                                 {% endif %}
                             </td>
                             <td>

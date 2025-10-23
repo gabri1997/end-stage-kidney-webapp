@@ -2,16 +2,41 @@
 
 {% block title %}Dashboard - ESKD Predictor{% endblock %}
 
+{% block extra_head %}
+<style>
+    .hero.is-primary {
+        padding: 3rem 1.5rem;
+    }
+    .hero-icon {
+        font-size: 6rem;
+        margin-left: 2rem;
+        opacity: 0.8;
+    }
+    .hero-content {
+        padding: 1rem 0;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <section class="hero is-primary is-bold">
     <div class="hero-body">
         <div class="container">
-            <h1 class="title is-2">
-                Dashboard
-            </h1>
-            <h2 class="subtitle">
-                Benvenuto nel tuo sistema di predizione ESKD
-            </h2>
+            <div class="columns is-vcentered">
+                <div class="column hero-content">
+                    <h1 class="title is-2">
+                        Dashboard
+                    </h1>
+                    <h2 class="subtitle">
+                        Benvenuto nel tuo sistema di predizione ESKD
+                    </h2>
+                </div>
+                <div class="column is-narrow">
+                    <span class="icon hero-icon">
+                        <i class="fas fa-heartbeat"></i>
+                    </span>
+                </div>
+            </div>
         </div>
     </div>
 </section>

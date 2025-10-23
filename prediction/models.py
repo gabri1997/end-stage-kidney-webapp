@@ -79,7 +79,12 @@ class Predizione(models.Model):
     mestc = models.ForeignKey('MESTC', on_delete=models.SET_NULL, null=True, blank=True, related_name='predizioni')
     data_predizione = models.DateTimeField(auto_now_add=True)
     probabilita_eskd = models.FloatField()
-    esito = models.CharField(max_length=20, choices=[('Negativo', 'Negativo'), ('Positivo', 'Positivo')])
+    ESITO_CHOICES = [
+        ('BASSO', 'Basso'),
+        ('MEDIO', 'Medio'),
+        ('ALTO', 'Alto'),
+    ]
+    esito = models.CharField(max_length=20, choices=ESITO_CHOICES)
 
     def __str__(self):
         return f"Predizione {self.id} — {self.paziente} ({self.probabilita_eskd:.2f}%)"

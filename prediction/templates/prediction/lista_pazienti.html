@@ -35,7 +35,7 @@
         transform: scale(1.03);
         opacity: 0.9;
     }
-    }
+    
     .page-title {
         color: #1e4b7a;
         font-weight: 700;
@@ -132,6 +132,7 @@
                         <th>Cognome</th>
                         <th>Età</th>
                         <th>Sesso</th>
+                        <th>Rischio ESKD</th>
                         <th class="text-center">Azioni</th>
                     </tr>
                 </thead>
@@ -149,6 +150,22 @@
                                 {% else %}
                                     -
                                 {% endif %}
+                            </td>
+                            <td>
+                                {% with ultima_pred=paziente.predizioni.last %}
+                                    {% if ultima_pred %}
+                                        {% if ultima_pred.esito == 'ALTO' %}
+                                            <span class="tag is-danger">Rischio Alto</span>
+                                        {% elif ultima_pred.esito == 'MEDIO' %}
+                                            <span class="tag is-warning">Rischio Medio</span>
+                                        {% else %}
+                                            <span class="tag is-success">Rischio Basso</span>
+                                        {% endif %}
+                                        <small>({{ ultima_pred.probabilita_eskd|floatformat:1 }}%)</small>
+                                    {% else %}
+                                        <span class="tag is-light">Nessuna predizione</span>
+                                    {% endif %}
+                                {% endwith %}
                             </td>
                             <td class="text-center">
                                 <a href="{% url 'dettaglio_paziente' paziente.id %}" class="action-btn btn-view">

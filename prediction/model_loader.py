@@ -117,6 +117,13 @@ def predict_risk(data):
         prob = torch.sigmoid(output).item()
 
     prob_percent = round(prob * 100, 2)
-    esito = "Positivo" if prob >= 0.5 else "Negativo"
+    
+    # Determina l'esito in base alla probabilità
+    if prob_percent >= 70:
+        esito = "ALTO"
+    elif prob_percent >= 30:
+        esito = "MEDIO"
+    else:
+        esito = "BASSO"
 
     return {"probabilita": prob_percent, "esito": esito}
