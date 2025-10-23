@@ -1,53 +1,139 @@
 {% extends 'prediction/base.html' %}
 
-{% block title %}Home - ESKD Predictor{% endblock %}
+{% block title %}Dashboard - ESKD Predictor{% endblock %}
 
 {% block content %}
-<section class="hero is-primary is-bold is-medium">
+<section class="hero is-primary is-bold">
     <div class="hero-body">
         <div class="container">
-            <div class="columns is-vcentered">
-                <div class="column">
-                    <h1 class="title is-1">
-                        Benvenuto in ESKD Predictor
-                    </h1>
-                    <h2 class="subtitle is-3">
-                        Sistema di predizione intelligente per la malattia renale allo stadio terminale
-                    </h2>
-                    <div class="buttons">
-                        <a href="{% url 'lista_pazienti' %}" class="button is-white is-outlined is-large">
-                            <span class="icon">
-                                <i class="fas fa-users"></i>
-                            </span>
-                            <span>Gestisci Pazienti</span>
-                        </a>
-                    </div>
-                </div>
-                <div class="column">
-                    <figure class="image">
-                        <img src="https://img.freepik.com/free-vector/human-kidney-anatomy-medical-science-vector_53876-140880.jpg" alt="Illustrazione reni">
-                    </figure>
-                </div>
-            </div>
+            <h1 class="title is-2">
+                Dashboard
+            </h1>
+            <h2 class="subtitle">
+                Benvenuto nel tuo sistema di predizione ESKD
+            </h2>
         </div>
     </div>
 </section>
 
 <section class="section">
     <div class="container">
+        <!-- Statistiche principali -->
         <div class="columns is-multiline">
-            <div class="column is-one-third">
-                <div class="box has-text-centered">
-                    <span class="icon is-large has-text-primary">
-                        <i class="fas fa-brain fa-3x"></i>
-                    </span>
-                    <h3 class="title is-4 mt-4">Intelligenza Artificiale</h3>
-                    <p class="subtitle is-6">
-                        Utilizziamo algoritmi avanzati di machine learning per predire il rischio di ESKD
-                    </p>
+            <div class="column is-half">
+                <div class="box has-background-primary-light">
+                    <article class="media">
+                        <div class="media-left">
+                            <span class="icon is-large has-text-primary">
+                                <i class="fas fa-users fa-3x"></i>
+                            </span>
+                        </div>
+                        <div class="media-content">
+                            <div class="content">
+                                <h3 class="title is-4">Pazienti Totali</h3>
+                                <p class="subtitle is-2">{{ num_pazienti }}</p>
+                            </div>
+                        </div>
+                    </article>
                 </div>
             </div>
-            <div class="column is-one-third">
+            
+            <div class="column is-half">
+                <div class="box has-background-info-light">
+                    <article class="media">
+                        <div class="media-left">
+                            <span class="icon is-large has-text-info">
+                                <i class="fas fa-stethoscope fa-3x"></i>
+                            </span>
+                        </div>
+                        <div class="media-content">
+                            <div class="content">
+                                <h3 class="title is-4">Visite Effettuate</h3>
+                                <p class="subtitle is-2">{{ num_visite }}</p>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </div>
+
+        <!-- Azioni Rapide -->
+        <div class="columns">
+            <div class="column is-full">
+                <div class="box">
+                    <h3 class="title is-4">Azioni Rapide</h3>
+                    <div class="buttons are-medium">
+                        <a href="{% url 'nuovo_paziente' %}" class="button is-primary">
+                            <span class="icon">
+                                <i class="fas fa-user-plus"></i>
+                            </span>
+                            <span>Nuovo Paziente</span>
+                        </a>
+                        <a href="{% url 'lista_pazienti' %}" class="button is-link">
+                            <span class="icon">
+                                <i class="fas fa-list"></i>
+                            </span>
+                            <span>Lista Pazienti</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ultime Predizioni -->
+        <div class="columns">
+            <div class="column is-full">
+                <div class="box">
+                    <h3 class="title is-4">
+                        <span class="icon-text">
+                            <span class="icon has-text-info">
+                                <i class="fas fa-chart-line"></i>
+                            </span>
+                            <span>Ultime Predizioni</span>
+                        </span>
+                    </h3>
+                    
+                    {% if ultime_predizioni %}
+                    <table class="table is-fullwidth">
+                        <thead>
+                            <tr>
+                                <th>Paziente</th>
+                                <th>Data</th>
+                                <th>Esito</th>
+                                <th>Probabilità</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for pred in ultime_predizioni %}
+                            <tr>
+                                <td>
+                                    <a href="{% url 'dettaglio_paziente' pred.paziente.id %}">
+                                        {{ pred.paziente.cognome }} {{ pred.paziente.nome }}
+                                    </a>
+                                </td>
+                                <td>{{ pred.data_predizione|date:"d/m/Y" }}</td>
+                                <td>
+                                    {% if pred.esito == 'ALTO' %}
+                                        <span class="tag is-danger">Alto</span>
+                                    {% elif pred.esito == 'MEDIO' %}
+                                        <span class="tag is-warning">Medio</span>
+                                    {% else %}
+                                        <span class="tag is-success">Basso</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ pred.probabilita_eskd|floatformat:1 }}%</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% else %}
+                    <p class="has-text-grey">Nessuna predizione effettuata</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
                 <div class="box has-text-centered">
                     <span class="icon is-large has-text-primary">
                         <i class="fas fa-chart-line fa-3x"></i>

@@ -14,20 +14,12 @@
             </div>
             <div class="level-right">
                 <div class="level-item">
-                    <div class="buttons">
-                        <a href="{% url 'modifica_paziente' paziente.id %}" class="button is-warning">
-                            <span class="icon">
-                                <i class="fas fa-edit"></i>
-                            </span>
-                            <span>Modifica Paziente</span>
-                        </a>
-                        <a href="{% url 'nuova_visita' paziente.id %}" class="button is-primary">
-                            <span class="icon">
-                                <i class="fas fa-plus"></i>
-                            </span>
-                            <span>Nuova Visita</span>
-                        </a>
-                    </div>
+                    <a href="{% url 'lista_pazienti' %}" class="button is-light">
+                        <span class="icon">
+                            <i class="fas fa-arrow-left"></i>
+                        </span>
+                        <span>Torna alla Lista</span>
+                    </a>
                 </div>
             </div>
         </nav>

@@ -16,14 +16,19 @@ from django.contrib import messages
 
 @login_required
 def home(request):
-    return render(request, 'prediction/home.html')
-from django.contrib import messages
-from django.shortcuts import redirect, get_object_or_404
-from .models import MESTC
-
-
-def home(request):
-    return HttpResponse("Ciao, questa è la home di ESKD!")
+    # Ottieni alcune statistiche per il dashboard
+    num_pazienti = Paziente.objects.filter(medico=request.user).count()
+    num_visite = Visita.objects.filter(medico=request.user).count()
+    ultime_predizioni = Predizione.objects.filter(
+        paziente__medico=request.user
+    ).order_by('-data_predizione')[:5]
+    
+    context = {
+        'num_pazienti': num_pazienti,
+        'num_visite': num_visite,
+        'ultime_predizioni': ultime_predizioni,
+    }
+    return render(request, 'prediction/home.html', context)
 
 
 @login_required

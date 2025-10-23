@@ -13,6 +13,29 @@
         margin-bottom: 30px;
         gap: 15px;
     }
+    .nav-buttons {
+        display: flex;
+        gap: 10px;
+    }
+    .home-btn {
+        background: linear-gradient(90deg, #4a90e2, #357abd);
+        border: none;
+        color: white;
+        padding: 10px 18px;
+        border-radius: 10px;
+        font-weight: bold;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.95em;
+        transition: 0.3s;
+        text-decoration: none;
+    }
+    .home-btn:hover {
+        transform: scale(1.03);
+        opacity: 0.9;
+    }
+    }
     .page-title {
         color: #1e4b7a;
         font-weight: 700;
@@ -74,13 +97,21 @@
 </style>
 
 <div class="container mt-5">
-    <div class="page-header">
-        <h2 class="page-title">
-            <i class="fas fa-user-md"></i> I tuoi pazienti
-        </h2>
-        <a href="{% url 'nuovo_paziente' %}" class="add-btn">
-            <i class="fas fa-user-plus"></i> Aggiungi paziente
-        </a>
+        <div class="page-header">
+        <h1 class="page-title">
+            <i class="fas fa-users"></i>
+            Lista Pazienti
+        </h1>
+        <div class="nav-buttons">
+            <a href="{% url 'home' %}" class="home-btn">
+                <i class="fas fa-home"></i>
+                Home
+            </a>
+            <a href="{% url 'nuovo_paziente' %}" class="add-btn">
+                <i class="fas fa-user-plus"></i>
+                Nuovo Paziente
+            </a>
+        </div>
     </div>
 
     {% if messages %}
