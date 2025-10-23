@@ -21,7 +21,10 @@ class VisitaForm(forms.ModelForm):
     class Meta:
         model = Visita
         fields = ['data_visita', 'creatinina', 'egfr', 'proteinuria', 'albuminuria',
-                  'pressione_sistolica', 'pressione_diastolica', 'note']
+                  'pressione_sistolica', 'pressione_diastolica', 'note', 'referto']
+        widgets = {
+            'referto': forms.FileInput(attrs={'accept': 'application/pdf,image/jpeg,image/png'})
+        }
 
 
 class MESTCForm(forms.ModelForm):

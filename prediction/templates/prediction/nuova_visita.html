@@ -16,7 +16,7 @@
                 </span>
             </h1>
 
-            <form method="post">
+            <form method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="columns is-multiline">
                     {% for field in form %}
@@ -26,6 +26,23 @@
                                 <div class="control">
                                     {% if field.name == 'note' %}
                                         {{ field|addclass:'textarea' }}
+                                    {% elif field.name == 'referto' %}
+                                        <div class="file has-name">
+                                            <label class="file-label">
+                                                {{ field }}
+                                                <span class="file-cta">
+                                                    <span class="file-icon">
+                                                        <i class="fas fa-upload"></i>
+                                                    </span>
+                                                    <span class="file-label">
+                                                        Scegli un file...
+                                                    </span>
+                                                </span>
+                                                <span class="file-name">
+                                                    Nessun file selezionato
+                                                </span>
+                                            </label>
+                                        </div>
                                     {% else %}
                                         <div class="{% if field.name == 'data_visita' %}control has-icons-left{% else %}control{% endif %}">
                                             {{ field|addclass:'input' }}
@@ -70,4 +87,21 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const fileInput = document.querySelector('input[type="file"]');
+    const fileName = document.querySelector('.file-name');
+    
+    fileInput.addEventListener('change', function() {
+        if (fileInput.files.length > 0) {
+            fileName.textContent = fileInput.files[0].name;
+        } else {
+            fileName.textContent = 'Nessun file selezionato';
+        }
+    });
+});
+</script>
 {% endblock %}

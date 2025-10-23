@@ -277,6 +277,7 @@
                             <th>eGFR</th>
                             <th>Proteinuria</th>
                             <th>Pressione</th>
+                            <th>Referto</th>
                             <th>Azioni</th>
                         </tr>
                     </thead>
@@ -288,6 +289,17 @@
                             <td>{{ visita.egfr }} mL/min</td>
                             <td>{{ visita.proteinuria }} mg/24h</td>
                             <td>{{ visita.pressione_sistolica }}/{{ visita.pressione_diastolica }} mmHg</td>
+                            <td>
+                                {% if visita.referto %}
+                                    <a href="{{ visita.referto.url }}" target="_blank" class="button is-small is-info" title="Visualizza Referto">
+                                        <span class="icon">
+                                            <i class="fas fa-file-medical"></i>
+                                        </span>
+                                    </a>
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
                             <td>
                                 <div class="buttons are-small">
                                     <a href="{% url 'modifica_visita' paziente.id visita.id %}" class="button is-warning" title="Modifica">

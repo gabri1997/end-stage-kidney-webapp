@@ -1,17 +1,49 @@
-<!DOCTYPE html>
-<html lang="it">
-<head>
-  <meta charset="UTF-8">
-  <title>Elimina Referto MEST-C</title>
-</head>
-<body>
-  <h1>Conferma eliminazione</h1>
-  <p>Vuoi davvero eliminare il referto del {{ mestc.data_rilevazione }} per {{ paziente.nome }} {{ paziente.cognome }}?</p>
+{% extends 'prediction/base.html' %}
 
-  <form method="post">
-    {% csrf_token %}
-    <button type="submit">✅ Sì, elimina</button>
-    <a href="{% url 'dettaglio_paziente' paziente.id %}">❌ Annulla</a>
-  </form>
-</body>
-</html>
+{% block title %}Conferma Eliminazione Referto MEST-C - {{ paziente.nome }} {{ paziente.cognome }}{% endblock %}
+
+{% block content %}
+<div class="columns is-centered">
+    <div class="column is-half">
+        <div class="box">
+            <h1 class="title">
+                <span class="icon-text">
+                    <span class="icon has-text-danger">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </span>
+                    <span>Conferma Eliminazione</span>
+                </span>
+            </h1>
+            
+            <div class="message is-warning mb-5">
+                <div class="message-body">
+                    <p class="is-size-5">Sei sicuro di voler eliminare il referto MEST-C del <strong>{{ mestc.data_rilevazione|date:"d/m/Y" }}</strong> per il paziente <strong>{{ paziente.nome }} {{ paziente.cognome }}</strong>?</p>
+                    <p class="mt-3">Questa azione non può essere annullata.</p>
+                </div>
+            </div>
+
+            <form method="post">
+                {% csrf_token %}
+                <div class="field is-grouped">
+                    <div class="control">
+                        <button type="submit" class="button is-danger">
+                            <span class="icon">
+                                <i class="fas fa-trash"></i>
+                            </span>
+                            <span>Sì, elimina</span>
+                        </button>
+                    </div>
+                    <div class="control">
+                        <a href="{% url 'dettaglio_paziente' paziente.id %}" class="button is-light">
+                            <span class="icon">
+                                <i class="fas fa-times"></i>
+                            </span>
+                            <span>Annulla</span>
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

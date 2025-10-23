@@ -46,6 +46,10 @@ class MESTC(models.Model):
         return f"MEST-C del {self.data_rilevazione} - {self.paziente}"
 
 
+def referto_upload_path(instance, filename):
+    # File will be uploaded to MEDIA_ROOT/referti/paziente_<id>/<filename>
+    return f'referti/paziente_{instance.paziente.id}/{filename}'
+
 class Visita(models.Model):
     # Ogni visita è associata a un paziente (relazione uno-a-molti)
     paziente = models.ForeignKey(Paziente, on_delete=models.CASCADE, related_name='visite')
@@ -59,6 +63,12 @@ class Visita(models.Model):
     note = models.TextField(blank=True, null=True)
     esito_predizione = models.FloatField(null=True, blank=True)
     data_inferenza = models.DateTimeField(null=True, blank=True)
+    referto = models.FileField(
+        upload_to=referto_upload_path,
+        null=True,
+        blank=True,
+        help_text='Carica un referto in formato PDF, JPG o PNG (max 5MB)'
+    )
 
     medico = models.ForeignKey( 
         settings.AUTH_USER_MODEL,

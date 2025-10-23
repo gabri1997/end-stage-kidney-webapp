@@ -75,12 +75,13 @@ def nuova_visita(request, paziente_id):
     paziente = get_object_or_404(Paziente, id=paziente_id, medico=request.user)
 
     if request.method == "POST":
-        form = VisitaForm(request.POST)
+        form = VisitaForm(request.POST, request.FILES)
         if form.is_valid():
             visita = form.save(commit=False)
             visita.paziente = paziente
             visita.medico = request.user  
             visita.save()
+            messages.success(request, "✅ Visita aggiunta con successo.")
             return redirect('dettaglio_paziente', paziente_id=paziente.id)
 
     else:
@@ -111,11 +112,12 @@ def modifica_visita(request, paziente_id, visita_id):
     visita = get_object_or_404(Visita, id=visita_id, paziente=paziente)
 
     if request.method == "POST":
-        form = VisitaForm(request.POST, instance=visita)
+        form = VisitaForm(request.POST, request.FILES, instance=visita)
         if form.is_valid():
             visita = form.save(commit=False)
             visita.medico = request.user 
             visita.save()
+            messages.success(request, "✅ Visita modificata con successo.")
             return redirect('dettaglio_paziente', paziente_id=paziente.id)
 
     else:
