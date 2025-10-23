@@ -1,0 +1,94 @@
+
+{% block title %}Login - ESKD Prediction{% endblock %}
+
+{% block extra_css %}
+<style>
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+    .login-container {
+        background: white;
+        padding: 2rem;
+        border-radius: 10px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        width: 100%;
+        max-width: 400px;
+    }
+    h2 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 1.5rem;
+    }
+    .error-message {
+        background: #fee;
+        color: #c33;
+        padding: 0.75rem;
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        border-left: 4px solid #c33;
+    }
+    form p {
+        margin-bottom: 1rem;
+    }
+    label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: #555;
+        font-weight: 500;
+    }
+    input[type="text"],
+    input[type="password"] {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 1rem;
+        box-sizing: border-box;
+    }
+    input[type="text"]:focus,
+    input[type="password"]:focus {
+        outline: none;
+        border-color: #667eea;
+    }
+    button {
+        width: 100%;
+        padding: 0.75rem;
+        background: #667eea;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+    button:hover {
+        background: #5568d3;
+    }
+    .helptext {
+        display: none;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="login-container">
+    <h2>🔐 Login ESKD</h2>
+    
+    {% if form.errors %}
+        <div class="error-message">
+            ❌ Username o password errati. Riprova.
+        </div>
+    {% endif %}
+    
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Accedi</button>
+    </form>
+</div>
+{% endblock %}

@@ -1,57 +1,71 @@
-<!DOCTYPE html>
-<html lang="it">
-<head>
-    <meta charset="UTF-8">
-    <title>Modifica Paziente</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 30px;
-            background-color: #fafafa;
-        }
-        h2 {
-            color: #2b4c7e;
-        }
-        form {
-            background-color: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0px 0px 6px rgba(0,0,0,0.1);
-            max-width: 500px;
-        }
-        button {
-            background-color: #2b4c7e;
-            color: white;
-            padding: 8px 16px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #3d65a5;
-        }
-        a {
-            color: #0066cc;
-            text-decoration: none;
-        }
-        a:hover {
-            text-decoration: underline;
-        }
-    </style>
-</head>
-<body>
+{% extends 'prediction/base.html' %}
+{% load form_tags %}
 
-    <h2>✏️ Modifica Dati di {{ paziente.nome }} {{ paziente.cognome }}</h2>
+{% block title %}Modifica {{ paziente.nome }} {{ paziente.cognome }}{% endblock %}
 
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">💾 Salva Modifiche</button>
-    </form>
+{% block content %}
+<div class="columns is-centered">
+    <div class="column is-half">
+        <div class="box">
+            <h1 class="title">
+                <span class="icon-text">
+                    <span class="icon">
+                        <i class="fas fa-user-edit"></i>
+                    </span>
+                    <span>Modifica Dati di {{ paziente.nome }} {{ paziente.cognome }}</span>
+                </span>
+            </h1>
 
-    <p style="margin-top:15px;">
-        <a href="{% url 'dettaglio_paziente' paziente.id %}">⬅️ Torna al dettaglio</a>
-    </p>
+            <form method="post">
+                {% csrf_token %}
+                {% for field in form %}
+                    <div class="field">
+                        <label class="label">{{ field.label }}</label>
+                        <div class="control">
+                            {{ field.errors }}
+                            {% if field.field.widget.input_type == 'checkbox' %}
+                                <label class="checkbox">
+                                    {{ field }} {{ field.label }}
+                                </label>
+                            {% else %}
+                                {{ field|addclass:'input' }}
+                            {% endif %}
+                        </div>
+                        {% if field.help_text %}
+                            <p class="help">{{ field.help_text }}</p>
+                        {% endif %}
+                    </div>
+                {% endfor %}
 
-</body>
-</html>
+                <div class="field is-grouped mt-5">
+                    <div class="control">
+                        <button type="submit" class="button is-primary">
+                            <span class="icon">
+                                <i class="fas fa-save"></i>
+                            </span>
+                            <span>Salva Modifiche</span>
+                        </button>
+                    </div>
+                    <div class="control">
+                        <a href="{% url 'dettaglio_paziente' paziente.id %}" class="button is-light">
+                            <span class="icon">
+                                <i class="fas fa-arrow-left"></i>
+                            </span>
+                            <span>Torna al dettaglio</span>
+                        </a>
+                    </div>
+                </div>
+            </form>
+
+            <div class="mt-5">
+                <a href="{% url 'elimina_paziente' paziente.id %}" class="button is-danger is-outlined">
+                    <span class="icon">
+                        <i class="fas fa-trash"></i>
+                    </span>
+                    <span>Elimina Paziente</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

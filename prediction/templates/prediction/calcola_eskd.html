@@ -1,11 +1,175 @@
-<h2>🧠 Calcola Rischio ESKD per {{ paziente.nome }} {{ paziente.cognome }}</h2>
+{% extends 'prediction/base.html' %}
+{% load form_tags %}
 
-<form method="post">
-    {% csrf_token %}
-    <table>
-        {{ form.as_table }}
-    </table>
-    <button type="submit">Calcola rischio</button>
-</form>
+{% block title %}Calcola ESKD - {{ paziente.nome }} {{ paziente.cognome }}{% endblock %}
 
-<p><a href="{% url 'dettaglio_paziente' paziente.id %}">⬅️ Torna al dettaglio</a></p>
+{% block content %}
+<div class="columns is-centered">
+    <div class="column is-two-thirds">
+        <div class="box">
+            <h1 class="title">
+                <span class="icon-text">
+                    <span class="icon">
+                        <i class="fas fa-brain"></i>
+                    </span>
+                    <span>Calcola Rischio ESKD</span>
+                </span>
+            </h1>
+            <h2 class="subtitle">{{ paziente.nome }} {{ paziente.cognome }}</h2>
+
+            <form method="post">
+                {% csrf_token %}
+                
+                <div class="columns is-multiline">
+                    <!-- Dati Demografici -->
+                    <div class="column is-12">
+                        <h3 class="title is-5">
+                            <span class="icon-text">
+                                <span class="icon">
+                                    <i class="fas fa-user"></i>
+                                </span>
+                                <span>Dati Demografici</span>
+                            </span>
+                        </h3>
+                        <div class="columns">
+                            <div class="column is-half">
+                                <div class="field">
+                                    <label class="label">{{ form.sesso.label }}</label>
+                                    <div class="control">
+                                        {{ form.sesso|addclass:'input' }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="column is-half">
+                                <div class="field">
+                                    <label class="label">{{ form.eta.label }}</label>
+                                    <div class="control">
+                                        {{ form.eta|addclass:'input' }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Parametri Clinici -->
+                    <div class="column is-12">
+                        <h3 class="title is-5">
+                            <span class="icon-text">
+                                <span class="icon">
+                                    <i class="fas fa-heartbeat"></i>
+                                </span>
+                                <span>Parametri Clinici</span>
+                            </span>
+                        </h3>
+                        <div class="columns is-multiline">
+                            <div class="column is-half">
+                                <div class="field">
+                                    <label class="label">{{ form.creatinina.label }}</label>
+                                    <div class="control">
+                                        {{ form.creatinina|addclass:'input' }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="column is-half">
+                                <div class="field">
+                                    <label class="label">{{ form.proteinuria.label }}</label>
+                                    <div class="control">
+                                        {{ form.proteinuria|addclass:'input' }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="column is-half">
+                                <div class="field">
+                                    <label class="label">{{ form.pressione_sistolica.label }}</label>
+                                    <div class="control">
+                                        {{ form.pressione_sistolica|addclass:'input' }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="column is-half">
+                                <div class="field">
+                                    <label class="label">{{ form.pressione_diastolica.label }}</label>
+                                    <div class="control">
+                                        {{ form.pressione_diastolica|addclass:'input' }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Parametri MEST-C -->
+                    <div class="column is-12">
+                        <h3 class="title is-5">
+                            <span class="icon-text">
+                                <span class="icon">
+                                    <i class="fas fa-microscope"></i>
+                                </span>
+                                <span>Parametri MEST-C</span>
+                            </span>
+                        </h3>
+                        <div class="columns is-multiline">
+                            {% for field in form %}
+                                {% if field.name in 'MESTC' %}
+                                    <div class="column is-one-fifth">
+                                        <div class="field">
+                                            <label class="label">{{ field.label }}</label>
+                                            <div class="control">
+                                                {{ field|addclass:'input' }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- Terapie -->
+                    <div class="column is-12">
+                        <h3 class="title is-5">
+                            <span class="icon-text">
+                                <span class="icon">
+                                    <i class="fas fa-pills"></i>
+                                </span>
+                                <span>Terapie in Corso</span>
+                            </span>
+                        </h3>
+                        <div class="columns is-multiline">
+                            {% for field in form %}
+                                {% if field.field.widget.input_type == 'checkbox' %}
+                                    <div class="column is-half">
+                                        <div class="field">
+                                            <label class="checkbox">
+                                                {{ field }}
+                                                {{ field.label }}
+                                            </label>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field is-grouped mt-5">
+                    <div class="control">
+                        <button type="submit" class="button is-primary">
+                            <span class="icon">
+                                <i class="fas fa-calculator"></i>
+                            </span>
+                            <span>Calcola Rischio</span>
+                        </button>
+                    </div>
+                    <div class="control">
+                        <a href="{% url 'dettaglio_paziente' paziente.id %}" class="button is-light">
+                            <span class="icon">
+                                <i class="fas fa-times"></i>
+                            </span>
+                            <span>Annulla</span>
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

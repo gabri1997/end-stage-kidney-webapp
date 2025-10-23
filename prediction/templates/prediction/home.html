@@ -1,0 +1,140 @@
+{% extends 'prediction/base.html' %}
+
+{% block title %}Home - ESKD Predictor{% endblock %}
+
+{% block content %}
+<section class="hero is-primary is-bold is-medium">
+    <div class="hero-body">
+        <div class="container">
+            <div class="columns is-vcentered">
+                <div class="column">
+                    <h1 class="title is-1">
+                        Benvenuto in ESKD Predictor
+                    </h1>
+                    <h2 class="subtitle is-3">
+                        Sistema di predizione intelligente per la malattia renale allo stadio terminale
+                    </h2>
+                    <div class="buttons">
+                        <a href="{% url 'lista_pazienti' %}" class="button is-white is-outlined is-large">
+                            <span class="icon">
+                                <i class="fas fa-users"></i>
+                            </span>
+                            <span>Gestisci Pazienti</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="column">
+                    <figure class="image">
+                        <img src="https://img.freepik.com/free-vector/human-kidney-anatomy-medical-science-vector_53876-140880.jpg" alt="Illustrazione reni">
+                    </figure>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div class="columns is-multiline">
+            <div class="column is-one-third">
+                <div class="box has-text-centered">
+                    <span class="icon is-large has-text-primary">
+                        <i class="fas fa-brain fa-3x"></i>
+                    </span>
+                    <h3 class="title is-4 mt-4">Intelligenza Artificiale</h3>
+                    <p class="subtitle is-6">
+                        Utilizziamo algoritmi avanzati di machine learning per predire il rischio di ESKD
+                    </p>
+                </div>
+            </div>
+            <div class="column is-one-third">
+                <div class="box has-text-centered">
+                    <span class="icon is-large has-text-primary">
+                        <i class="fas fa-chart-line fa-3x"></i>
+                    </span>
+                    <h3 class="title is-4 mt-4">Monitoraggio Continuo</h3>
+                    <p class="subtitle is-6">
+                        Tieni traccia dell'evoluzione del rischio nel tempo per ogni paziente
+                    </p>
+                </div>
+            </div>
+            <div class="column is-one-third">
+                <div class="box has-text-centered">
+                    <span class="icon is-large has-text-primary">
+                        <i class="fas fa-clipboard-check fa-3x"></i>
+                    </span>
+                    <h3 class="title is-4 mt-4">Gestione Completa</h3>
+                    <p class="subtitle is-6">
+                        Gestisci visite, referti MEST-C e predizioni in un'unica piattaforma
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="box mt-6">
+            <div class="content">
+                <h3 class="title is-4">Come Funziona</h3>
+                <div class="steps">
+                    <div class="step-item">
+                        <div class="step-marker">1</div>
+                        <div class="step-details">
+                            <p class="step-title">Inserisci i Dati del Paziente</p>
+                            <p>Registra le informazioni anagrafiche e cliniche del paziente</p>
+                        </div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-marker">2</div>
+                        <div class="step-details">
+                            <p class="step-title">Aggiungi i Referti MEST-C</p>
+                            <p>Inserisci i risultati dell'analisi istologica</p>
+                        </div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-marker">3</div>
+                        <div class="step-details">
+                            <p class="step-title">Ottieni la Predizione</p>
+                            <p>Il sistema calcolerà automaticamente il rischio di ESKD</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .steps {
+        display: flex;
+        justify-content: space-between;
+        margin: 2rem 0;
+    }
+    .step-item {
+        flex: 1;
+        text-align: center;
+        padding: 1rem;
+    }
+    .step-marker {
+        width: 3rem;
+        height: 3rem;
+        border-radius: 50%;
+        background-color: #00d1b2;
+        color: white;
+        font-size: 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1rem;
+    }
+    .step-title {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+    .hero.is-primary {
+        background: linear-gradient(135deg, #00d1b2 0%, #1e88e5 100%);
+    }
+    .hero img {
+        max-height: 400px;
+        margin: 0 auto;
+    }
+</style>
+{% endblock %}

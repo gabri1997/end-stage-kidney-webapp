@@ -1,27 +1,146 @@
-<!DOCTYPE html>
-<html lang="it">
-<head>
-    <meta charset="UTF-8">
-    <title>Elenco Pazienti</title>
-</head>
-<body>
-    <h1>Elenco dei Pazienti</h1>
+{% extends "base.html" %}
 
-    <p><a href="{% url 'nuovo_paziente' %}">➕ Aggiungi un nuovo paziente</a></p>
+{% block content %}
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
+    .page-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        margin-bottom: 30px;
+        gap: 15px;
+    }
+    .page-title {
+        color: #1e4b7a;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin: 0;
+    }
+    .page-title i {
+        font-size: 1.6em;
+        color: #17a2b8;
+    }
+    .add-btn {
+        background: linear-gradient(90deg, #00b09b, #96c93d);
+        border: none;
+        color: white;
+        padding: 10px 18px;
+        border-radius: 10px;
+        font-weight: bold;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.95em;
+        transition: 0.3s;
+        text-decoration: none;
+    }
+    .add-btn:hover {
+        transform: scale(1.03);
+        opacity: 0.9;
+    }
+    table {
+        background-color: white;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0px 2px 10px rgba(0,0,0,0.08);
+    }
+    th {
+        background-color: #e9f5ff;
+        color: #1e4b7a;
+        font-weight: 600;
+    }
+    .action-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        font-size: 0.9em;
+        padding: 6px 10px;
+        border-radius: 6px;
+        text-decoration: none;
+        transition: 0.2s;
+    }
+    .btn-view { background-color: #cce5ff; color: #004085; }
+    .btn-edit { background-color: #fff3cd; color: #856404; }
+    .btn-del { background-color: #f8d7da; color: #721c24; }
+    .btn-view:hover, .btn-edit:hover, .btn-del:hover {
+        transform: scale(1.05);
+    }
+</style>
+
+<div class="container mt-5">
+    <div class="page-header">
+        <h2 class="page-title">
+            <i class="fas fa-user-md"></i> I tuoi pazienti
+        </h2>
+        <a href="{% url 'nuovo_paziente' %}" class="add-btn">
+            <i class="fas fa-user-plus"></i> Aggiungi paziente
+        </a>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
 
     {% if pazienti %}
-        <ul>
-        {% for p in pazienti %}
-            <li>
-                <a href="{% url 'dettaglio_paziente' p.id %}">
-                    {{ p.cognome }} {{ p.nome }}
-                </a>
-                — {{ p.codice_fiscale }}
-            </li>
-        {% endfor %}
-        </ul>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Cognome</th>
+                        <th>Età</th>
+                        <th>Sesso</th>
+                        <th class="text-center">Azioni</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for paziente in pazienti %}
+                        <tr>
+                            <td>{{ paziente.nome }}</td>
+                            <td>{{ paziente.cognome }}</td>
+                            <td>{{ paziente.eta|default:"-" }}</td>
+                            <td>
+                                {% if paziente.sesso == 'M' %}
+                                    👨‍⚕️ Maschio
+                                {% elif paziente.sesso == 'F' %}
+                                    👩‍⚕️ Femmina
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td class="text-center">
+                                <a href="{% url 'dettaglio_paziente' paziente.id %}" class="action-btn btn-view">
+                                    👁️ Dettagli
+                                </a>
+                                <a href="{% url 'modifica_paziente' paziente.id %}" class="action-btn btn-edit">
+                                    ✏️ Modifica
+                                </a>
+                                <a href="{% url 'elimina_paziente' paziente.id %}" 
+                                   class="action-btn btn-del"
+                                   onclick="return confirm('Vuoi davvero eliminare {{ paziente.nome }} {{ paziente.cognome }}?');">
+                                    🗑️ Elimina
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     {% else %}
-        <p>Nessun paziente registrato.</p>
+        <div class="alert alert-info text-center mt-4">
+            Nessun paziente registrato. Aggiungi il primo cliccando su <strong>“Aggiungi paziente”</strong>.
+        </div>
     {% endif %}
-</body>
-</html>
+</div>
+{% endblock %}

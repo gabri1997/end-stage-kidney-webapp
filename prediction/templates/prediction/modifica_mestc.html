@@ -1,18 +1,102 @@
-<!DOCTYPE html>
-<html lang="it">
-<head>
-  <meta charset="UTF-8">
-  <title>Modifica Referto MEST-C</title>
-</head>
-<body>
-  <h1>Modifica referto MEST-C per {{ paziente.nome }} {{ paziente.cognome }}</h1>
+{% extends 'prediction/base.html' %}
+{% load form_tags %}
 
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Salva modifiche</button>
-  </form>
+{% block title %}Modifica MEST-C - {{ paziente.nome }} {{ paziente.cognome }}{% endblock %}
 
-  <p><a href="{% url 'dettaglio_paziente' paziente.id %}">⬅️ Torna al dettaglio paziente</a></p>
-</body>
-</html>
+{% block content %}
+<div class="columns is-centered">
+    <div class="column is-half">
+        <div class="box">
+            <h1 class="title">
+                <span class="icon-text">
+                    <span class="icon">
+                        <i class="fas fa-microscope"></i>
+                    </span>
+                    <span>Modifica referto MEST-C</span>
+                </span>
+            </h1>
+            <h2 class="subtitle">{{ paziente.nome }} {{ paziente.cognome }}</h2>
+
+            <form method="post">
+                {% csrf_token %}
+                <div class="field">
+                    <label class="label">{{ form.data_rilevazione.label }}</label>
+                    <div class="control has-icons-left">
+                        {{ form.data_rilevazione|addclass:'input' }}
+                        <span class="icon is-small is-left">
+                            <i class="fas fa-calendar"></i>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="columns is-multiline">
+                    <div class="column is-half">
+                        <div class="field">
+                            <label class="label">{{ form.M.label }}</label>
+                            <div class="control">
+                                {{ form.M|addclass:'input' }}
+                            </div>
+                            <p class="help">Mesangial hypercellularity (0-1)</p>
+                        </div>
+                    </div>
+                    <div class="column is-half">
+                        <div class="field">
+                            <label class="label">{{ form.E.label }}</label>
+                            <div class="control">
+                                {{ form.E|addclass:'input' }}
+                            </div>
+                            <p class="help">Endocapillary proliferation (0-1)</p>
+                        </div>
+                    </div>
+                    <div class="column is-half">
+                        <div class="field">
+                            <label class="label">{{ form.S.label }}</label>
+                            <div class="control">
+                                {{ form.S|addclass:'input' }}
+                            </div>
+                            <p class="help">Segmental sclerosis (0-1)</p>
+                        </div>
+                    </div>
+                    <div class="column is-half">
+                        <div class="field">
+                            <label class="label">{{ form.T.label }}</label>
+                            <div class="control">
+                                {{ form.T|addclass:'input' }}
+                            </div>
+                            <p class="help">Tubular atrophy/interstitial fibrosis (0-1)</p>
+                        </div>
+                    </div>
+                    <div class="column is-half">
+                        <div class="field">
+                            <label class="label">{{ form.C.label }}</label>
+                            <div class="control">
+                                {{ form.C|addclass:'input' }}
+                            </div>
+                            <p class="help">Crescents (0-1)</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field is-grouped mt-5">
+                    <div class="control">
+                        <button type="submit" class="button is-primary">
+                            <span class="icon">
+                                <i class="fas fa-save"></i>
+                            </span>
+                            <span>Salva Modifiche</span>
+                        </button>
+                    </div>
+                    <div class="control">
+                        <a href="{% url 'dettaglio_paziente' paziente.id %}" class="button is-light">
+                            <span class="icon">
+                                <i class="fas fa-times"></i>
+                            </span>
+                            <span>Annulla</span>
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

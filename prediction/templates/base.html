@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}WebApp ESKD{% endblock %}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <script defer src="https://use.fontawesome.com/releases/v5.15.4/js/all.js"></script>
+    <style>
+        .risk-positive {
+            background-color: #fee;
+            border-left: 5px solid #f14668;
+        }
+        .risk-negative {
+            background-color: #efe;
+            border-left: 5px solid #48c774;
+        }
+    </style>
+    {% block extra_head %}{% endblock %}
+</head>
+
+<body>
+    <nav class="navbar is-primary" role="navigation" aria-label="main navigation">
+        <div class="navbar-brand">
+            <a class="navbar-item" href="{% url 'lista_pazienti' %}">
+                <span class="icon">
+                    <i class="fas fa-brain"></i>
+                </span>
+                <strong class="ml-2">ESKD Predictor</strong>
+            </a>
+        </div>
+
+        <div class="navbar-menu">
+            <div class="navbar-start">
+                <a class="navbar-item" href="{% url 'lista_pazienti' %}">
+                    <span class="icon-text">
+                        <span class="icon">
+                            <i class="fas fa-users"></i>
+                        </span>
+                        <span>Pazienti</span>
+                    </span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="section">
+        <div class="container">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="notification is-success">
+                        <button class="delete"></button>
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            {% block content %}{% endblock %}
+        </div>
+    </section>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Delete notification functionality
+            (document.querySelectorAll('.notification .delete') || []).forEach(($delete) => {
+                const $notification = $delete.parentNode;
+                $delete.addEventListener('click', () => {
+                    $notification.parentNode.removeChild($notification);
+                });
+            });
+        });
+    </script>
+    {% block extra_scripts %}{% endblock %}
+
+    {% if user.is_authenticated %}
+        <footer class="footer">
+            <div class="content has-text-centered">
+                <p>
+                    <form method="post" action="{% url 'logout' %}" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit" 
+                                class="button is-danger is-outlined"
+                                onclick="return confirm('Vuoi davvero disconnetterti?');">
+                            <span class="icon">
+                                <i class="fas fa-sign-out-alt"></i>
+                            </span>
+                            <span>Logout</span>
+                        </button>
+                    </form>
+                </p>
+            </div>
+        </footer>
+    {% endif %}
+</body>
+</html>

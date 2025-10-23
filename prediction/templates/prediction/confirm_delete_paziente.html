@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5 text-center">
+    <h2>⚠️ Conferma eliminazione paziente</h2>
+    <p>Sei sicuro di voler eliminare <strong>{{ paziente.nome }} {{ paziente.cognome }}</strong>?</p>
+
+    <form method="POST">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Elimina definitivamente</button>
+        <a href="{% url 'lista_pazienti' %}" class="btn btn-secondary">Annulla</a>
+    </form>
+</div>
+{% endblock %}

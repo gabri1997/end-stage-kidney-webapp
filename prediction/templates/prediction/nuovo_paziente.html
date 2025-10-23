@@ -1,18 +1,62 @@
-<!DOCTYPE html>
-<html lang="it">
-<head>
-    <meta charset="UTF-8">
-    <title>Nuovo Paziente</title>
-</head>
-<body>
-    <h1>Aggiungi un nuovo paziente</h1>
+{% extends 'prediction/base.html' %}
+{% load form_tags %}
 
-    <form method="POST">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Salva</button>
-    </form>
+{% block title %}Nuovo Paziente{% endblock %}
 
-    <p><a href="{% url 'lista_pazienti' %}">Torna alla lista pazienti</a></p>
-</body>
-</html>
+{% block content %}
+<div class="columns is-centered">
+    <div class="column is-half">
+        <div class="box">
+            <h1 class="title">
+                <span class="icon-text">
+                    <span class="icon">
+                        <i class="fas fa-user-plus"></i>
+                    </span>
+                    <span>Aggiungi un nuovo paziente</span>
+                </span>
+            </h1>
+
+            <form method="POST">
+                {% csrf_token %}
+                {% for field in form %}
+                    <div class="field">
+                        <label class="label">{{ field.label }}</label>
+                        <div class="control">
+                            {{ field.errors }}
+                            {% if field.field.widget.input_type == 'checkbox' %}
+                                <label class="checkbox">
+                                    {{ field }} {{ field.label }}
+                                </label>
+                            {% else %}
+                                {{ field.as_widget|addclass:'input' }}
+                            {% endif %}
+                        </div>
+                        {% if field.help_text %}
+                            <p class="help">{{ field.help_text }}</p>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+                
+                <div class="field is-grouped mt-5">
+                    <div class="control">
+                        <button type="submit" class="button is-primary">
+                            <span class="icon">
+                                <i class="fas fa-save"></i>
+                            </span>
+                            <span>Salva</span>
+                        </button>
+                    </div>
+                    <div class="control">
+                        <a href="{% url 'lista_pazienti' %}" class="button is-light">
+                            <span class="icon">
+                                <i class="fas fa-times"></i>
+                            </span>
+                            <span>Annulla</span>
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -13,6 +13,10 @@ from .models import Predizione, Visita, MESTC
 from .forms import CalcolaESKDForm
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
+
+@login_required
+def home(request):
+    return render(request, 'prediction/home.html')
 from django.contrib import messages
 from django.shortcuts import redirect, get_object_or_404
 from .models import MESTC
@@ -22,11 +26,15 @@ def home(request):
     return HttpResponse("Ciao, questa è la home di ESKD!")
 
 
+@login_required
 def nuovo_paziente(request):
     if request.method == "POST":
         form = PazienteForm(request.POST)
         if form.is_valid():
-            form.save()
+            paziente = form.save(commit=False)
+            paziente.medico = request.user  # ← assegna il medico loggato
+            paziente.save()
+            messages.success(request, "✅ Paziente aggiunto con successo.")
             return redirect("lista_pazienti")
     else:
         form = PazienteForm()
@@ -355,3 +363,18 @@ def delete_predizione(request, predizione_id):
     predizione.delete()
     messages.success(request, "Predizione ESKD eliminata con successo.")
     return redirect("dettaglio_paziente", paziente_id=paziente_id)
+
+
+
+@login_required
+def elimina_paziente(request, paziente_id):
+    paziente = get_object_or_404(Paziente, id=paziente_id, medico=request.user)
+
+    if request.method == "POST":
+        nome = f"{paziente.nome} {paziente.cognome}"
+        paziente.delete()
+        messages.success(request, f"✅ Paziente {nome} eliminato con successo.")
+        return redirect("lista_pazienti")
+
+    # Se si accede via GET, mostra la pagina di conferma
+    return render(request, "prediction/confirm_delete_paziente.html", {"paziente": paziente})

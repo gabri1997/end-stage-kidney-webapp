@@ -1,18 +1,73 @@
-<!DOCTYPE html>
-<html lang="it">
-<head>
-    <meta charset="UTF-8">
-    <title>Nuova Visita</title>
-</head>
-<body>
-    <h1>Nuova Visita per {{ paziente.nome }} {{ paziente.cognome }}</h1>
+{% extends 'prediction/base.html' %}
+{% load form_tags %}
 
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Salva</button>
-    </form>
+{% block title %}Nuova Visita - {{ paziente.nome }} {{ paziente.cognome }}{% endblock %}
 
-    <p><a href="{% url 'dettaglio_paziente' paziente.id %}">⬅️ Torna al dettaglio paziente</a></p>
-</body>
-</html>
+{% block content %}
+<div class="columns is-centered">
+    <div class="column is-two-thirds">
+        <div class="box">
+            <h1 class="title">
+                <span class="icon-text">
+                    <span class="icon">
+                        <i class="fas fa-stethoscope"></i>
+                    </span>
+                    <span>Nuova Visita per {{ paziente.nome }} {{ paziente.cognome }}</span>
+                </span>
+            </h1>
+
+            <form method="post">
+                {% csrf_token %}
+                <div class="columns is-multiline">
+                    {% for field in form %}
+                        <div class="column is-half">
+                            <div class="field">
+                                <label class="label">{{ field.label }}</label>
+                                <div class="control">
+                                    {% if field.name == 'note' %}
+                                        {{ field|addclass:'textarea' }}
+                                    {% else %}
+                                        <div class="{% if field.name == 'data_visita' %}control has-icons-left{% else %}control{% endif %}">
+                                            {{ field|addclass:'input' }}
+                                            {% if field.name == 'data_visita' %}
+                                                <span class="icon is-small is-left">
+                                                    <i class="fas fa-calendar"></i>
+                                                </span>
+                                            {% endif %}
+                                        </div>
+                                    {% endif %}
+                                    {% if field.errors %}
+                                        <p class="help is-danger">{{ field.errors }}</p>
+                                    {% endif %}
+                                    {% if field.help_text %}
+                                        <p class="help">{{ field.help_text }}</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <div class="field is-grouped mt-5">
+                    <div class="control">
+                        <button type="submit" class="button is-primary">
+                            <span class="icon">
+                                <i class="fas fa-save"></i>
+                            </span>
+                            <span>Salva Visita</span>
+                        </button>
+                    </div>
+                    <div class="control">
+                        <a href="{% url 'dettaglio_paziente' paziente.id %}" class="button is-light">
+                            <span class="icon">
+                                <i class="fas fa-times"></i>
+                            </span>
+                            <span>Annulla</span>
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

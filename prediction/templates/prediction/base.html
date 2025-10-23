@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}WebApp ESKD{% endblock %}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <script defer src="https://use.fontawesome.com/releases/v5.15.4/js/all.js"></script>
+    <style>
+        .risk-positive {
+            background-color: #fee;
+            border-left: 5px solid #f14668;
+        }
+        .risk-negative {
+            background-color: #efe;
+            border-left: 5px solid #48c774;
+        }
+        footer {
+            margin-top: 60px;
+            padding: 2rem 1.5rem;
+            background-color: #f5f5f5;
+            border-top: 1px solid #ddd;
+        }
+        .logout-button {
+            transition: all 0.2s ease-in-out;
+        }
+        .logout-button:hover {
+            transform: scale(1.05);
+        }
+    </style>
+    {% block extra_head %}{% endblock %}
+</head>
+
+<body>
+    <!-- 🔹 Navbar -->
+    <nav class="navbar is-primary" role="navigation" aria-label="main navigation">
+        <div class="navbar-brand">
+            <a class="navbar-item" href="{% url 'home' %}">
+                <span class="icon">
+                    <i class="fas fa-brain"></i>
+                </span>
+                <strong class="ml-2">ESKD Predictor</strong>
+            </a>
+
+            <!-- Hamburger menu for mobile -->
+            <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="mainNavbar">
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+            </a>
+        </div>
+
+        <div id="mainNavbar" class="navbar-menu">
+            <div class="navbar-start">
+                <a class="navbar-item" href="{% url 'home' %}">
+                    <span class="icon-text">
+                        <span class="icon"><i class="fas fa-home"></i></span>
+                        <span>Home</span>
+                    </span>
+                </a>
+                <a class="navbar-item" href="{% url 'lista_pazienti' %}">
+                    <span class="icon-text">
+                        <span class="icon"><i class="fas fa-users"></i></span>
+                        <span>Pazienti</span>
+                    </span>
+                </a>
+            </div>
+
+            <div class="navbar-end">
+                <div class="navbar-item">
+                    {% if user.is_authenticated %}
+                        <span class="icon-text">
+                            <span class="icon"><i class="fas fa-user-circle"></i></span>
+                            <span>{{ user.username }}</span>
+                        </span>
+                        {% if user.is_staff %}
+                            <a class="navbar-item" href="{% url 'admin:index' %}">
+                                <span class="icon-text">
+                                    <span class="icon"><i class="fas fa-cogs"></i></span>
+                                    <span>Admin</span>
+                                </span>
+                            </a>
+                        {% endif %}
+                    {% else %}
+                        <div class="buttons">
+                            <a href="{% url 'login' %}" class="button is-light">
+                                <span class="icon"><i class="fas fa-sign-in-alt"></i></span>
+                                <span>Login</span>
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 🔹 Contenuto principale -->
+    <section class="section">
+        <div class="container">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="notification is-success is-light">
+                        <button class="delete"></button>
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            {% block content %}{% endblock %}
+        </div>
+    </section>
+
+    <!-- 🔹 Footer con Logout -->
+    {% if user.is_authenticated %}
+    <footer class="footer">
+        <div class="content has-text-centered">
+            <form method="POST" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="button is-danger is-outlined logout-button">
+                    <span class="icon"><i class="fas fa-sign-out-alt"></i></span>
+                    <span>Logout</span>
+                </button>
+            </form>
+        </div>
+    </footer>
+    {% endif %}
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Delete notification functionality
+            (document.querySelectorAll('.notification .delete') || []).forEach(($delete) => {
+                const $notification = $delete.parentNode;
+                $delete.addEventListener('click', () => {
+                    $notification.parentNode.removeChild($notification);
+                });
+            });
+
+            // Hamburger menu functionality
+            const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
+            if ($navbarBurgers.length > 0) {
+                $navbarBurgers.forEach(el => {
+                    el.addEventListener('click', () => {
+                        const target = el.dataset.target;
+                        const $target = document.getElementById(target);
+                        el.classList.toggle('is-active');
+                        $target.classList.toggle('is-active');
+                    });
+                });
+            }
+        });
+    </script>
+
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>

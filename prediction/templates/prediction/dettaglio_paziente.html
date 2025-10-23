@@ -1,248 +1,490 @@
-<!DOCTYPE html>
-<html lang="it">
-<head>
-    <meta charset="UTF-8">
-    <title>Dettaglio Paziente</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 30px;
-            line-height: 1.6;
-            background-color: #fafafa;
-        }
-        h1, h2 {
-            color: #2b4c7e;
-        }
-        table {
-            border-collapse: collapse;
-            width: 100%;
-            margin-top: 10px;
-        }
-        th, td {
-            border: 1px solid #ccc;
-            padding: 6px 10px;
-            text-align: center;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-        a {
-            text-decoration: none;
-            color: #0066cc;
-        }
-        a:hover {
-            text-decoration: underline;
-        }
-        hr {
-            margin: 25px 0;
-        }
-        ul {
-            list-style-type: none;
-            padding-left: 0;
-        }
-        li {
-            margin-bottom: 8px;
-        }
-        .box-rischio {
-            padding: 15px;
-            border-radius: 10px;
-            margin: 15px 0;
-            transition: opacity 0.5s ease-in-out;
-        }
-        .box-positivo {
-            border: 2px solid red;
-            background-color: #ffe5e5;
-        }
-        .box-negativo {
-            border: 2px solid green;
-            background-color: #e5ffe5;
-        }
-        .btn-delete {
-            color: red;
-            font-weight: bold;
-        }
-        .btn-delete:hover {
-            text-decoration: underline;
-        }
-    </style>
-</head>
-<body>
+{% extends 'prediction/base.html' %}
 
-    {% if messages %}
-    <div id="message-box" 
-         style="background-color: #e7f9e7; border: 2px solid #4CAF50; color: #2e7d32; 
-                padding: 10px 15px; border-radius: 8px; margin-bottom: 20px;
-                transition: opacity 0.5s ease-in-out;">
-        {% for message in messages %}
-            <p style="margin: 0;">{{ message }}</p>
-        {% endfor %}
+{% block title %}{{ paziente.nome }} {{ paziente.cognome }} - Dettaglio{% endblock %}
+
+{% block content %}
+
+<div class="columns">
+    <div class="column">
+        <nav class="level">
+            <div class="level-left">
+                <div class="level-item">
+                    <h1 class="title">{{ paziente.nome }} {{ paziente.cognome }}</h1>
+                </div>
+            </div>
+            <div class="level-right">
+                <div class="level-item">
+                    <div class="buttons">
+                        <a href="{% url 'modifica_paziente' paziente.id %}" class="button is-warning">
+                            <span class="icon">
+                                <i class="fas fa-edit"></i>
+                            </span>
+                            <span>Modifica Paziente</span>
+                        </a>
+                        <a href="{% url 'nuova_visita' paziente.id %}" class="button is-primary">
+                            <span class="icon">
+                                <i class="fas fa-plus"></i>
+                            </span>
+                            <span>Nuova Visita</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <div class="columns">
+            <!-- Dati anagrafici -->
+            <div class="column is-half">
+                <div class="box">
+                    <h3 class="title is-4">
+                        <span class="icon-text">
+                            <span class="icon">
+                                <i class="fas fa-user"></i>
+                            </span>
+                            <span>Dati Anagrafici</span>
+                        </span>
+                    </h3>
+                    
+                    <div class="field is-horizontal">
+                        <div class="field-label is-normal">
+                            <label class="label">Codice Fiscale</label>
+                        </div>
+                        <div class="field-body">
+                            <div class="field">
+                                <p class="control">
+                                    <span class="tag is-medium">{{ paziente.codice_fiscale|default:'-' }}</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="field is-horizontal">
+                        <div class="field-label is-normal">
+                            <label class="label">Email</label>
+                        </div>
+                        <div class="field-body">
+                            <div class="field">
+                                <p class="control">
+                                    {% if paziente.email %}
+                                        <a href="mailto:{{ paziente.email }}" class="tag is-info is-medium">
+                                            <span class="icon">
+                                                <i class="fas fa-envelope"></i>
+                                            </span>
+                                            <span>{{ paziente.email }}</span>
+                                        </a>
+                                    {% else %}
+                                        <span class="tag is-light is-medium">-</span>
+                                    {% endif %}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="field is-horizontal">
+                        <div class="field-label is-normal">
+                            <label class="label">Telefono</label>
+                        </div>
+                        <div class="field-body">
+                            <div class="field">
+                                <p class="control">
+                                    {% if paziente.telefono %}
+                                        <a href="tel:{{ paziente.telefono }}" class="tag is-info is-medium">
+                                            <span class="icon">
+                                                <i class="fas fa-phone"></i>
+                                            </span>
+                                            <span>{{ paziente.telefono }}</span>
+                                        </a>
+                                    {% else %}
+                                        <span class="tag is-light is-medium">-</span>
+                                    {% endif %}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="field is-horizontal">
+                        <div class="field-label is-normal">
+                            <label class="label">Indirizzo</label>
+                        </div>
+                        <div class="field-body">
+                            <div class="field">
+                                <p class="control">
+                                    {% if paziente.indirizzo %}
+                                        <span class="tag is-medium">
+                                            <span class="icon">
+                                                <i class="fas fa-map-marker-alt"></i>
+                                            </span>
+                                            <span>{{ paziente.indirizzo }}</span>
+                                        </span>
+                                    {% else %}
+                                        <span class="tag is-light is-medium">-</span>
+                                    {% endif %}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="field is-horizontal">
+                        <div class="field-label is-normal">
+                            <label class="label">Sesso</label>
+                        </div>
+                        <div class="field-body">
+                            <div class="field">
+                                <p class="control">
+                                    <span class="tag is-info is-medium">
+                                        <span class="icon">
+                                            {% if paziente.sesso == 'M' %}
+                                                <i class="fas fa-mars"></i>
+                                            {% elif paziente.sesso == 'F' %}
+                                                <i class="fas fa-venus"></i>
+                                            {% endif %}
+                                        </span>
+                                        <span>
+                                            {% if paziente.sesso == 'M' %}Maschio
+                                            {% elif paziente.sesso == 'F' %}Femmina
+                                            {% else %}-{% endif %}
+                                        </span>
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="field is-horizontal">
+                        <div class="field-label is-normal">
+                            <label class="label">Età</label>
+                        </div>
+                        <div class="field-body">
+                            <div class="field">
+                                <p class="control">
+                                    <span class="tag is-info is-medium">
+                                        <span class="icon">
+                                            <i class="fas fa-birthday-cake"></i>
+                                        </span>
+                                        <span>{{ paziente.eta }} anni</span>
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="field mt-5">
+                        <div class="control">
+                            <a href="{% url 'modifica_paziente' paziente.id %}" class="button is-warning">
+                                <span class="icon">
+                                    <i class="fas fa-edit"></i>
+                                </span>
+                                <span>Modifica Dati</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ESKD Risk -->
+            <div class="column is-half">
+                {% if ultima_predizione %}
+                    <div class="box">
+                        <h3 class="title is-4">
+                            <span class="icon-text">
+                                <span class="icon">
+                                    <i class="fas fa-brain"></i>
+                                </span>
+                                <span>Rischio ESKD Attuale</span>
+                            </span>
+                        </h3>
+
+                        <div class="has-text-centered my-6">
+                            <div class="{% if ultima_predizione.esito == 'Positivo' %}has-text-danger{% else %}has-text-success{% endif %}">
+                                <span class="icon is-large">
+                                    <i class="fas fa-2x {% if ultima_predizione.esito == 'Positivo' %}fa-exclamation-triangle{% else %}fa-check-circle{% endif %}"></i>
+                                </span>
+                                <p class="title is-2 mb-2">{{ ultima_predizione.probabilita_eskd|floatformat:2 }}%</p>
+                                <p class="subtitle is-4">{{ ultima_predizione.esito }}</p>
+                            </div>
+                        </div>
+
+                        <div class="field is-horizontal">
+                            <div class="field-label is-normal">
+                                <label class="label">Data Predizione</label>
+                            </div>
+                            <div class="field-body">
+                                <div class="field">
+                                    <p class="control">
+                                        <span class="tag is-medium">
+                                            <span class="icon">
+                                                <i class="fas fa-calendar"></i>
+                                            </span>
+                                            <span>{{ ultima_predizione.data_predizione|date:"d/m/Y H:i" }}</span>
+                                        </span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        {% if ultima_predizione.visita %}
+                            <div class="field is-horizontal">
+                                <div class="field-label is-normal">
+                                    <label class="label">Visita Associata</label>
+                                </div>
+                                <div class="field-body">
+                                    <div class="field">
+                                        <p class="control">
+                                            <span class="tag is-medium">
+                                                <span class="icon">
+                                                    <i class="fas fa-stethoscope"></i>
+                                                </span>
+                                                <span>{{ ultima_predizione.visita.data_visita|date:"d/m/Y" }}</span>
+                                            </span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+    <hr>
+
+    <div class="box">
+        <h3 class="title is-4">
+            <span class="icon-text">
+                <span class="icon">
+                    <i class="fas fa-stethoscope"></i>
+                </span>
+                <span>Visite</span>
+            </span>
+        </h3>
+
+        <div class="buttons mb-4">
+            <a href="{% url 'nuova_visita' paziente.id %}" class="button is-primary">
+                <span class="icon">
+                    <i class="fas fa-plus"></i>
+                </span>
+                <span>Nuova Visita</span>
+            </a>
+        </div>
+
+        {% if visite %}
+            <div class="table-container">
+                <table class="table is-fullwidth is-striped is-hoverable">
+                    <thead>
+                        <tr>
+                            <th>Data</th>
+                            <th>Creatinina</th>
+                            <th>eGFR</th>
+                            <th>Proteinuria</th>
+                            <th>Pressione</th>
+                            <th>Azioni</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for visita in visite %}
+                        <tr>
+                            <td>{{ visita.data_visita|date:"d/m/Y" }}</td>
+                            <td>{{ visita.creatinina }} mg/dL</td>
+                            <td>{{ visita.egfr }} mL/min</td>
+                            <td>{{ visita.proteinuria }} mg/24h</td>
+                            <td>{{ visita.pressione_sistolica }}/{{ visita.pressione_diastolica }} mmHg</td>
+                            <td>
+                                <div class="buttons are-small">
+                                    <a href="{% url 'modifica_visita' paziente.id visita.id %}" class="button is-warning" title="Modifica">
+                                        <span class="icon">
+                                            <i class="fas fa-edit"></i>
+                                        </span>
+                                    </a>
+                                    <a href="{% url 'elimina_visita' paziente.id visita.id %}" 
+                                       class="button is-danger" 
+                                       onclick="return confirm('Vuoi davvero eliminare questa visita?');" 
+                                       title="Elimina">
+                                        <span class="icon">
+                                            <i class="fas fa-trash"></i>
+                                        </span>
+                                    </a>
+                                    <a href="{% url 'calcola_eskd' paziente.id visita.id %}" class="button is-info" title="Calcola ESKD">
+                                        <span class="icon">
+                                            <i class="fas fa-calculator"></i>
+                                        </span>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="notification is-info is-light">
+                <span class="icon-text">
+                    <span class="icon">
+                        <i class="fas fa-info-circle"></i>
+                    </span>
+                    <span>Nessuna visita registrata.</span>
+                </span>
+            </div>
+        {% endif %}
     </div>
 
-    <script>
-        // Fa scomparire il messaggio dopo 3 secondi
-        setTimeout(() => {
-            const box = document.getElementById("message-box");
-            if (box) {
-                box.style.opacity = "0";
-                setTimeout(() => box.remove(), 500);
-            }
-        }, 3000);
-    </script>
-    {% endif %}
+    <hr>
 
+    <div class="box">
+        <h3 class="title is-4">
+            <span class="icon-text">
+                <span class="icon">
+                    <i class="fas fa-microscope"></i>
+                </span>
+                <span>Referti MEST-C</span>
+            </span>
+        </h3>
 
-
-    <h1>{{ paziente.nome }} {{ paziente.cognome }}</h1>
-
-    {% if ultima_predizione %}
-        <div class="box-rischio {% if ultima_predizione.esito == 'Positivo' %}box-positivo{% else %}box-negativo{% endif %}">
-            <h3 style="margin-top: 0;">🧠 Rischio ESKD Attuale</h3>
-            <p style="font-size: 1.2em;">
-                <strong>Probabilità:</strong> {{ ultima_predizione.probabilita_eskd|floatformat:2 }}%
-                —
-                {% if ultima_predizione.esito == 'Positivo' %}
-                    <span style="color:red; font-weight:bold;">{{ ultima_predizione.esito }}</span>
-                {% else %}
-                    <span style="color:green; font-weight:bold;">{{ ultima_predizione.esito }}</span>
-                {% endif %}
-            </p>
-            <p>
-                <strong>Data predizione:</strong> {{ ultima_predizione.data_predizione|date:"d/m/Y H:i" }}<br>
-                {% if ultima_predizione.visita %}
-                    <strong>Visita associata:</strong> {{ ultima_predizione.visita.data_visita|date:"d/m/Y" }}
-                {% endif %}
-            </p>
+        <div class="buttons mb-4">
+            <a href="{% url 'nuovo_mestc' paziente.id %}" class="button is-primary">
+                <span class="icon">
+                    <i class="fas fa-plus"></i>
+                </span>
+                <span>Nuovo MEST-C</span>
+            </a>
         </div>
-    {% endif %}
 
-    <h3>📋 Dati anagrafici</h3>
-    <p><strong>Codice Fiscale:</strong> {{ paziente.codice_fiscale }}</p>
-    <p><strong>Email:</strong> {{ paziente.email }}</p>
-    <p><strong>Telefono:</strong> {{ paziente.telefono }}</p>
-    <p><strong>Indirizzo:</strong> {{ paziente.indirizzo }}</p>
-    <p><strong>Sesso:</strong> 
-        {% if paziente.sesso == 'M' %}Maschio{% elif paziente.sesso == 'F' %}Femmina{% else %}-{% endif %}
-    </p>
-    <p><strong>Età:</strong> {{ paziente.eta }} anni</p>
-    <p>
-        <a href="{% url 'modifica_paziente' paziente.id %}">✏️ Modifica dati anagrafici</a>
-    </p>
-
-    <hr>
-
-    <h2>🩺 Visite</h2>
-    <p><a href="{% url 'nuova_visita' paziente.id %}">➕ Aggiungi una nuova visita</a></p>
-
-    {% if visite %}
-        <ul>
-        {% for visita in visite %}
-            <li>
-                <strong>{{ visita.data_visita }}</strong> — Creatinina: {{ visita.creatinina }} mg/dL |
-                <a href="{% url 'modifica_visita' paziente.id visita.id %}">✏️ Modifica</a> |
-                <a href="{% url 'elimina_visita' paziente.id visita.id %}" onclick="return confirm('Vuoi davvero eliminare questa visita?');">🗑️ Elimina</a> |
-                <a href="{% url 'calcola_eskd' paziente.id visita.id %}">🧠 Calcola ESKD</a>
-            </li>
-        {% endfor %}
-        </ul>
-    {% else %}
-        <p>Nessuna visita registrata.</p>
-    {% endif %}
-
-    <hr>
-
-    <h2>🔬 Referti MEST-C</h2>
-    <p><a href="{% url 'nuovo_mestc' paziente.id %}">➕ Aggiungi un nuovo referto MEST-C</a></p>
-
-    {% if mestc_records %}
-        <table>
-            <thead>
-                <tr>
-                    <th>Data rilevazione</th>
-                    <th>M</th>
-                    <th>E</th>
-                    <th>S</th>
-                    <th>T</th>
-                    <th>C</th>
-                    <th>Azioni</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for record in mestc_records %}
-                <tr>
-                    <td>{{ record.data_rilevazione|date:"d/m/Y" }}</td>
-                    <td>{{ record.M }}</td>
-                    <td>{{ record.E }}</td>
-                    <td>{{ record.S }}</td>
-                    <td>{{ record.T }}</td>
-                    <td>{{ record.C }}</td>
-                    <td>
-                        <a href="{% url 'modifica_mestc' paziente.id record.id %}">✏️ Modifica</a> |
-                        <a href="{% url 'delete_mestc' record.id %}"
-                            class="btn-delete"
-                            onclick="return confirm('Sei sicuro di voler eliminare questo referto MEST-C?');">
-                            🗑️ Elimina
-                            </a>
-
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>   
-    {% else %}
-        <p>Nessun referto MEST-C registrato.</p>
-    {% endif %}
+        {% if mestc_records %}
+            <div class="table-container">
+                <table class="table is-fullwidth is-striped is-hoverable">
+                    <thead>
+                        <tr>
+                            <th>Data rilevazione</th>
+                            <th>M</th>
+                            <th>E</th>
+                            <th>S</th>
+                            <th>T</th>
+                            <th>C</th>
+                            <th>Azioni</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for record in mestc_records %}
+                        <tr>
+                            <td>{{ record.data_rilevazione|date:"d/m/Y" }}</td>
+                            <td>{{ record.M }}</td>
+                            <td>{{ record.E }}</td>
+                            <td>{{ record.S }}</td>
+                            <td>{{ record.T }}</td>
+                            <td>{{ record.C }}</td>
+                            <td>
+                                <div class="buttons are-small">
+                                    <a href="{% url 'modifica_mestc' paziente.id record.id %}" class="button is-warning" title="Modifica">
+                                        <span class="icon">
+                                            <i class="fas fa-edit"></i>
+                                        </span>
+                                    </a>
+                                    <a href="{% url 'delete_mestc' record.id %}"
+                                        class="button is-danger"
+                                        onclick="return confirm('Sei sicuro di voler eliminare questo referto MEST-C?');" title="Elimina">
+                                        <span class="icon">
+                                            <i class="fas fa-trash"></i>
+                                        </span>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="notification is-info is-light">
+                <span class="icon-text">
+                    <span class="icon">
+                        <i class="fas fa-info-circle"></i>
+                    </span>
+                    <span>Nessun referto MEST-C registrato.</span>
+                </span>
+            </div>
+        {% endif %}
+    </div>
 
     <hr>
 
-    <h2>📈 Andamento Predizioni ESKD</h2>
-    {% if predizioni %}
-        <table>
-            <thead>
-                <tr>
-                    <th>Data</th>
-                    <th>Probabilità (%)</th>
-                    <th>Esito</th>
-                    <th>Visita associata</th>
-                    <th>Azioni</th>
-                </tr>
-            </thead>
-            <tbody>
-            {% for pred in predizioni %}
-                <tr>
-                    <td>{{ pred.data_predizione|date:"d/m/Y H:i" }}</td>
-                    <td>{{ pred.probabilita_eskd|floatformat:2 }}</td>
-                    <td>
-                        {% if pred.esito == 'Positivo' %}
-                            <span style="color:red; font-weight:bold;">{{ pred.esito }}</span>
-                        {% else %}
-                            <span style="color:green; font-weight:bold;">{{ pred.esito }}</span>
-                        {% endif %}
-                    </td>
-                    <td>
-                        {% if pred.visita %}
-                            {{ pred.visita.data_visita|date:"d/m/Y" }}
-                        {% else %}
-                            -
-                        {% endif %}
-                    </td>
-                    <td>
-                        <a href="{% url 'delete_predizione' pred.id %}" 
-                        class="btn-delete" 
-                        onclick="return confirm('Vuoi davvero eliminare questa predizione ESKD?');">
-                        🗑️ Elimina
-                        </a>
-                    </td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    {% else %}
-        <p>Nessuna predizione ancora registrata per questo paziente.</p>
-    {% endif %}
+    <div class="box">
+        <h3 class="title is-4">
+            <span class="icon-text">
+                <span class="icon">
+                    <i class="fas fa-chart-line"></i>
+                </span>
+                <span>Andamento Predizioni ESKD</span>
+            </span>
+        </h3>
 
+        {% if predizioni %}
+            <div class="table-container">
+                <table class="table is-fullwidth is-striped is-hoverable">
+                    <thead>
+                        <tr>
+                            <th>Data</th>
+                            <th>Probabilità (%)</th>
+                            <th>Esito</th>
+                            <th>Visita associata</th>
+                            <th>Azioni</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for pred in predizioni %}
+                        <tr>
+                            <td>{{ pred.data_predizione|date:"d/m/Y H:i" }}</td>
+                            <td>{{ pred.probabilita_eskd|floatformat:2 }}</td>
+                            <td>
+                                {% if pred.esito == 'Positivo' %}
+                                    <span class="tag is-danger">{{ pred.esito }}</span>
+                                {% else %}
+                                    <span class="tag is-success">{{ pred.esito }}</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if pred.visita %}
+                                    {{ pred.visita.data_visita|date:"d/m/Y" }}
+                                {% else %}
+                                    <span class="tag is-light">-</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="buttons are-small">
+                                    <a href="{% url 'delete_predizione' pred.id %}"
+                                        class="button is-danger"
+                                        onclick="return confirm('Vuoi davvero eliminare questa predizione ESKD?');" title="Elimina">
+                                        <span class="icon">
+                                            <i class="fas fa-trash"></i>
+                                        </span>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="notification is-info is-light">
+                <span class="icon-text">
+                    <span class="icon">
+                        <i class="fas fa-info-circle"></i>
+                    </span>
+                    <span>Nessuna predizione ancora registrata per questo paziente.</span>
+                </span>
+            </div>
+        {% endif %}
+    </div>
 
-    <hr>
-    <p><a href="{% url 'lista_pazienti' %}">⬅️ Torna alla lista pazienti</a></p>
-
-</body>
-</html>
+    <div class="level mt-6">
+        <div class="level-left">
+            <div class="level-item">
+                <a href="{% url 'lista_pazienti' %}" class="button">
+                    <span class="icon">
+                        <i class="fas fa-arrow-left"></i>
+                    </span>
+                    <span>Torna alla lista pazienti</span>
+                </a>
+            </div>
+        </div>
+    </div>
+{% endblock %}
