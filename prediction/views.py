@@ -56,6 +56,12 @@ def home(request):
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from django.shortcuts import render, redirect
+from .tasks import esegui_inference
+
+def lancia_inference(request, paziente_id):
+    esegui_inference.send(paziente_id)  
+    messages.success(request, "Inference avviata in background.")
+    return redirect("lista_pazienti")
 
 @login_required
 def nuovo_paziente(request):
