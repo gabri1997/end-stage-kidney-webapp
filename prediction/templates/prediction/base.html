@@ -4,28 +4,68 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}WebApp ESKD{% endblock %}</title>
+    {% load static %}
+    <link rel="icon" type="image/svg+xml" href="{% static 'prediction/images/favicon.svg' %}">
+    <link rel="icon" type="image/png" href="{% static 'prediction/images/favicon.png' %}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
     <script defer src="https://use.fontawesome.com/releases/v5.15.4/js/all.js"></script>
     <style>
+        html, body {
+            background-color: #ffffff;
+            min-height: 100vh;
+        }
+
+        /* Sfondo leggermente più chiaro per i box */
+        .box {
+            background-color: #ffffff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        /* Stili per i box di rischio */
         .risk-positive {
-            background-color: #fee;
+            background-color: #fff5f5;
             border-left: 5px solid #f14668;
+            box-shadow: 0 2px 4px rgba(241,70,104,0.1);
         }
         .risk-negative {
-            background-color: #efe;
+            background-color: #f0fff4;
             border-left: 5px solid #48c774;
+            box-shadow: 0 2px 4px rgba(72,199,116,0.1);
         }
+
+        /* Footer migliorato */
         footer {
             margin-top: 60px;
             padding: 2rem 1.5rem;
-            background-color: #f5f5f5;
-            border-top: 1px solid #ddd;
+            background-color: #ffffff;
+            border-top: 1px solid rgba(0,0,0,0.05);
+            box-shadow: 0 -2px 4px rgba(0,0,0,0.03);
         }
+
+        /* Effetti hover migliorati */
         .logout-button {
             transition: all 0.2s ease-in-out;
         }
         .logout-button:hover {
             transform: scale(1.05);
+        }
+
+        /* Miglioramenti per la leggibilità */
+        .title, .subtitle {
+            color: #363636;
+        }
+        
+        /* Miglioramenti per i form */
+        .input, .textarea, .select select {
+            background-color: #ffffff;
+            border-color: #dbdbdb;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+        }
+        
+        .input:focus, .textarea:focus, .select select:focus {
+            border-color: #3273dc;
+            box-shadow: 0 0 0 0.125em rgba(50,115,220,0.25);
         }
     </style>
     {% block extra_head %}{% endblock %}
@@ -35,22 +75,29 @@
     <!-- 🔹 Navbar -->
     <nav class="navbar is-primary" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
+            {% if user.is_authenticated %}
             <a class="navbar-item" href="{% url 'home' %}">
+            {% else %}
+            <a class="navbar-item" href="{% url 'login' %}">
+            {% endif %}
                 <span class="icon">
                     <i class="fas fa-brain"></i>
                 </span>
                 <strong class="ml-2">ESKD Predictor</strong>
             </a>
 
-            <!-- Hamburger menu for mobile -->
+            {% if user.is_authenticated %}
+            <!-- Hamburger menu for mobile (solo per utenti autenticati) -->
             <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="mainNavbar">
                 <span aria-hidden="true"></span>
                 <span aria-hidden="true"></span>
                 <span aria-hidden="true"></span>
             </a>
+            {% endif %}
         </div>
 
         <div id="mainNavbar" class="navbar-menu">
+            {% if user.is_authenticated %}
             <div class="navbar-start">
                 <a class="navbar-item" href="{% url 'home' %}">
                     <span class="icon-text">
@@ -65,6 +112,7 @@
                     </span>
                 </a>
             </div>
+            {% endif %}
 
             <div class="navbar-end">
                 <div class="navbar-item">
@@ -82,12 +130,14 @@
                             </a>
                         {% endif %}
                     {% else %}
+                        {% if request.resolver_match.url_name != 'login' %}
                         <div class="buttons">
                             <a href="{% url 'login' %}" class="button is-light">
                                 <span class="icon"><i class="fas fa-sign-in-alt"></i></span>
                                 <span>Login</span>
                             </a>
                         </div>
+                        {% endif %}
                     {% endif %}
                 </div>
             </div>

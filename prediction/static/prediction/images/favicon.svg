@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg">
+    <title>ESKD Predictor Favicon</title>
+    <g fill="none" stroke="#3273dc" stroke-width="2">
+        <!-- Forma del rene stilizzata -->
+        <path d="M16,4 C22,4 28,8 28,16 C28,24 22,28 16,28 C10,28 4,24 4,16 C4,8 10,4 16,4 Z" />
+        <!-- Linea interna che suggerisce il filtro glomerulare -->
+        <path d="M12,12 C14,16 18,16 20,20" stroke-linecap="round"/>
+    </g>
+</svg>

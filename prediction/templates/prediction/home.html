@@ -15,6 +15,10 @@
     .hero-content {
         padding: 1rem 0;
     }
+    .box:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
 </style>
 {% endblock %}
 
@@ -46,7 +50,7 @@
         <!-- Statistiche principali -->
         <div class="columns is-multiline">
             <div class="column is-half">
-                <div class="box has-background-primary-light">
+                <div class="box has-background-primary-light" style="border-radius: 12px; transition: all 0.3s ease;">
                     <article class="media">
                         <div class="media-left">
                             <span class="icon is-large has-text-primary">
@@ -64,7 +68,7 @@
             </div>
             
             <div class="column is-half">
-                <div class="box has-background-info-light">
+                <div class="box has-background-info-light" style="border-radius: 12px; transition: all 0.3s ease;">
                     <article class="media">
                         <div class="media-left">
                             <span class="icon is-large has-text-info">
