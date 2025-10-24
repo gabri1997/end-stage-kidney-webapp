@@ -13,6 +13,29 @@ from .models import Predizione, Visita, MESTC
 from .forms import CalcolaESKDForm
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
+# In cima al tuo views.py, assicurati di avere questi import:
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib import messages
+from django.shortcuts import render, redirect
+
+def register(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            # Salva l'utente
+            user = form.save()
+            username = form.cleaned_data.get('username')
+            
+            # Messaggio di successo
+            messages.success(request, f"✅ Account creato per {username}! Ora puoi effettuare il login.")
+            return redirect('login')
+        else:
+            # Mostra errori specifici
+            messages.error(request, "❌ Errore nella registrazione. Controlla i campi e riprova.")
+    else:
+        form = UserCreationForm()
+    
+    return render(request, 'register.html', {'form': form})
 
 @login_required
 def home(request):
@@ -30,6 +53,9 @@ def home(request):
     }
     return render(request, 'prediction/home.html', context)
 
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib import messages
+from django.shortcuts import render, redirect
 
 @login_required
 def nuovo_paziente(request):
@@ -47,10 +73,10 @@ def nuovo_paziente(request):
     return render(request, "prediction/nuovo_paziente.html", {"form": form})
 
 def lista_pazienti(request):
-    pazienti = Paziente.objects.all().order_by("cognome", "nome")
+    pazienti = Paziente.objects.filter(medico=request.user).order_by("cognome", "nome")
     context = {"pazienti": pazienti}
     return render(request, "prediction/lista_pazienti.html", context)
-    from django.shortcuts import get_object_or_404
+    
 
 @login_required
 def dettaglio_paziente(request, paziente_id):

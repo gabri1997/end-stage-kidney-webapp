@@ -4,74 +4,274 @@
 
 {% block title %}Login - ESKD Predictor{% endblock %}
 
+{% block extra_css %}
+<style>
+    .login-section {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        padding: 2rem 1.5rem;
+    }
+    
+    .login-box {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        overflow: hidden;
+        transition: transform 0.3s ease;
+    }
+    
+    .login-box:hover {
+        transform: translateY(-5px);
+    }
+    
+    .image-column {
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .image-column::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, rgba(102, 126, 234, 0.8) 0%, rgba(118, 75, 162, 0.8) 100%);
+        z-index: 1;
+    }
+    
+    .image-column img {
+        object-fit: cover;
+        width: 100%;
+        height: 100%;
+        min-height: 500px;
+    }
+    
+    .image-overlay {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 2;
+        text-align: center;
+        color: white;
+        width: 80%;
+    }
+    
+    .image-overlay h2 {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    }
+    
+    .image-overlay p {
+        font-size: 1.1rem;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+    }
+    
+    .form-column {
+        padding: 3rem 2.5rem;
+    }
+    
+    .login-title {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+    
+    .login-subtitle {
+        color: #7a7a7a;
+        margin-bottom: 2rem;
+    }
+    
+    .custom-input {
+        border: 2px solid #e8e8e8;
+        border-radius: 10px;
+        padding: 0.75rem 1rem;
+        transition: all 0.3s ease;
+        font-size: 1rem;
+    }
+    
+    .custom-input:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+    
+    .custom-label {
+        font-weight: 600;
+        color: #363636;
+        margin-bottom: 0.5rem;
+    }
+    
+    .custom-button {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        border-radius: 10px;
+        padding: 0.75rem 2rem;
+        font-weight: 600;
+        font-size: 1.1rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+    
+    .custom-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+    }
+    
+    .custom-notification {
+        border-radius: 10px;
+        border-left: 4px solid #f14668;
+    }
+    
+    .register-link {
+        text-align: center;
+        margin-top: 1.5rem;
+        padding: 1rem;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .register-link a {
+        color: #667eea;
+        font-weight: 600;
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+    
+    .register-link a:hover {
+        color: #764ba2;
+        text-decoration: underline;
+    }
+    
+    .icon-gradient {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    
+    @media screen and (max-width: 768px) {
+        .image-column {
+            display: none;
+        }
+        
+        .form-column {
+            padding: 2rem 1.5rem;
+        }
+        
+        .login-title {
+            font-size: 2rem;
+        }
+    }
+</style>
+{% endblock %}
+
 {% block content %}
-<section class="hero is-fullheight">
-    <div class="hero-body">
-        <div class="container">
-            <div class="columns is-centered">
-                <div class="column is-8">
-                    <div class="box">
-                        <div class="columns">
-                            <!-- Colonna immagine -->
-                            <div class="column is-half">
-                                <figure class="image is-4by3">
-                                    <img src="{% static 'prediction/images/doctor.jpeg' %}" alt="Doctor" style="object-fit: cover; width: 100%; height: 100%;">
-                                </figure>
-                            </div>
-                            <!-- Colonna form -->
-                            <div class="column is-half">
-                                <h1 class="title has-text-centered mb-6">
-                                    <span class="icon-text">
-                                        <span class="icon has-text-primary">
-                                            <i class="fas fa-user-md"></i>
-                                        </span>
-                                        <span>Login</span>
-                                    </span>
-                                </h1>
-
-                                {% if form.errors %}
-                                    <div class="notification is-danger is-light">
-                                        <button class="delete"></button>
-                                        Credenziali non valide. Per favore riprova.
-                                    </div>
-                                {% endif %}
-
-                                <form method="post" class="mt-5">
-                                    {% csrf_token %}
-                                    <div class="field">
-                                        <label class="label" for="id_username">Username</label>
-                                        <div class="control has-icons-left">
-                                            <input type="text" name="username" class="input" id="id_username" required>
-                                            <span class="icon is-small is-left">
-                                                <i class="fas fa-user"></i>
-                                            </span>
-                                        </div>
-                                    </div>
-
-                                    <div class="field">
-                                        <label class="label" for="id_password">Password</label>
-                                        <div class="control has-icons-left">
-                                            <input type="password" name="password" class="input" id="id_password" required>
-                                            <span class="icon is-small is-left">
-                                                <i class="fas fa-lock"></i>
-                                            </span>
-                                        </div>
-                                    </div>
-
-                                    <div class="field mt-5">
-                                        <div class="control">
-                                            <button type="submit" class="button is-primary is-fullwidth">
-                                                <span class="icon">
-                                                    <i class="fas fa-sign-in-alt"></i>
-                                                </span>
-                                                <span>Accedi</span>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </form>
+<section class="login-section">
+    <div class="container">
+        <div class="columns is-centered">
+            <div class="column is-10-tablet is-8-desktop">
+                <div class="login-box">
+                    <div class="columns is-gapless">
+                        <!-- Colonna immagine con overlay -->
+                        <div class="column is-half image-column">
+                            <img src="{% static 'prediction/images/doctor.jpeg' %}" alt="Doctor">
+                            <div class="image-overlay">
+                                <h2>Benvenuto</h2>
+                                <p>Sistema di predizione ESKD basato su intelligenza artificiale</p>
                             </div>
                         </div>
+                        
+                        <!-- Colonna form -->
+                        <div class="column is-half form-column">
+                            <div class="has-text-centered">
+                                <span class="icon is-large icon-gradient mb-3">
+                                    <i class="fas fa-user-md fa-3x"></i>
+                                </span>
+                                <h1 class="login-title">Login</h1>
+                                <p class="login-subtitle">Accedi al tuo account</p>
+                            </div>
+
+                            {% if form.errors %}
+                                <div class="notification is-danger is-light custom-notification">
+                                    <button class="delete"></button>
+                                    <strong>Errore!</strong> Credenziali non valide. Per favore riprova.
+                                </div>
+                            {% endif %}
+
+                            <form method="post">
+                                {% csrf_token %}
+                                <div class="field">
+                                    <label class="label custom-label" for="id_username">
+                                        <span class="icon-text">
+                                            <span class="icon">
+                                                <i class="fas fa-user"></i>
+                                            </span>
+                                            <span>Username</span>
+                                        </span>
+                                    </label>
+                                    <div class="control has-icons-left">
+                                        <input type="text" 
+                                               name="username" 
+                                               class="input custom-input" 
+                                               id="id_username" 
+                                               placeholder="Inserisci il tuo username"
+                                               required>
+                                        <span class="icon is-small is-left">
+                                            <i class="fas fa-user"></i>
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="field">
+                                    <label class="label custom-label" for="id_password">
+                                        <span class="icon-text">
+                                            <span class="icon">
+                                                <i class="fas fa-lock"></i>
+                                            </span>
+                                            <span>Password</span>
+                                        </span>
+                                    </label>
+                                    <div class="control has-icons-left">
+                                        <input type="password" 
+                                               name="password" 
+                                               class="input custom-input" 
+                                               id="id_password" 
+                                               placeholder="Inserisci la tua password"
+                                               required>
+                                        <span class="icon is-small is-left">
+                                            <i class="fas fa-lock"></i>
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="field mt-5">
+                                    <div class="control">
+                                        <button type="submit" class="button is-primary is-fullwidth custom-button">
+                                            <span class="icon">
+                                                <i class="fas fa-sign-in-alt"></i>
+                                            </span>
+                                            <span>Accedi al Sistema</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
                     </div>
+                </div>
+                
+                <div class="register-link">
+                    Non hai un account? <a href="{% url 'register' %}">Registrati qui</a>
                 </div>
             </div>
         </div>
