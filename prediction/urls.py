@@ -22,6 +22,7 @@ urlpatterns = [
     path('mestc/<int:mestc_id>/delete/', views.delete_mestc, name='delete_mestc'),
     path("predizione/<int:predizione_id>/delete/", views.delete_predizione, name="delete_predizione"),
     path('pazienti/<int:paziente_id>/elimina/', views.elimina_paziente, name='elimina_paziente'),
+     path('pazienti/<int:paziente_id>/condividi/', views.condividi_paziente, name='condividi_paziente'),
 
     # --- 🔐 Autenticazione ---
     path('login/', auth_views.LoginView.as_view(template_name='login.html'), name='login'),

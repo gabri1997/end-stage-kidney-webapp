@@ -21,7 +21,7 @@
             }
         /* Sfondo leggermente più chiaro per i box */
         .box {
-            background-color: #ffffff;
+            background-color: #ffffffcc;
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
             border: 1px solid rgba(0,0,0,0.05);
         }
@@ -83,7 +83,7 @@
 <body>
  
     <!-- 🔹 Navbar -->
-<nav class="navbar is-primary" role="navigation" aria-label="main navigation">
+<nav class="navbar is-success" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
         {% if user.is_authenticated %}
             <a class="navbar-item" href="{% url 'home' %}">

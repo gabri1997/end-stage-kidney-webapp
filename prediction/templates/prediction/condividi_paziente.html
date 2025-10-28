@@ -1,0 +1,19 @@
+{% extends 'prediction/base.html' %}
+{% block content %}
+<div class="container mt-5 box">
+    <h2 class="title">Condividi {{ paziente.nome }} {{ paziente.cognome }}</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="field">
+            <label class="label">Inserisci username del medico:</label>
+            <div class="control">
+                <input type="text" name="username" class="input" placeholder="es. dr.marco123" required>
+            </div>
+        </div>
+        <div class="field mt-4">
+            <button type="submit" class="button is-primary">Condividi</button>
+            <a href="{% url 'lista_pazienti' %}" class="button is-light">Annulla</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

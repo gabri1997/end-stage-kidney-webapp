@@ -18,6 +18,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.db.models import Q
+from django.contrib.auth.models import User
 
 def register(request):
     if request.method == 'POST':
@@ -39,9 +40,34 @@ def register(request):
     return render(request, 'register.html', {'form': form})
 
 @login_required
+def condividi_paziente(request, paziente_id):
+    paziente = get_object_or_404(
+        Paziente.objects.filter(Q(medico=request.user) | Q(medici_condivisi=request.user)),
+        id=paziente_id
+    )
+
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        try:
+            altro_medico = User.objects.get(username=username)
+            paziente.medici_condivisi.add(altro_medico)
+            messages.success(request, f"Paziente condiviso con {altro_medico.username} ✅")
+        except User.DoesNotExist:
+            messages.error(request, "Nessun medico trovato con questo nome utente ❌")
+
+        return redirect('lista_pazienti')
+
+    return render(request, 'prediction/condividi_paziente.html', {'paziente': paziente})
+
+    
+    return render(request, 'prediction/condividi_paziente.html', {'paziente': paziente})
+@login_required
 def home(request):
     # Ottieni alcune statistiche per il dashboard
-    num_pazienti = Paziente.objects.filter(medico=request.user).count()
+    num_pazienti = Paziente.objects.filter(
+        Q(medico=request.user) | Q(medici_condivisi=request.user)
+    ).distinct().count()
+
     num_visite = Visita.objects.filter(medico=request.user).count()
     ultime_predizioni = Predizione.objects.filter(
         paziente__medico=request.user
@@ -81,8 +107,10 @@ def nuovo_paziente(request):
 
 @login_required
 def lista_pazienti(request):
-    query = request.GET.get('q')
-    pazienti = Paziente.objects.filter(medico=request.user).order_by("cognome", "nome")
+    query = request.GET.get('q','')
+    pazienti = Paziente.objects.filter(
+        Q(medico=request.user) | Q(medici_condivisi=request.user)
+    ).distinct().order_by('cognome', 'nome')
     if query:
         pazienti = pazienti.filter(
             Q(nome__icontains=query) | Q(cognome__icontains=query)
@@ -93,7 +121,11 @@ def lista_pazienti(request):
 
 @login_required
 def dettaglio_paziente(request, paziente_id):
-    paziente = get_object_or_404(Paziente, id=paziente_id, medico=request.user)
+    paziente = get_object_or_404(
+    Paziente.objects.filter(Q(medico=request.user) | Q(medici_condivisi=request.user)),
+    id=paziente_id
+)
+
     visite = Visita.objects.filter(paziente=paziente).order_by("data_visita")
     mestc_records = MESTC.objects.filter(paziente=paziente).order_by("data_rilevazione")
     predizioni = Predizione.objects.filter(paziente=paziente).order_by("-data_predizione")
@@ -111,7 +143,11 @@ def dettaglio_paziente(request, paziente_id):
 
 @login_required
 def nuova_visita(request, paziente_id):
-    paziente = get_object_or_404(Paziente, id=paziente_id, medico=request.user)
+    paziente = get_object_or_404(
+    Paziente.objects.filter(Q(medico=request.user) | Q(medici_condivisi=request.user)),
+    id=paziente_id
+)
+
 
     if request.method == "POST":
         form = VisitaForm(request.POST, request.FILES)
@@ -130,7 +166,11 @@ def nuova_visita(request, paziente_id):
 
 @login_required
 def nuovo_mestc(request, paziente_id):
-    paziente = get_object_or_404(Paziente, id=paziente_id, medico=request.user)
+    paziente = get_object_or_404(
+    Paziente.objects.filter(Q(medico=request.user) | Q(medici_condivisi=request.user)),
+    id=paziente_id
+)
+
 
     if request.method == "POST":
         form = MESTCForm(request.POST)
@@ -147,7 +187,11 @@ def nuovo_mestc(request, paziente_id):
 
 @login_required
 def modifica_visita(request, paziente_id, visita_id):
-    paziente = get_object_or_404(Paziente, id=paziente_id, medico=request.user)
+    paziente = get_object_or_404(
+    Paziente.objects.filter(Q(medico=request.user) | Q(medici_condivisi=request.user)),
+    id=paziente_id
+)
+
     visita = get_object_or_404(Visita, id=visita_id, paziente=paziente)
 
     if request.method == "POST":
@@ -167,7 +211,11 @@ def modifica_visita(request, paziente_id, visita_id):
 
 @login_required
 def elimina_visita(request, paziente_id, visita_id):
-    paziente = get_object_or_404(Paziente, id=paziente_id, medico=request.user)
+    paziente = get_object_or_404(
+    Paziente.objects.filter(Q(medico=request.user) | Q(medici_condivisi=request.user)),
+    id=paziente_id
+)
+
     visita = get_object_or_404(Visita, id=visita_id, paziente=paziente)
 
     if request.method == "POST":
@@ -178,7 +226,11 @@ def elimina_visita(request, paziente_id, visita_id):
 
 @login_required
 def modifica_mestc(request, paziente_id, mestc_id):
-    paziente = get_object_or_404(Paziente, id=paziente_id, medico=request.user)
+    paziente = get_object_or_404(
+    Paziente.objects.filter(Q(medico=request.user) | Q(medici_condivisi=request.user)),
+    id=paziente_id
+)
+
     mestc = get_object_or_404(MESTC, id=mestc_id, paziente=paziente)
 
     if request.method == "POST":
@@ -194,7 +246,11 @@ def modifica_mestc(request, paziente_id, mestc_id):
 
 @login_required
 def elimina_mestc(request, paziente_id, mestc_id):
-    paziente = get_object_or_404(Paziente, id=paziente_id, medico=request.user)
+    paziente = get_object_or_404(
+    Paziente.objects.filter(Q(medico=request.user) | Q(medici_condivisi=request.user)),
+    id=paziente_id
+)
+
     mestc = get_object_or_404(MESTC, id=mestc_id, paziente=paziente)
 
     if request.method == "POST":
@@ -206,7 +262,11 @@ def elimina_mestc(request, paziente_id, mestc_id):
 
 @login_required
 def calcola_eskd(request, paziente_id, visita_id):
-    paziente = get_object_or_404(Paziente, id=paziente_id)
+    paziente = get_object_or_404(
+    Paziente.objects.filter(Q(medico=request.user) | Q(medici_condivisi=request.user)),
+    id=paziente_id
+)
+
     visita = get_object_or_404(Visita, id=visita_id)
     mestc = MESTC.objects.filter(paziente=paziente).order_by('-data_rilevazione').first()
 
@@ -353,28 +413,16 @@ def calcola_eskd(request, paziente_id, visita_id):
         "form": form
     })
 
-@login_required
-def modifica_paziente(request, paziente_id):
-    paziente = get_object_or_404(Paziente, id=paziente_id)
-
-    if request.method == "POST":
-        form = PazienteForm(request.POST, instance=paziente)
-        if form.is_valid():
-            form.save()
-            return redirect("dettaglio_paziente", paziente_id=paziente.id)
-    else:
-        form = PazienteForm(instance=paziente)
-
-    return render(request, "prediction/modifica_paziente.html", {
-        "paziente": paziente,
-        "form": form
-    })
-
+ì
 from django.contrib import messages  # aggiungi questo import in alto
 
 @login_required
 def modifica_paziente(request, paziente_id):
-    paziente = get_object_or_404(Paziente, id=paziente_id)
+    paziente = get_object_or_404(
+    Paziente.objects.filter(Q(medico=request.user) | Q(medici_condivisi=request.user)),
+    id=paziente_id
+)
+
 
     if request.method == "POST":
         form = PazienteForm(request.POST, instance=paziente)
@@ -416,7 +464,11 @@ def delete_predizione(request, predizione_id):
 
 @login_required
 def elimina_paziente(request, paziente_id):
-    paziente = get_object_or_404(Paziente, id=paziente_id, medico=request.user)
+    paziente = get_object_or_404(
+    Paziente.objects.filter(Q(medico=request.user) | Q(medici_condivisi=request.user)),
+    id=paziente_id
+)
+
 
     if request.method == "POST":
         nome = f"{paziente.nome} {paziente.cognome}"

@@ -5,8 +5,8 @@
 <style>
     body {
         background: 
-            linear-gradient(135deg, rgba(0, 209, 178, 0.3), rgba(30, 136, 229, 0.3)),
-            url("{% static 'prediction/images/background-medico.png' %}") no-repeat center center fixed;
+            linear-gradient(135deg, rgba(0, 209, 112, 0.3), rgba(161, 191, 218, 0.3)),
+            url("{% static 'prediction/images/background_medico.png' %}") no-repeat center center fixed;
         background-size: cover;
         background-attachment: fixed;
     }
@@ -74,9 +74,11 @@
 
     th {
         background-color: #e9f5ff;
-        color: #1e4b7a;
+        color: #1e777a;
         font-weight: 600;
     }
+    .btn-share { background-color: #d1f7d1; color: #166534; }
+    .btn-share:hover { transform: scale(1.05); }
 
     .action-btn {
         display: inline-flex;
@@ -89,13 +91,22 @@
         text-decoration: none;
         transition: 0.2s;
     }
+    .box {
+        background-color: rgba(240, 240, 240, 0.623);
+        border-radius: 12px;
+        backdrop-filter: blur(4px);
+    }
 
-    .btn-view { background-color: #cce5ff; color: #004085; }
-    .btn-edit { background-color: #fff3cd; color: #856404; }
-    .btn-del { background-color: #f8d7da; color: #721c24; }
+    .btn-view { background-color: #220e9671; color: #000000ce; }
+    .btn-edit { background-color: #fff3cd; color: #000000ce; }
+    .btn-del { background-color: #f8d7da; color: #000000ce; }
 
     .btn-view:hover, .btn-edit:hover, .btn-del:hover {
         transform: scale(1.05);
+    }
+    .is-shared {
+    background-color: rgba(0, 209, 178, 0.15) !important;
+    transition: background-color 0.3s ease;
     }
 
     /* Aggiunge un po’ di respiro tra le sezioni */
@@ -156,9 +167,16 @@
                 </thead>
                 <tbody>
                     {% for paziente in pazienti %}
-                        <tr>
-                            <td>{{ paziente.nome }}</td>
-                            <td>{{ paziente.cognome }}</td>
+                        <tr class="{% if request.user in paziente.medici_condivisi.all %}is-shared{% endif %}">
+                        <td>
+                            {{ paziente.nome }}
+                            {% if request.user in paziente.medici_condivisi.all %}
+                                <span class="tag is-info is-light" style="margin-left: 5px;">
+                                    <i class="fas fa-share-alt"></i> Condiviso
+                                </span>
+                            {% endif %}
+                        </td>
+                        <td>{{ paziente.cognome }}</td>
                             <td>{{ paziente.eta|default:"-" }}</td>
                             <td>
                                 {% if paziente.sesso == 'M' %}
@@ -191,6 +209,9 @@
                                 </a>
                                 <a href="{% url 'modifica_paziente' paziente.id %}" class="action-btn btn-edit">
                                     ✏️ Modifica
+                                </a>
+                                <a href="{% url 'condividi_paziente' paziente.id %}" class="action-btn btn-share">
+                                    🤝 Condividi
                                 </a>
                                 <a href="{% url 'elimina_paziente' paziente.id %}" 
                                    class="action-btn btn-del"

@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 
 class Paziente(models.Model):
     medico = models.ForeignKey(User, on_delete=models.CASCADE, related_name='pazienti')
+    medici_condivisi = models.ManyToManyField(User, related_name='pazienti_condivisi', blank=True)
     nome = models.CharField(max_length=100)
     cognome = models.CharField(max_length=100)
     codice_fiscale = models.CharField(max_length=16, unique=True)
