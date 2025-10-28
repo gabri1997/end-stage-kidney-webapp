@@ -28,10 +28,101 @@ class MySimpleBinaryNet(nn.Module):
             nn.Dropout(dropout),
             nn.Linear(100, 1)
         )
-        
+
     def forward(self, x):
         return self.layers(x)
 
+
+class MySimpleRegressorNet(nn.Module):
+    def __init__(self, input_size, dropout=0.3):
+        super(MySimpleRegressorNet, self).__init__()
+        self.layers = nn.Sequential(
+            nn.Linear(input_size, 125),
+            nn.BatchNorm1d(125),
+            nn.SELU(),
+            nn.Dropout(0.5),
+
+            nn.Linear(125, 125),
+            nn.BatchNorm1d(125),
+            nn.SELU(),
+            nn.Dropout(0.3),
+
+            nn.Linear(125, 125),
+            nn.BatchNorm1d(125),
+            nn.SELU(),
+            nn.Dropout(0.3),
+
+            nn.Linear(125, 1)
+        )
+
+    def forward(self, x):
+        output = self.layers(x)
+        return torch.clamp(output, min=0.0, max=10.0)  # anni limitati a 0–10
+
+
+
+def predict_years_to_eskd(data):
+    """
+    Esegue la predizione degli anni fino a ESKD su un singolo paziente.
+    'data' è un dizionario con i campi:
+    creatinina, proteinuria, pressione_sistolica, pressione_diastolica,
+    M, E, S, T, C, iperteso, sesso, eta, Antihypertensive, Immunosuppressants, FishOil
+    """
+
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    save_pth = os.path.join(base_dir, "models")
+    save_pth = os.path.join(save_pth, "regression")
+    if not os.path.isdir(save_pth):
+        raise FileNotFoundError(f"Cartella modelli non trovata: {save_pth}")
+    
+    # Qua carico i miei pesi, in questo caso il fold migliore per RMSE era il 7 
+    # Valori cmq scarsissimi eh, ma ci si prova vecchio mio, la vita è un lungo tirocinio
+    scaler_file = os.path.join(save_pth, f"scaler_fold_7.pkl")
+    model_file = os.path.join(save_pth, f"best_model_fold_7.pth")
+
+    if not os.path.exists(model_file):
+        raise FileNotFoundError("File del modello non trovato")
+
+    scaler = joblib.load(scaler_file)
+
+    sesso_val = 0 if data.get("sesso") == "M" else 1  # M=0, F=1
+    # therapy_val = max(
+    #     data.get("Antihypertensive", 0),
+    #     data.get("Immunosuppressants", 0),
+    #     data.get("FishOil", 0)
+    # )
+    # ['Gender', 'Age', 'Hypertension', 'M', 'E', 'S', 'T', 'C', 'Proteinuria', 'Creatinine', 'Antihypertensive', 'Immunosuppressants', 'FishOil']
+    values = [
+        sesso_val,
+        float(data.get("eta", 0)),
+        float(data.get("iperteso", 0)),
+        float(data.get("M", 0)),
+        float(data.get("E", 0)),    
+        float(data.get("S", 0)),
+        float(data.get("T", 0)),
+        float(data.get("C", 0)),
+        float(data.get("proteinuria", 0)),
+        float(data.get("creatinina", 0)),
+        float(data.get("Antihypertensive", 0)),
+        float(data.get("Immunosuppressants", 0)),
+        float(data.get("FishOil", 0))
+    ]
+
+    X = np.array(values, dtype=np.float32).reshape(1, -1)
+    X_scaled = scaler.transform(X)
+
+    model = MySimpleRegressorNet(input_size=X_scaled.shape[1], dropout=0.5)
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    model.load_state_dict(torch.load(model_file, map_location=device))
+    model.to(device)
+    model.eval()
+
+    with torch.no_grad():
+        X_tensor = torch.tensor(X_scaled, dtype=torch.float32).to(device)
+        output = model(X_tensor)
+        years = output.item()   
+    
+    return round(years, 2)
 
 
 def predict_risk(data):
@@ -44,6 +135,7 @@ def predict_risk(data):
 
     base_dir = os.path.dirname(os.path.abspath(__file__))
     save_pth = os.path.join(base_dir, "models")
+    save_pth = os.path.join(save_pth, "classification")
     if not os.path.isdir(save_pth):
         raise FileNotFoundError(f"Cartella modelli non trovata: {save_pth}")
 
@@ -81,7 +173,7 @@ def predict_risk(data):
         float(therapy_val)                      # 11. Therapy
     ]
 
-    print("\n✅ Valori finali passati allo scaler e al modello:")
+    print("\n Valori finali passati allo scaler e al modello:")
     for i, name in enumerate(["Gender", "Age", "Hypertension", "M", "E", "S", "T", "C", "Proteinuria", "Creatinine", "Therapy"]):
         print(f"{i+1:02d}. {name:12s} = {values[i]}")
 
@@ -126,4 +218,10 @@ def predict_risk(data):
     else:
         esito = "BASSO"
 
-    return {"probabilita": prob_percent, "esito": esito}
+    if esito == "ALTO" or esito == "MEDIO": 
+        print(f"\n Attenzione: Rischio ESKD ALTO ({prob_percent}%)")
+        years = predict_years_to_eskd(data)
+        print(f"   → Predizione anni fino a ESKD: {years:.2f} anni")
+    else:
+        print(f"\n Rischio ESKD BASSO ({prob_percent}%)")
+    return {"probabilita": prob_percent, "esito": esito, "anni_eskd": years if esito != "BASSO" else None}

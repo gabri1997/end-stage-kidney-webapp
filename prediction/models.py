@@ -89,6 +89,8 @@ class Predizione(models.Model):
     mestc = models.ForeignKey('MESTC', on_delete=models.SET_NULL, null=True, blank=True, related_name='predizioni')
     data_predizione = models.DateTimeField(auto_now_add=True)
     probabilita_eskd = models.FloatField()
+    anni_eskd = models.FloatField(null=True, blank=True)
+
     ESITO_CHOICES = [
         ('BASSO', 'Basso'),
         ('MEDIO', 'Medio'),

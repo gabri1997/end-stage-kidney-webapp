@@ -78,6 +78,7 @@ def nuovo_paziente(request):
 
     return render(request, "prediction/nuovo_paziente.html", {"form": form})
 
+@login_required
 def lista_pazienti(request):
     pazienti = Paziente.objects.filter(medico=request.user).order_by("cognome", "nome")
     context = {"pazienti": pazienti}
@@ -302,13 +303,15 @@ def calcola_eskd(request, paziente_id, visita_id):
             result = predict_risk(data)
             probabilita = result["probabilita"]
             esito = result["esito"]
+            anni_eskd = result.get("anni_eskd", None)
 
             # --- Salva nel DB ---
             Predizione.objects.create(
                 paziente=paziente,
                 visita=visita,
                 probabilita_eskd=probabilita,
-                esito=esito
+                esito=esito,
+                anni_eskd=anni_eskd
             )
 
             messages.success(request, f"Predizione completata: rischio {esito} ({probabilita:.2f}%)")

@@ -13,7 +13,6 @@
         align-items: center;
         padding: 2rem 1.5rem;
     }
-    
     .login-box {
         background: white;
         border-radius: 20px;
@@ -21,16 +20,13 @@
         overflow: hidden;
         transition: transform 0.3s ease;
     }
-    
     .login-box:hover {
         transform: translateY(-5px);
     }
-    
     .image-column {
         position: relative;
         overflow: hidden;
     }
-    
     .image-column::before {
         content: '';
         position: absolute;
@@ -41,14 +37,12 @@
         background: linear-gradient(135deg, rgba(102, 126, 234, 0.8) 0%, rgba(118, 75, 162, 0.8) 100%);
         z-index: 1;
     }
-    
     .image-column img {
         object-fit: cover;
         width: 100%;
         height: 100%;
         min-height: 500px;
     }
-    
     .image-overlay {
         position: absolute;
         top: 50%;
@@ -59,23 +53,19 @@
         color: white;
         width: 80%;
     }
-    
     .image-overlay h2 {
         font-size: 2rem;
         font-weight: 700;
         margin-bottom: 1rem;
         text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
     }
-    
     .image-overlay p {
         font-size: 1.1rem;
         text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
     }
-    
     .form-column {
         padding: 3rem 2.5rem;
     }
-    
     .login-title {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         -webkit-background-clip: text;
@@ -85,12 +75,10 @@
         font-weight: 700;
         margin-bottom: 0.5rem;
     }
-    
     .login-subtitle {
         color: #7a7a7a;
         margin-bottom: 2rem;
     }
-    
     .custom-input {
         border: 2px solid #e8e8e8;
         border-radius: 10px;
@@ -98,18 +86,15 @@
         transition: all 0.3s ease;
         font-size: 1rem;
     }
-    
     .custom-input:focus {
         border-color: #667eea;
         box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
     }
-    
     .custom-label {
         font-weight: 600;
         color: #363636;
         margin-bottom: 0.5rem;
     }
-    
     .custom-button {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         border: none;
@@ -120,18 +105,15 @@
         transition: all 0.3s ease;
         box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
     }
-    
     .custom-button:hover {
         transform: translateY(-2px);
         box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
         background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
     }
-    
     .custom-notification {
         border-radius: 10px;
         border-left: 4px solid #f14668;
     }
-    
     .register-link {
         text-align: center;
         margin-top: 1.5rem;
@@ -140,19 +122,16 @@
         border-radius: 10px;
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     }
-    
     .register-link a {
         color: #667eea;
         font-weight: 600;
         text-decoration: none;
         transition: color 0.3s ease;
     }
-    
     .register-link a:hover {
         color: #764ba2;
         text-decoration: underline;
     }
-    
     .icon-gradient {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         -webkit-background-clip: text;
@@ -160,15 +139,60 @@
         background-clip: text;
     }
     
+    /* Password field con toggle esterno a destra */
+    .password-wrapper {
+        position: relative;
+    }
+    
+    .password-wrapper .control {
+        width: 100%;
+    }
+    
+    .password-wrapper .custom-input {
+        padding-right: 3.5rem;
+    }
+    
+    .password-toggle-btn {
+        position: absolute;
+        right: 5px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        border-radius: 8px;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+        color: white;
+        z-index: 10;
+    }
+    
+    .password-toggle-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.5);
+        background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+    }
+    
+    .password-toggle-btn:active {
+        transform: translateY(0);
+    }
+    
+    .password-toggle-btn i {
+        font-size: 1.1rem;
+    }
+    
     @media screen and (max-width: 768px) {
         .image-column {
             display: none;
         }
-        
         .form-column {
             padding: 2rem 1.5rem;
         }
-        
         .login-title {
             font-size: 2rem;
         }
@@ -214,44 +238,36 @@
                                 <div class="field">
                                     <label class="label custom-label" for="id_username">
                                         <span class="icon-text">
-                                            <span class="icon">
-                                                <i class="fas fa-user"></i>
-                                            </span>
+                                            <span class="icon"><i class="fas fa-user"></i></span>
                                             <span>Username</span>
                                         </span>
                                     </label>
                                     <div class="control has-icons-left">
-                                        <input type="text" 
-                                               name="username" 
-                                               class="input custom-input" 
-                                               id="id_username" 
-                                               placeholder="Inserisci il tuo username"
-                                               required>
+                                        <input type="text" name="username" class="input custom-input" id="id_username" placeholder="Inserisci il tuo username" required>
                                         <span class="icon is-small is-left">
-                                            <i class="fas fa-user"></i>
+                                            <i class="fas fa-lock"></i>
                                         </span>
                                     </div>
                                 </div>
 
+                                <!-- Campo password con toggle ESTERNO -->
                                 <div class="field">
                                     <label class="label custom-label" for="id_password">
                                         <span class="icon-text">
-                                            <span class="icon">
-                                                <i class="fas fa-lock"></i>
-                                            </span>
+                                            <span class="icon"><i class="fas fa-lock"></i></span>
                                             <span>Password</span>
                                         </span>
                                     </label>
-                                    <div class="control has-icons-left">
-                                        <input type="password" 
-                                               name="password" 
-                                               class="input custom-input" 
-                                               id="id_password" 
-                                               placeholder="Inserisci la tua password"
-                                               required>
-                                        <span class="icon is-small is-left">
-                                            <i class="fas fa-lock"></i>
-                                        </span>
+                                    <div class="password-wrapper">
+                                        <div class="control has-icons-left">
+                                            <input type="password" name="password" class="input custom-input" id="id_password" placeholder="Inserisci la tua password" required>
+                                            <span class="icon is-small is-left">
+                                                <i class="fas fa-lock"></i>
+                                            </span>
+                                        </div>
+                                        <button type="button" class="password-toggle-btn" id="toggle-password" title="Mostra/Nascondi password">
+                                            <i class="fas fa-eye-slash"></i>
+                                        </button>
                                     </div>
                                 </div>
 
@@ -280,13 +296,34 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-    // Funzione per chiudere le notifiche
+    // Chiudi notifiche
     (document.querySelectorAll('.notification .delete') || []).forEach(($delete) => {
         const $notification = $delete.parentNode;
         $delete.addEventListener('click', () => {
             $notification.parentNode.removeChild($notification);
         });
     });
+
+    // Toggle mostra/nascondi password con bottone esterno
+    const togglePassword = document.getElementById('toggle-password');
+    const passwordInput = document.getElementById('id_password');
+
+    if (togglePassword && passwordInput) {
+        togglePassword.addEventListener('click', function() {
+            const icon = this.querySelector('i');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            } else {
+                passwordInput.type = 'password';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            }
+        });
+    }
 });
 </script>
+
 {% endblock %}

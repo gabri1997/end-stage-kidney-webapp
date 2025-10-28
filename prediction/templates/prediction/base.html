@@ -67,82 +67,100 @@
             border-color: #3273dc;
             box-shadow: 0 0 0 0.125em rgba(50,115,220,0.25);
         }
+        /* Arrotonda tutti i pulsanti allo stesso modo */
+        .button {
+            border-radius: 5px !important; /* puoi regolare il valore (es. 8px, 12px, ecc.) */
+        }
+
     </style>
     {% block extra_head %}{% endblock %}
 </head>
 
 <body>
+ 
     <!-- 🔹 Navbar -->
-    <nav class="navbar is-primary" role="navigation" aria-label="main navigation">
-        <div class="navbar-brand">
-            {% if user.is_authenticated %}
+<nav class="navbar is-primary" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+        {% if user.is_authenticated %}
             <a class="navbar-item" href="{% url 'home' %}">
-            {% else %}
+        {% else %}
             <a class="navbar-item" href="{% url 'login' %}">
-            {% endif %}
-                <span class="icon">
-                    <i class="fas fa-brain"></i>
-                </span>
-                <strong class="ml-2">ESKD Predictor</strong>
-            </a>
+        {% endif %}
+            <span class="icon">
+                <i class="fas fa-brain"></i>
+            </span>
+            <strong class="ml-2">ESKD Predictor</strong>
+        </a>
 
+        {% if user.is_authenticated %}
+        <!-- Hamburger menu for mobile -->
+        <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="mainNavbar">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+        {% endif %}
+    </div>
+
+    <div id="mainNavbar" class="navbar-menu">
+        <!-- 🔹 Sezione sinistra -->
+        <div class="navbar-start">
+            <a class="navbar-item" href="{% url 'home' %}">
+                <span class="icon-text">
+                    <span class="icon"><i class="fas fa-home"></i></span>
+                    <span>Home</span>
+                </span>
+            </a>
             {% if user.is_authenticated %}
-            <!-- Hamburger menu for mobile (solo per utenti autenticati) -->
-            <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="mainNavbar">
-                <span aria-hidden="true"></span>
-                <span aria-hidden="true"></span>
-                <span aria-hidden="true"></span>
+            <a class="navbar-item" href="{% url 'lista_pazienti' %}">
+                <span class="icon-text">
+                    <span class="icon"><i class="fas fa-users"></i></span>
+                    <span>Pazienti</span>
+                </span>
             </a>
             {% endif %}
         </div>
 
-        <div id="mainNavbar" class="navbar-menu">
-            {% if user.is_authenticated %}
-            <div class="navbar-start">
-                <a class="navbar-item" href="{% url 'home' %}">
-                    <span class="icon-text">
-                        <span class="icon"><i class="fas fa-home"></i></span>
-                        <span>Home</span>
-                    </span>
-                </a>
-                <a class="navbar-item" href="{% url 'lista_pazienti' %}">
-                    <span class="icon-text">
-                        <span class="icon"><i class="fas fa-users"></i></span>
-                        <span>Pazienti</span>
-                    </span>
-                </a>
-            </div>
-            {% endif %}
-
-            <div class="navbar-end">
-                <div class="navbar-item">
-                    {% if user.is_authenticated %}
-                        <span class="icon-text">
+        <!-- 🔹 Sezione destra -->
+        <div class="navbar-end">
+            <div class="navbar-item">
+                {% if user.is_authenticated %}
+                    <div class="buttons">
+                        <span class="icon-text mr-3">
                             <span class="icon"><i class="fas fa-user-circle"></i></span>
                             <span>{{ user.username }}</span>
                         </span>
+
                         {% if user.is_staff %}
-                            <a class="navbar-item" href="{% url 'admin:index' %}">
-                                <span class="icon-text">
-                                    <span class="icon"><i class="fas fa-cogs"></i></span>
-                                    <span>Admin</span>
-                                </span>
-                            </a>
+                        <a href="{% url 'admin:index' %}" class="button is-light">
+                            <span class="icon"><i class="fas fa-cogs"></i></span>
+                            <span>Admin</span>
+                        </a>
                         {% endif %}
-                    {% else %}
-                        {% if request.resolver_match.url_name != 'login' %}
-                        <div class="buttons">
-                            <a href="{% url 'login' %}" class="button is-light">
-                                <span class="icon"><i class="fas fa-sign-in-alt"></i></span>
-                                <span>Login</span>
-                            </a>
-                        </div>
-                        {% endif %}
+
+                        <!-- 🔹 Logout -->
+                        <form method="POST" action="{% url 'logout' %}" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="button is-danger is-light logout-button">
+                                <span class="icon"><i class="fas fa-sign-out-alt"></i></span>
+                                <span>Logout</span>
+                            </button>
+                        </form>
+                    </div>
+                {% else %}
+                    {% if request.resolver_match.url_name != 'login' %}
+                    <div class="buttons">
+                        <a href="{% url 'login' %}" class="button is-light">
+                            <span class="icon"><i class="fas fa-sign-in-alt"></i></span>
+                            <span>Login</span>
+                        </a>
+                    </div>
                     {% endif %}
-                </div>
+                {% endif %}
             </div>
         </div>
-    </nav>
+    </div>
+</nav>
 
     <!-- 🔹 Contenuto principale -->
     <section class="section">
@@ -160,20 +178,7 @@
         </div>
     </section>
 
-    <!-- 🔹 Footer con Logout -->
-    {% if user.is_authenticated %}
-    <footer class="footer">
-        <div class="content has-text-centered">
-            <form method="POST" action="{% url 'logout' %}">
-                {% csrf_token %}
-                <button type="submit" class="button is-danger is-outlined logout-button">
-                    <span class="icon"><i class="fas fa-sign-out-alt"></i></span>
-                    <span>Logout</span>
-                </button>
-            </form>
-        </div>
-    </footer>
-    {% endif %}
+  
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
