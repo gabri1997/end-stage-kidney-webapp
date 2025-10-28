@@ -41,10 +41,17 @@ def register(request):
 
 @login_required
 def condividi_paziente(request, paziente_id):
-    paziente = get_object_or_404(
-        Paziente.objects.filter(Q(medico=request.user) | Q(medici_condivisi=request.user)),
-        id=paziente_id
+    paziente = (
+        Paziente.objects.filter(
+            Q(id=paziente_id),
+            Q(medico=request.user) | Q(medici_condivisi=request.user)
+        )
+        .distinct()
+        .first()
     )
+
+    if not paziente:
+        raise Http404("Paziente non trovato")
 
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -121,10 +128,17 @@ def lista_pazienti(request):
 
 @login_required
 def dettaglio_paziente(request, paziente_id):
-    paziente = get_object_or_404(
-    Paziente.objects.filter(Q(medico=request.user) | Q(medici_condivisi=request.user)),
-    id=paziente_id
-)
+    paziente = (
+        Paziente.objects.filter(
+            Q(id=paziente_id),
+            Q(medico=request.user) | Q(medici_condivisi=request.user)
+        )
+        .distinct()
+        .first()
+    )
+
+    if not paziente:
+        raise Http404("Paziente non trovato")
 
     visite = Visita.objects.filter(paziente=paziente).order_by("data_visita")
     mestc_records = MESTC.objects.filter(paziente=paziente).order_by("data_rilevazione")
@@ -187,10 +201,17 @@ def nuovo_mestc(request, paziente_id):
 
 @login_required
 def modifica_visita(request, paziente_id, visita_id):
-    paziente = get_object_or_404(
-    Paziente.objects.filter(Q(medico=request.user) | Q(medici_condivisi=request.user)),
-    id=paziente_id
-)
+    paziente = (
+        Paziente.objects.filter(
+            Q(id=paziente_id),
+            Q(medico=request.user) | Q(medici_condivisi=request.user)
+        )
+        .distinct()
+        .first()
+    )
+
+    if not paziente:
+        raise Http404("Paziente non trovato")
 
     visita = get_object_or_404(Visita, id=visita_id, paziente=paziente)
 
@@ -413,15 +434,22 @@ def calcola_eskd(request, paziente_id, visita_id):
         "form": form
     })
 
-ì
+
 from django.contrib import messages  # aggiungi questo import in alto
 
 @login_required
 def modifica_paziente(request, paziente_id):
-    paziente = get_object_or_404(
-    Paziente.objects.filter(Q(medico=request.user) | Q(medici_condivisi=request.user)),
-    id=paziente_id
-)
+    paziente = (
+        Paziente.objects.filter(
+            Q(id=paziente_id),
+            Q(medico=request.user) | Q(medici_condivisi=request.user)
+        )
+        .distinct()
+        .first()
+    )
+
+    if not paziente:
+        raise Http404("Paziente non trovato")
 
 
     if request.method == "POST":
@@ -464,10 +492,17 @@ def delete_predizione(request, predizione_id):
 
 @login_required
 def elimina_paziente(request, paziente_id):
-    paziente = get_object_or_404(
-    Paziente.objects.filter(Q(medico=request.user) | Q(medici_condivisi=request.user)),
-    id=paziente_id
-)
+    paziente = (
+        Paziente.objects.filter(
+            Q(id=paziente_id),
+            Q(medico=request.user) | Q(medici_condivisi=request.user)
+        )
+        .distinct()
+        .first()
+    )
+
+    if not paziente:
+        raise Http404("Paziente non trovato")
 
 
     if request.method == "POST":
