@@ -1,14 +1,107 @@
-{% extends "base.html" %}
+{% extends "prediction/base.html" %}
+{% load static %}
+
+{% block title %}Conferma Eliminazione - {{ paziente.nome }} {{ paziente.cognome }}{% endblock %}
 
 {% block content %}
-<div class="container mt-5 text-center">
-    <h2>⚠️ Conferma eliminazione paziente</h2>
-    <p>Sei sicuro di voler eliminare <strong>{{ paziente.nome }} {{ paziente.cognome }}</strong>?</p>
+<style>
+body {
+    background: linear-gradient(135deg, rgba(29, 156, 97, 0.25), rgba(183, 204, 223, 0.3)),
+                url("{% static 'prediction/images/background-medico.png' %}") no-repeat center center fixed;
+    background-size: cover;
+}
+
+.delete-container {
+    max-width: 600px;
+    margin: 5rem auto;
+    background: rgba(255, 255, 255, 0.93);
+    border-radius: 15px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    padding: 3rem 2rem;
+    text-align: center;
+    color: #1e4b7a;
+}
+
+.delete-icon {
+    color: #f14668;
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.delete-container h2 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+}
+
+.delete-container p {
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+    color: #3d3d3d;
+}
+
+.delete-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.button-delete {
+    background: linear-gradient(135deg, #ff4d4f, #d63031);
+    color: #fff;
+    font-weight: 600;
+    border: none;
+    border-radius: 10px;
+    padding: 0.75rem 1.5rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(255, 77, 79, 0.3);
+}
+
+.button-delete:hover {
+    background: linear-gradient(135deg, #d63031, #ff4d4f);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(255, 77, 79, 0.5);
+}
+
+.button-cancel {
+    background: linear-gradient(135deg, #00b09b, #96c93d);
+    color: white;
+    font-weight: 600;
+    border: none;
+    border-radius: 10px;
+    padding: 0.75rem 1.5rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0, 176, 155, 0.3);
+}
+
+.button-cancel:hover {
+    background: linear-gradient(135deg, #96c93d, #00b09b);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0, 176, 155, 0.4);
+}
+</style>
+
+<div class="delete-container">
+    <span class="delete-icon">
+        <i class="fas fa-exclamation-triangle"></i>
+    </span>
+    <h2>Conferma eliminazione paziente</h2>
+    <p>Sei sicuro di voler eliminare <strong>{{ paziente.nome }} {{ paziente.cognome }}</strong>?<br>
+    Questa operazione <strong>non può essere annullata</strong>.</p>
 
     <form method="POST">
         {% csrf_token %}
-        <button type="submit" class="btn btn-danger">Elimina definitivamente</button>
-        <a href="{% url 'lista_pazienti' %}" class="btn btn-secondary">Annulla</a>
+        <div class="delete-buttons">
+            <button type="submit" class="button-delete">
+                <span class="icon"><i class="fas fa-trash-alt"></i></span>
+                <span>Elimina definitivamente</span>
+            </button>
+            <a href="{% url 'lista_pazienti' %}" class="button-cancel">
+                <span class="icon"><i class="fas fa-arrow-left"></i></span>
+                <span>Annulla</span>
+            </a>
+        </div>
     </form>
 </div>
 {% endblock %}
