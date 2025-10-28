@@ -1,10 +1,25 @@
 {% extends "prediction/base.html" %}
+{% load static %}
 
 {% block content %}
 <style>
     body {
-        background-color: #f8f9fa;
+        background: 
+            linear-gradient(135deg, rgba(0, 209, 178, 0.3), rgba(30, 136, 229, 0.3)),
+            url("{% static 'prediction/images/background-medico.png' %}") no-repeat center center fixed;
+        background-size: cover;
+        background-attachment: fixed;
     }
+
+    /* Rende le box leggibili su sfondo */
+    .container {
+        background: rgba(255, 255, 255, 0.85);
+        border-radius: 20px;
+        padding: 2rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(6px);
+    }
+
     .page-header {
         display: flex;
         align-items: center;
@@ -13,7 +28,7 @@
         margin-bottom: 30px;
         gap: 15px;
     }
-    
+
     .page-title {
         color: #1e4b7a;
         font-weight: 700;
@@ -22,10 +37,12 @@
         gap: 10px;
         margin: 0;
     }
+
     .page-title i {
         font-size: 1.6em;
         color: #17a2b8;
     }
+
     .add-btn {
         background: linear-gradient(90deg, #00b09b, #96c93d);
         border: none;
@@ -39,23 +56,28 @@
         font-size: 0.95em;
         transition: 0.3s;
         text-decoration: none;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
+
     .add-btn:hover {
         transform: scale(1.03);
         opacity: 0.9;
         color: white;
     }
+
     table {
-        background-color: white;
+        background-color: rgba(255, 255, 255, 0.95);
         border-radius: 10px;
         overflow: hidden;
         box-shadow: 0px 2px 10px rgba(0,0,0,0.08);
     }
+
     th {
         background-color: #e9f5ff;
         color: #1e4b7a;
         font-weight: 600;
     }
+
     .action-btn {
         display: inline-flex;
         align-items: center;
@@ -67,16 +89,24 @@
         text-decoration: none;
         transition: 0.2s;
     }
+
     .btn-view { background-color: #cce5ff; color: #004085; }
     .btn-edit { background-color: #fff3cd; color: #856404; }
     .btn-del { background-color: #f8d7da; color: #721c24; }
+
     .btn-view:hover, .btn-edit:hover, .btn-del:hover {
         transform: scale(1.05);
+    }
+
+    /* Aggiunge un po’ di respiro tra le sezioni */
+    .mt-5 {
+        margin-top: 2rem;
     }
 </style>
 
 <div class="container mt-5">
     <div class="page-header">
+        
         <h1 class="page-title">
             <i class="fas fa-users"></i>
             Lista Pazienti
@@ -86,6 +116,21 @@
             Nuovo Paziente
         </a>
     </div>
+    <!-- 🔍 Barra di ricerca -->
+    <form method="get" action="{% url 'lista_pazienti' %}" class="mb-4" style="display: flex; gap: 10px; align-items: center;">
+        <input 
+            type="text" 
+            name="q" 
+            value="{{ request.GET.q }}" 
+            class="input" 
+            placeholder="Cerca paziente per nome o cognome..." 
+            style="flex: 1; border-radius: 10px; padding: 10px;"
+        >
+        <button type="submit" class="button is-link" style="border-radius: 10px;">
+            <span class="icon"><i class="fas fa-search"></i></span>
+            <span>Cerca</span>
+        </button>
+    </form>
 
     {% if messages %}
         {% for message in messages %}

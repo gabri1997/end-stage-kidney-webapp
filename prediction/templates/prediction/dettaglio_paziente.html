@@ -1,10 +1,18 @@
 {% extends 'prediction/base.html' %}
-
+{% load static %}
 {% block title %}{{ paziente.nome }} {{ paziente.cognome }} - Dettaglio{% endblock %}
 
 {% block content %}
 
 <style>
+
+body {
+    background: 
+        linear-gradient(135deg, rgba(22, 214, 150, 0.3), rgba(68, 123, 172, 0.349)),
+        url("{% static 'prediction/images/background-medico.png' %}") no-repeat center center fixed;
+    background-size: cover;
+}
+
 .privacy-blur {
     filter: blur(5px);
     transition: filter 0.3s ease;
@@ -16,6 +24,16 @@
 }
 .privacy-toggle:hover {
     transform: scale(1.1);
+}
+h1.title {
+    color: #eaecec; /* verde acqua professionale */
+}
+.box.custom-box {
+    background-color: rgba(255, 255, 255, 0.95); /* bianco quasi pieno */
+    color: #1e4b7a; /* testo blu-scuro */
+    border-radius: 12px; /* bordi stondati */
+    padding: 1.5rem; /* spaziatura interna */
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1); /* ombra delicata */
 }
 </style>
 

@@ -17,6 +17,7 @@ from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from django.shortcuts import render, redirect
+from django.db.models import Q
 
 def register(request):
     if request.method == 'POST':
@@ -80,7 +81,12 @@ def nuovo_paziente(request):
 
 @login_required
 def lista_pazienti(request):
+    query = request.GET.get('q')
     pazienti = Paziente.objects.filter(medico=request.user).order_by("cognome", "nome")
+    if query:
+        pazienti = pazienti.filter(
+            Q(nome__icontains=query) | Q(cognome__icontains=query)
+        )
     context = {"pazienti": pazienti}
     return render(request, "prediction/lista_pazienti.html", context)
     
