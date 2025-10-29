@@ -161,11 +161,11 @@
                 <tr>
                     <th>Nome</th>
                     <th>Cognome</th>
-                    <th class="text-center">Condiviso con me</th>
                     <th>Età</th>
                     <th>Sesso</th>
                     <th>Rischio ESKD</th>
                     <th class="text-center">Azioni</th>
+                    <th class="text-center">Condiviso con me</th>
                 </tr>
             </thead>
             <tbody>
@@ -173,18 +173,6 @@
                     <tr class="{% if request.user in paziente.medici_condivisi.all %}is-shared{% endif %}">
                         <td>{{ paziente.nome }}</td>
                         <td>{{ paziente.cognome }}</td>
-
-                        <!-- 🔗 NUOVA COLONNA CONDIVISO -->
-                        <td class="text-center">
-                            {% if request.user in paziente.medici_condivisi.all %}
-                                <span class="icon has-text-info" title="Condiviso con te">
-                                    <i class="fas fa-share-alt"></i>
-                                </span>
-                            {% else %}
-                                <span class="has-text-grey-light">—</span>
-                            {% endif %}
-                        </td>
-
                         <td>{{ paziente.eta|default:"-" }}</td>
                         <td>
                             {% if paziente.sesso == 'M' %}
@@ -219,7 +207,7 @@
                                 ✏️ Modifica
                             </a>
                             <a href="{% url 'condividi_paziente' paziente.id %}" class="action-btn btn-share">
-                                 Condividi
+                                👨‍⚕️👩‍⚕️ Condividi
                             </a>
                             <a href="{% url 'elimina_paziente' paziente.id %}" 
                             class="action-btn btn-del"
@@ -227,6 +215,19 @@
                                 🗑️ Elimina
                             </a>
                         </td>
+                        <td class="text-center">
+                            {% if request.user in paziente.medici_condivisi.all %}
+                                <span class="icon has-text-info" title="Condiviso tra medici">
+                                    <i class="fas fa-user-md"></i>
+                                    <i class="fas fa-arrow-right" style="margin: 0 5px; opacity: 0.8;"></i>
+                                    <i class="fas fa-user-md"></i>
+                                </span>
+                            {% else %}
+                                <span class="has-text-grey-light">—</span>
+                            {% endif %}
+
+                        </td>
+
                     </tr>
                 {% endfor %}
             </tbody>
