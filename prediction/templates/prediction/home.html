@@ -8,17 +8,16 @@
     
     body {
         background: 
-            linear-gradient(135deg, rgba(29, 156, 97, 0.397), rgba(183, 204, 223, 0.3)),
+            linear-gradient(135deg, rgba(161, 154, 154, 0.597), rgba(238, 240, 241, 0.504)),
             url("{% static 'prediction/images/background_medico.png' %}") no-repeat center center fixed;
         background-size: cover;
+        background-blend-mode: overlay !important;
     }
     .box {
         background-color: rgba(240, 240, 240, 0.822);
         border-radius: 12px;
         backdrop-filter: blur(4px);
     }
-   
-
     .hero-icon {
         font-size: 6rem;
         margin-left: 2rem;
@@ -249,7 +248,7 @@
         width: 3rem;
         height: 3rem;
         border-radius: 50%;
-        background-color: #36c46077;
+        background-color: #9fc4aa77;
         color: white;
         font-size: 1.5rem;
         display: flex;
@@ -263,14 +262,13 @@
     }
 
     .hero.is-primary {
-        background: linear-gradient(135deg, #618a7c 0%, #e8f5e9 100%);
-        color: #1e4b3e; /* verde scuro per il testo */
-        border: 1px solid rgba(255, 255, 255, 0.4);
+        background: linear-gradient(135deg, #5ebb82 0%, #8bc0a5ee 100%) !important;
+        color: white !important;
         border-radius: 20px;
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-        margin: 2rem auto;
+        box-shadow: 0 8px 20px rgba(255, 255, 255, 0.493);
+        margin: 2rem auto;  
         width: 100%;
-        color: #c23055; /* testo blu scuro per contrasto */
+        color: #c23055 !important; /* testo blu scuro per contrasto */
     }
 
     .hero img {

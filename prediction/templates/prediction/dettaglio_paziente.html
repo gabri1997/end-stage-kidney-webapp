@@ -7,11 +7,12 @@
 <style>
 
 body {
-    background: 
-        linear-gradient(135deg, rgba(29, 156, 97, 0.397), rgba(183, 204, 223, 0.3)),
-        url("{% static 'prediction/images/background-medico.png' %}") no-repeat center center fixed;
-    background-size: cover;
-}
+        background: 
+            linear-gradient(135deg, rgba(161, 154, 154, 0.597), rgba(238, 240, 241, 0.504)),
+            url("{% static 'prediction/images/background_medico.png' %}") no-repeat center center fixed;
+        background-size: cover;
+        background-blend-mode: overlay !important;
+    }
 
 .privacy-blur {
     filter: blur(5px);

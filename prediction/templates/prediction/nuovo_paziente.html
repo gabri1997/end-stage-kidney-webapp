@@ -1,21 +1,111 @@
 {% extends 'prediction/base.html' %}
 {% load form_tags %}
+{% load static %}
 
 {% block title %}Nuovo Paziente{% endblock %}
 
 {% block content %}
+<style>
+body {
+    background: 
+        linear-gradient(135deg, rgba(29, 156, 97, 0.397), rgba(183, 204, 223, 0.3)),
+        url("{% static 'prediction/images/background-medico.png' %}") no-repeat center center fixed;
+    background-size: cover;
+}
+
+h1.title {
+    color: #0c0f0f;
+}
+
+.box.custom-box {
+    background-color: rgba(247, 247, 247, 0.856);
+    color: #1e4b7a;
+    border-radius: 12px;
+    padding: 1.8rem 2rem;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+.header-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.top-action {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 1.5rem;
+}
+
+.button.is-primary {
+    background: linear-gradient(135deg, #00b09b, #96c93d);
+    border: none;
+    color: white;
+    font-weight: 600;
+}
+
+.button.is-primary:hover {
+    background: linear-gradient(135deg, #0ac08a, #a0d36b);
+}
+
+.button.is-light:hover {
+    background-color: #eef3f7;
+}
+
+.label {
+    color: #1e4b7a;
+    font-weight: 600;
+}
+
+.help {
+    font-size: 0.85em;
+    color: #6c757d;
+}
+
+.input {
+    border-radius: 10px;
+    border: 1.5px solid #cdd4dc;
+    transition: all 0.3s ease;
+}
+
+.input:focus {
+    border-color: #00b09b;
+    box-shadow: 0 0 0 3px rgba(0, 176, 155, 0.15);
+}
+
+.field {
+    margin-bottom: 1.2rem;
+}
+</style>
+
 <div class="columns is-centered">
     <div class="column is-half">
-        <div class="box">
-            <h1 class="title">
-                <span class="icon-text">
-                    <span class="icon">
-                        <i class="fas fa-user-plus"></i>
-                    </span>
-                    <span>Aggiungi un nuovo paziente</span>
+        
+        <!-- Pulsante sopra il box -->
+        <div class="top-action">
+            <a href="{% url 'lista_pazienti' %}" class="button is-light">
+                <span class="icon">
+                    <i class="fas fa-arrow-left"></i>
                 </span>
-            </h1>
+                <span>Torna alla Lista</span>
+            </a>
+        </div>
 
+        <!-- Box principale -->
+        <div class="box custom-box">
+            <div class="header-bar">
+                <h1 class="title is-4">
+                    <span class="icon-text">
+                        <span class="icon">
+                            <i class="fas fa-user-plus"></i>
+                        </span>
+                        <span>Aggiungi un Nuovo Paziente</span>
+                    </span>
+                </h1>
+            </div>
+
+            <!-- FORM -->
             <form method="POST">
                 {% csrf_token %}
                 {% for field in form %}
@@ -28,7 +118,7 @@
                                     {{ field }} {{ field.label }}
                                 </label>
                             {% else %}
-                                {{ field.as_widget|addclass:'input' }}
+                                {{ field|addclass:'input' }}
                             {% endif %}
                         </div>
                         {% if field.help_text %}
@@ -37,13 +127,14 @@
                     </div>
                 {% endfor %}
                 
+                <!-- Pulsanti di azione -->
                 <div class="field is-grouped mt-5">
                     <div class="control">
                         <button type="submit" class="button is-primary">
                             <span class="icon">
                                 <i class="fas fa-save"></i>
                             </span>
-                            <span>Salva</span>
+                            <span>Salva Paziente</span>
                         </button>
                     </div>
                     <div class="control">
