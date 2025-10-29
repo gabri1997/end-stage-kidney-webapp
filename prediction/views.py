@@ -157,7 +157,7 @@ def dettaglio_paziente(request, paziente_id):
 @login_required
 def nuova_visita(request, paziente_id):
     paziente = get_object_or_404(
-    Paziente.objects.filter(Q(medico=request.user) | Q(medici_condivisi=request.user)),
+    Paziente.objects.filter(Q(medico=request.user) | Q(medici_condivisi=request.user)).distinct(),
     id=paziente_id
 )
 
@@ -180,7 +180,7 @@ def nuova_visita(request, paziente_id):
 @login_required
 def nuovo_mestc(request, paziente_id):
     paziente = get_object_or_404(
-    Paziente.objects.filter(Q(medico=request.user) | Q(medici_condivisi=request.user)),
+    Paziente.objects.filter(Q(medico=request.user) | Q(medici_condivisi=request.user)).distinct(),
     id=paziente_id
 )
 
@@ -247,7 +247,7 @@ def elimina_visita(request, paziente_id, visita_id):
 @login_required
 def modifica_mestc(request, paziente_id, mestc_id):
     paziente = get_object_or_404(
-    Paziente.objects.filter(Q(medico=request.user) | Q(medici_condivisi=request.user)),
+    Paziente.objects.filter(Q(medico=request.user) | Q(medici_condivisi=request.user)).distinct(),
     id=paziente_id
 )
 
@@ -267,7 +267,7 @@ def modifica_mestc(request, paziente_id, mestc_id):
 @login_required
 def elimina_mestc(request, paziente_id, mestc_id):
     paziente = get_object_or_404(
-    Paziente.objects.filter(Q(medico=request.user) | Q(medici_condivisi=request.user)),
+    Paziente.objects.filter(Q(medico=request.user) | Q(medici_condivisi=request.user)).distinct(),
     id=paziente_id
 )
 
@@ -283,7 +283,7 @@ def elimina_mestc(request, paziente_id, mestc_id):
 @login_required
 def calcola_eskd(request, paziente_id, visita_id):
     paziente = get_object_or_404(
-    Paziente.objects.filter(Q(medico=request.user) | Q(medici_condivisi=request.user)),
+    Paziente.objects.filter(Q(medico=request.user) | Q(medici_condivisi=request.user)).distinct(),
     id=paziente_id
 )
 

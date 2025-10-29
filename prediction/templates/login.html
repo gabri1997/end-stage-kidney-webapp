@@ -26,6 +26,9 @@
     .image-column {
         position: relative;
         overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
     .image-column::before {
         content: '';
@@ -39,9 +42,11 @@
     }
     .image-column img {
         object-fit: cover;
-        width: 100%;
-        height: 100%;
-        min-height: 500px;
+        width: 50%;
+        height: auto;
+        max-height: 300px;
+        position: relative;
+        z-index: 0;
     }
     .image-overlay {
         position: absolute;
@@ -139,7 +144,6 @@
         background-clip: text;
     }
     
-    /* Password field con toggle esterno a destra */
     .password-wrapper {
         position: relative;
     }
@@ -185,6 +189,22 @@
     .password-toggle-btn i {
         font-size: 1.1rem;
     }
+
+    .welcome-section {
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 2px solid #e8e8e8;
+    }
+
+    .welcome-section .login-title {
+        font-size: 1.8rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .welcome-section p {
+        color: #7a7a7a;
+        margin-bottom: 1rem;
+    }
     
     @media screen and (max-width: 768px) {
         .image-column {
@@ -210,10 +230,6 @@
                         <!-- Colonna immagine con overlay -->
                         <div class="column is-half image-column">
                             <img src="{% static 'prediction/images/doc.jpeg' %}" alt="Doctor">
-                            <div class="image-overlay">
-                                <h2>Benvenuto</h2>
-                                <p>Sistema di predizione ESKD basato su intelligenza artificiale</p>
-                            </div>
                         </div>
                         
                         <!-- Colonna form -->
@@ -222,7 +238,7 @@
                                 <span class="icon is-large icon-gradient mb-3">
                                     <i class="fas fa-user-md fa-3x"></i>
                                 </span>
-                                <h1 class="login-title">Login</h1>
+                                <h2 class="login-title">Benvenuto!</h2>
                                 <p class="login-subtitle">Accedi al tuo account</p>
                             </div>
 
@@ -282,12 +298,17 @@
                                     </div>
                                 </div>
                             </form>
+
+                            <!-- Sezione benvenuto spostata sotto il form -->
+                            <div class="welcome-section">
+                                <div class="has-text-centered">
+                                    <div class="register-link" style="box-shadow:none; background:none; margin-top:0;">
+                                        Non hai un account? <a href="{% url 'register' %}">Registrati qui</a>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-                
-                <div class="register-link">
-                    Non hai un account? <a href="{% url 'register' %}">Registrati qui</a>
                 </div>
             </div>
         </div>
