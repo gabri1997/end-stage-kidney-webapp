@@ -5,343 +5,451 @@
 {% block content %}
 
 <style>
-
 body {
-        background: 
-            linear-gradient(135deg, rgba(161, 154, 154, 0.597), rgba(238, 240, 241, 0.504)),
-            url("{% static 'prediction/images/background_medico.png' %}") no-repeat center center fixed;
-        background-size: cover;
-        background-blend-mode: overlay !important;
-    }
+    background: 
+        linear-gradient(135deg, rgba(161, 154, 154, 0.597), rgba(238, 240, 241, 0.504)),
+        url("{% static 'prediction/images/background_medico.png' %}") no-repeat center center fixed;
+    background-size: cover;
+    background-blend-mode: overlay !important;
+}
+
+.main-container {
+    max-width: 1400px;
+    margin: 2rem auto;
+    padding: 0 1.5rem;
+}
 
 .privacy-blur {
     filter: blur(5px);
     transition: filter 0.3s ease;
     user-select: none;
 }
+
 .privacy-toggle {
     cursor: pointer;
     transition: all 0.3s ease;
 }
+
 .privacy-toggle:hover {
     transform: scale(1.1);
 }
-h1.title {
-    color: #0c0f0f; /* verde acqua professionale */
+
+.header-section {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 12px;
+    padding: 1.5rem 2rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    margin-bottom: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
-.box.custom-box {
-    background-color: rgba(247, 247, 247, 0.856); /* bianco quasi pieno */
-    color: #1e4b7a; /* testo blu-scuro */
-    border-radius: 12px; /* bordi stondati */
-    padding: 1.5rem; /* spaziatura interna */
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1); /* ombra delicata */
+
+.page-title {
+    color: #1e4b7a;
+    font-weight: 700;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.page-title i {
+    color: #17a2b8;
+    font-size: 1.4em;
+}
+
+.box {
+    background: rgba(255, 255, 255, 0.92);
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+    margin-bottom: 1.5rem;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.box:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+}
+
+.box-title {
+    color: #1e4b7a;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #e9f5ff;
+}
+
+.box-title i {
+    color: #17a2b8;
+}
+
+.risk-card {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 15px;
+    padding: 2rem;
+    text-align: center;
+    margin: 1.5rem 0;
+}
+
+.risk-percentage {
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin: 1rem 0;
+}
+
+.risk-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.data-field {
+    display: flex;
+    align-items: center;
+    padding: 0.8rem 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.data-field:last-child {
+    border-bottom: none;
+}
+
+.data-label {
+    font-weight: 600;
+    color: #495057;
+    min-width: 180px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.data-label i {
+    color: #6c757d;
+    width: 20px;
+}
+
+.data-value {
+    flex: 1;
+}
+
+.tag {
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    font-weight: 500;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.btn-kidney {
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+    color: white;
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.btn-kidney:hover {
+    background: linear-gradient(135deg, #c0392b, #a93226);
+    transform: scale(1.05);
+    color: white;
+}
+
+.btn-kidney i {
+    margin-right: 5px;
+}
+
+.table-modern {
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.table-modern thead {
+    background: linear-gradient(135deg, #e9f5ff, #d1e7fd);
+}
+
+.table-modern thead th {
+    color: #1e4b7a;
+    font-weight: 600;
+    border: none;
+    padding: 1rem;
+}
+
+.table-modern tbody tr {
+    transition: background-color 0.2s ease;
+}
+
+.table-modern tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+.table-modern tbody td {
+    padding: 1rem;
+    vertical-align: middle;
+}
+
+.button.is-primary {
+    background: linear-gradient(90deg, #00b09b, #96c93d);
+    border: none;
+    font-weight: 600;
+}
+
+.button.is-primary:hover {
+    background: linear-gradient(90deg, #00a088, #87ba2d);
+}
+
+.notification {
+    border-radius: 10px;
+    border-left: 4px solid #3298dc;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 3rem;
+    color: #6c757d;
+}
+
+.empty-state i {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    opacity: 0.3;
+}
+
+@media (max-width: 768px) {
+    .header-section {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+    
+    .data-field {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
 }
 </style>
 
-<div class="columns">
-    <div class="column">
-        <nav class="level">
-            <div class="level-left">
-                <div class="level-item">
-                    <h1 class="title">{{ paziente.nome }} {{ paziente.cognome }}</h1>
-                </div>
-            </div>
-            <div class="level-right">
-                <div class="level-item">
-                    <a href="{% url 'lista_pazienti' %}" class="button is-light">
+<div class="main-container">
+    <!-- Header con nome paziente -->
+    <div class="header-section">
+        <h1 class="page-title">
+            <i class="fas fa-user-injured"></i>
+            {{ paziente.nome }} {{ paziente.cognome }}
+        </h1>
+        <a href="{% url 'lista_pazienti' %}" class="button is-light">
+            <span class="icon">
+                <i class="fas fa-arrow-left"></i>
+            </span>
+            <span>Torna alla Lista</span>
+        </a>
+    </div>
+
+    <div class="columns">
+        <!-- Dati anagrafici -->
+        <div class="column is-half">
+            <div class="box">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <h3 class="box-title" style="margin: 0; border: none; padding: 0;">
+                        <i class="fas fa-user"></i>
+                        <span>Dati Anagrafici</span>
+                    </h3>
+                    <button id="togglePrivacy" class="button is-small is-info privacy-toggle" title="Mostra/Nascondi dati sensibili">
                         <span class="icon">
-                            <i class="fas fa-arrow-left"></i>
+                            <i id="privacyIcon" class="fas fa-eye"></i>
                         </span>
-                        <span>Torna alla Lista</span>
+                    </button>
+                </div>
+                
+                <div id="sensitiveData">
+                    <div class="data-field">
+                        <div class="data-label">
+                            <i class="fas fa-id-card"></i>
+                            Codice Fiscale
+                        </div>
+                        <div class="data-value">
+                            <span class="tag is-light is-medium">{{ paziente.codice_fiscale|default:'-' }}</span>
+                        </div>
+                    </div>
+
+                    <div class="data-field">
+                        <div class="data-label">
+                            <i class="fas fa-envelope"></i>
+                            Email
+                        </div>
+                        <div class="data-value">
+                            {% if paziente.email %}
+                                <a href="mailto:{{ paziente.email }}" class="tag is-info is-medium">
+                                    {{ paziente.email }}
+                                </a>
+                            {% else %}
+                                <span class="tag is-light is-medium">-</span>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="data-field">
+                        <div class="data-label">
+                            <i class="fas fa-phone"></i>
+                            Telefono
+                        </div>
+                        <div class="data-value">
+                            {% if paziente.telefono %}
+                                <a href="tel:{{ paziente.telefono }}" class="tag is-info is-medium">
+                                    {{ paziente.telefono }}
+                                </a>
+                            {% else %}
+                                <span class="tag is-light is-medium">-</span>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="data-field">
+                        <div class="data-label">
+                            <i class="fas fa-map-marker-alt"></i>
+                            Indirizzo
+                        </div>
+                        <div class="data-value">
+                            {% if paziente.indirizzo %}
+                                <span class="tag is-light is-medium">{{ paziente.indirizzo }}</span>
+                            {% else %}
+                                <span class="tag is-light is-medium">-</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="data-field">
+                    <div class="data-label">
+                        <i class="{% if paziente.sesso == 'M' %}fas fa-mars{% elif paziente.sesso == 'F' %}fas fa-venus{% endif %}"></i>
+                        Sesso
+                    </div>
+                    <div class="data-value">
+                        <span class="tag is-info is-medium">
+                            {% if paziente.sesso == 'M' %}Maschio
+                            {% elif paziente.sesso == 'F' %}Femmina
+                            {% else %}-{% endif %}
+                        </span>
+                    </div>
+                </div>
+
+                <div class="data-field">
+                    <div class="data-label">
+                        <i class="fas fa-calendar-day"></i>
+                        Data di Nascita
+                    </div>
+                    <div class="data-value">
+                        <span class="tag is-info is-medium">
+                            {% if paziente.data_nascita %}
+                                {{ paziente.data_nascita|date:"d/m/Y" }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </span>
+                    </div>
+                </div>
+
+                <div class="data-field">
+                    <div class="data-label">
+                        <i class="fas fa-birthday-cake"></i>
+                        Età
+                    </div>
+                    <div class="data-value">
+                        <span class="tag is-info is-medium">{{ paziente.eta }} anni</span>
+                    </div>
+                </div>
+                
+                <div class="field mt-5">
+                    <a href="{% url 'modifica_paziente' paziente.id %}" class="button is-warning">
+                        <span class="icon">
+                            <i class="fas fa-edit"></i>
+                        </span>
+                        <span>Modifica Dati</span>
                     </a>
                 </div>
             </div>
-        </nav>
+        </div>
 
-        <div class="columns">
-            <!-- Dati anagrafici -->
-            <div class="column is-half">
+        <!-- ESKD Risk -->
+        <div class="column is-half">
+            {% if ultima_predizione %}
                 <div class="box">
-                    <div class="level mb-4">
-                        <div class="level-left">
-                            <div class="level-item">
-                                <h3 class="title is-4">
-                                    <span class="icon-text">
-                                        <span class="icon">
-                                            <i class="fas fa-user"></i>
-                                        </span>
-                                        <span>Dati Anagrafici</span>
-                                    </span>
-                                </h3>
-                            </div>
+                    <h3 class="box-title">
+                        <i class="fas fa-heartbeat"></i>
+                        <span>Rischio ESKD Attuale</span>
+                    </h3>
+
+                    <div class="risk-card">
+                        <div class="risk-icon {% if ultima_predizione.esito == 'ALTO' %}has-text-danger{% elif ultima_predizione.esito == 'MEDIO' %}has-text-warning{% else %}has-text-success{% endif %}">
+                            <i class="fas {% if ultima_predizione.esito == 'ALTO' %}fa-exclamation-triangle{% elif ultima_predizione.esito == 'MEDIO' %}fa-exclamation-circle{% else %}fa-check-circle{% endif %}"></i>
                         </div>
-                        <div class="level-right">
-                            <div class="level-item">
-                                <button id="togglePrivacy" class="button is-small is-info privacy-toggle" title="Mostra/Nascondi dati sensibili">
+                        <div class="risk-percentage {% if ultima_predizione.esito == 'ALTO' %}has-text-danger{% elif ultima_predizione.esito == 'MEDIO' %}has-text-warning{% else %}has-text-success{% endif %}">
+                            {{ ultima_predizione.probabilita_eskd|floatformat:2 }}%
+                        </div>
+                        <p class="subtitle is-4">
+                            {% if ultima_predizione.esito == 'ALTO' %}
+                                Rischio Alto
+                            {% elif ultima_predizione.esito == 'MEDIO' %}
+                                Rischio Medio
+                            {% else %}
+                                Rischio Basso
+                            {% endif %}
+                        </p>
+                        {% if ultima_predizione.anni_eskd %}
+                            <div class="notification is-light mt-3">
+                                <span class="icon-text">
                                     <span class="icon">
-                                        <i id="privacyIcon" class="fas fa-eye"></i>
+                                        <i class="fas fa-clock"></i>
                                     </span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div id="sensitiveData">
-                        <div class="field is-horizontal">
-                            <div class="field-label is-normal">
-                                <label class="label">Codice Fiscale</label>
-                            </div>
-                            <div class="field-body">
-                                <div class="field">
-                                    <p class="control">
-                                        <span class="tag is-medium">{{ paziente.codice_fiscale|default:'-' }}</span>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="field is-horizontal">
-                            <div class="field-label is-normal">
-                                <label class="label">Email</label>
-                            </div>
-                            <div class="field-body">
-                                <div class="field">
-                                    <p class="control">
-                                        {% if paziente.email %}
-                                            <a href="mailto:{{ paziente.email }}" class="tag is-info is-medium">
-                                                <span class="icon">
-                                                    <i class="fas fa-envelope"></i>
-                                                </span>
-                                                <span>{{ paziente.email }}</span>
-                                            </a>
-                                        {% else %}
-                                            <span class="tag is-light is-medium">-</span>
-                                        {% endif %}
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="field is-horizontal">
-                            <div class="field-label is-normal">
-                                <label class="label">Telefono</label>
-                            </div>
-                            <div class="field-body">
-                                <div class="field">
-                                    <p class="control">
-                                        {% if paziente.telefono %}
-                                            <a href="tel:{{ paziente.telefono }}" class="tag is-info is-medium">
-                                                <span class="icon">
-                                                    <i class="fas fa-phone"></i>
-                                                </span>
-                                                <span>{{ paziente.telefono }}</span>
-                                            </a>
-                                        {% else %}
-                                            <span class="tag is-light is-medium">-</span>
-                                        {% endif %}
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="field is-horizontal">
-                            <div class="field-label is-normal">
-                                <label class="label">Indirizzo</label>
-                            </div>
-                            <div class="field-body">
-                                <div class="field">
-                                    <p class="control">
-                                        {% if paziente.indirizzo %}
-                                            <span class="tag is-medium">
-                                                <span class="icon">
-                                                    <i class="fas fa-map-marker-alt"></i>
-                                                </span>
-                                                <span>{{ paziente.indirizzo }}</span>
-                                            </span>
-                                        {% else %}
-                                            <span class="tag is-light is-medium">-</span>
-                                        {% endif %}
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="field is-horizontal">
-                        <div class="field-label is-normal">
-                            <label class="label">Sesso</label>
-                        </div>
-                        <div class="field-body">
-                            <div class="field">
-                                <p class="control">
-                                    <span class="tag is-info is-medium">
-                                        <span class="icon">
-                                            {% if paziente.sesso == 'M' %}
-                                                <i class="fas fa-mars"></i>
-                                            {% elif paziente.sesso == 'F' %}
-                                                <i class="fas fa-venus"></i>
-                                            {% endif %}
-                                        </span>
-                                        <span>
-                                            {% if paziente.sesso == 'M' %}Maschio
-                                            {% elif paziente.sesso == 'F' %}Femmina
-                                            {% else %}-{% endif %}
-                                        </span>
-                                    </span>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                        
-                    <div class="field is-horizontal">
-                        <div class="field-label is-normal">
-                            <label class="label">Data di Nascita</label>
-                        </div>
-                        <div class="field-body">
-                            <div class="field">
-                                <p class="control">
-                                    <span class="tag is-info is-medium">
-                                        <span class="icon">
-                                            <i class="fas fa-calendar-day"></i>
-                                        </span>
-                                        <span>
-                                            {% if paziente.calcola_eta %}
-                                                {{ paziente.calcola_eta }} anni
-                                            {% else %}
-                                                    -
-                                            {% endif %}
-                                        </span>
-                                    </span>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="field is-horizontal">
-                        <div class="field-label is-normal">
-                            <label class="label">Età</label>
-                        </div>
-                        <div class="field-body">
-                            <div class="field">
-                                <p class="control">
-                                    <span class="tag is-info is-medium">
-                                        <span class="icon">
-                                            <i class="fas fa-birthday-cake"></i>
-                                        </span>
-                                        <span>{{ paziente.eta }} anni</span>
-                                    </span>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="field mt-5">
-                        <div class="control">
-                            <a href="{% url 'modifica_paziente' paziente.id %}" class="button is-warning">
-                                <span class="icon">
-                                    <i class="fas fa-edit"></i>
+                                    <span><strong>Stima tempo ESKD:</strong> {{ ultima_predizione.anni_eskd|floatformat:1 }} anni</span>
                                 </span>
-                                <span>Modifica Dati</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ESKD Risk -->
-            <div class="column is-half">
-                {% if ultima_predizione %}
-                    <div class="box">
-                        <h3 class="title is-4">
-                            <span class="icon-text">
-                                <span class="icon">
-                                    <i class="fas fa-brain"></i>
-                                </span>
-                                <span>Rischio ESKD Attuale</span>
-                            </span>
-                        </h3>
-
-                        <div class="has-text-centered my-6">
-                            <div class="{% if ultima_predizione.esito == 'ALTO' %}has-text-danger{% elif ultima_predizione.esito == 'MEDIO' %}has-text-warning{% else %}has-text-success{% endif %}">
-                                <span class="icon is-large mb-4">
-                                    <i class="fas fa-2x {% if ultima_predizione.esito == 'ALTO' %}fa-exclamation-triangle{% elif ultima_predizione.esito == 'MEDIO' %}fa-exclamation-circle{% else %}fa-check-circle{% endif %}"></i>
-                                </span>
-                                <p class="title is-2 mb-5">{{ ultima_predizione.probabilita_eskd|floatformat:2 }}%</p>
-                                <p class="subtitle is-4 mt-4">
-                                    {% if ultima_predizione.esito == 'ALTO' %}
-                                        Rischio Alto
-                                    {% elif ultima_predizione.esito == 'MEDIO' %}
-                                        Rischio Medio
-                                    {% else %}
-                                        Rischio Basso
-                                    {% endif %}
-                                </p>
-                                {% if ultima_predizione.anni_eskd %}
-                                    <div class="box has-background-light mt-4">
-                                        <p class="subtitle is-5">
-                                            <span class="icon-text">
-                                                <span class="icon">
-                                                    <i class="fas fa-clock"></i>
-                                                </span>
-                                                <span><strong>Stima tempo ESKD:</strong> {{ ultima_predizione.anni_eskd|floatformat:1 }} anni</span>
-                                            </span>
-                                        </p>
-                                    </div>
-                                {% endif %}
-                            </div>
-                        </div>
-
-                        <div class="field is-horizontal">
-                            <div class="field-label is-normal">
-                                <label class="label">Data Predizione</label>
-                            </div>
-                            <div class="field-body">
-                                <div class="field">
-                                    <p class="control">
-                                        <span class="tag is-medium">
-                                            <span class="icon">
-                                                <i class="fas fa-calendar"></i>
-                                            </span>
-                                            <span>{{ ultima_predizione.data_predizione|date:"d/m/Y H:i" }}</span>
-                                        </span>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-
-                        {% if ultima_predizione.visita %}
-                            <div class="field is-horizontal">
-                                <div class="field-label is-normal">
-                                    <label class="label">Visita Associata</label>
-                                </div>
-                                <div class="field-body">
-                                    <div class="field">
-                                        <p class="control">
-                                            <span class="tag is-medium">
-                                                <span class="icon">
-                                                    <i class="fas fa-stethoscope"></i>
-                                                </span>
-                                                <span>{{ ultima_predizione.visita.data_visita|date:"d/m/Y" }}</span>
-                                            </span>
-                                        </p>
-                                    </div>
-                                </div>
                             </div>
                         {% endif %}
                     </div>
-                {% endif %}
-            </div>
+
+                    <div class="data-field">
+                        <div class="data-label">
+                            <i class="fas fa-calendar"></i>
+                            Data Predizione
+                        </div>
+                        <div class="data-value">
+                            <span class="tag is-light is-medium">
+                                {{ ultima_predizione.data_predizione|date:"d/m/Y H:i" }}
+                            </span>
+                        </div>
+                    </div>
+
+                    {% if ultima_predizione.visita %}
+                        <div class="data-field">
+                            <div class="data-label">
+                                <i class="fas fa-stethoscope"></i>
+                                Visita Associata
+                            </div>
+                            <div class="data-value">
+                                <span class="tag is-light is-medium">
+                                    {{ ultima_predizione.visita.data_visita|date:"d/m/Y" }}
+                                </span>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            {% endif %}
         </div>
+    </div>
 
-    <hr>
-
+    <!-- Visite -->
     <div class="box">
-        <h3 class="title is-4">
-            <span class="icon-text">
-                <span class="icon">
-                    <i class="fas fa-stethoscope"></i>
-                </span>
-                <span>Visite</span>
-            </span>
+        <h3 class="box-title">
+            <i class="fas fa-stethoscope"></i>
+            <span>Visite</span>
         </h3>
 
         <div class="buttons mb-4">
@@ -355,7 +463,7 @@ h1.title {
 
         {% if visite %}
             <div class="table-container">
-                <table class="table is-fullwidth is-striped is-hoverable">
+                <table class="table is-fullwidth is-hoverable table-modern">
                     <thead>
                         <tr>
                             <th>Data</th>
@@ -370,7 +478,7 @@ h1.title {
                     <tbody>
                         {% for visita in visite %}
                         <tr>
-                            <td>{{ visita.data_visita|date:"d/m/Y" }}</td>
+                            <td><strong>{{ visita.data_visita|date:"d/m/Y" }}</strong></td>
                             <td>{{ visita.creatinina }} mg/dL</td>
                             <td>{{ visita.egfr }} mL/min</td>
                             <td>{{ visita.proteinuria }} mg/24h</td>
@@ -383,29 +491,38 @@ h1.title {
                                         </span>
                                     </a>
                                 {% else %}
-                                    -
+                                    <span class="tag is-light">-</span>
                                 {% endif %}
                             </td>
                             <td>
-                                <div class="buttons are-small">
-                                    <a href="{% url 'modifica_visita' paziente.id visita.id %}" class="button is-warning" title="Modifica">
+                                <div class="action-buttons">
+                                    <a href="{% url 'modifica_visita' paziente.id visita.id %}" class="button is-small is-warning" title="Modifica">
                                         <span class="icon">
                                             <i class="fas fa-edit"></i>
                                         </span>
                                     </a>
                                     <a href="{% url 'elimina_visita' paziente.id visita.id %}" 
-                                       class="button is-danger" 
+                                       class="button is-small is-danger" 
                                        onclick="return confirm('Vuoi davvero eliminare questa visita?');" 
                                        title="Elimina">
                                         <span class="icon">
                                             <i class="fas fa-trash"></i>
                                         </span>
                                     </a>
-                                    <a href="{% url 'calcola_eskd' paziente.id visita.id %}" class="button is-info" title="Calcola ESKD">
+                                    <a href="{% url 'calcola_eskd' paziente.id visita.id %}" 
+                                    class="button is-small btn-kidney" 
+                                    title="Calcola Rischio ESKD">
                                         <span class="icon">
-                                            <i class="fas fa-calculator"></i>
+                                            <svg xmlns="http://www.w3.org/2000/svg" 
+                                                viewBox="0 0 512 512" 
+                                                width="16" height="16" 
+                                                fill="currentColor">
+                                                <path d="M151.3 64c-53 0-96 43-96 96v192c0 53 43 96 96 96c35.3 0 64-28.7 64-64V160c0-53-43-96-96-96zm209.4 0c-53 0-96 43-96 96v224c0 53 43 96 96 96c52.8 0 95.9-43 96-95.8V160c-.1-52.8-43.2-96-96-96z"/>
+                                            </svg>
                                         </span>
+                                        <span>Calcola Rischio</span>
                                     </a>
+
                                 </div>
                             </td>
                         </tr>
@@ -414,27 +531,18 @@ h1.title {
                 </table>
             </div>
         {% else %}
-            <div class="notification is-info is-light">
-                <span class="icon-text">
-                    <span class="icon">
-                        <i class="fas fa-info-circle"></i>
-                    </span>
-                    <span>Nessuna visita registrata.</span>
-                </span>
+            <div class="empty-state">
+                <i class="fas fa-stethoscope"></i>
+                <p>Nessuna visita registrata.</p>
             </div>
         {% endif %}
     </div>
 
-    <hr>
-
+    <!-- Referti MEST-C -->
     <div class="box">
-        <h3 class="title is-4">
-            <span class="icon-text">
-                <span class="icon">
-                    <i class="fas fa-microscope"></i>
-                </span>
-                <span>Referti MEST-C</span>
-            </span>
+        <h3 class="box-title">
+            <i class="fas fa-microscope"></i>
+            <span>Referti MEST-C</span>
         </h3>
 
         <div class="buttons mb-4">
@@ -448,7 +556,7 @@ h1.title {
 
         {% if mestc_records %}
             <div class="table-container">
-                <table class="table is-fullwidth is-striped is-hoverable">
+                <table class="table is-fullwidth is-hoverable table-modern">
                     <thead>
                         <tr>
                             <th>Data rilevazione</th>
@@ -463,21 +571,21 @@ h1.title {
                     <tbody>
                         {% for record in mestc_records %}
                         <tr>
-                            <td>{{ record.data_rilevazione|date:"d/m/Y" }}</td>
-                            <td>{{ record.M }}</td>
-                            <td>{{ record.E }}</td>
-                            <td>{{ record.S }}</td>
-                            <td>{{ record.T }}</td>
-                            <td>{{ record.C }}</td>
+                            <td><strong>{{ record.data_rilevazione|date:"d/m/Y" }}</strong></td>
+                            <td><span class="tag is-info">{{ record.M }}</span></td>
+                            <td><span class="tag is-info">{{ record.E }}</span></td>
+                            <td><span class="tag is-info">{{ record.S }}</span></td>
+                            <td><span class="tag is-info">{{ record.T }}</span></td>
+                            <td><span class="tag is-info">{{ record.C }}</span></td>
                             <td>
-                                <div class="buttons are-small">
-                                    <a href="{% url 'modifica_mestc' paziente.id record.id %}" class="button is-warning" title="Modifica">
+                                <div class="action-buttons">
+                                    <a href="{% url 'modifica_mestc' paziente.id record.id %}" class="button is-small is-warning" title="Modifica">
                                         <span class="icon">
                                             <i class="fas fa-edit"></i>
                                         </span>
                                     </a>
                                     <a href="{% url 'delete_mestc' record.id %}"
-                                        class="button is-danger"
+                                        class="button is-small is-danger"
                                         onclick="return confirm('Sei sicuro di voler eliminare questo referto MEST-C?');" title="Elimina">
                                         <span class="icon">
                                             <i class="fas fa-trash"></i>
@@ -491,32 +599,23 @@ h1.title {
                 </table>
             </div>
         {% else %}
-            <div class="notification is-info is-light">
-                <span class="icon-text">
-                    <span class="icon">
-                        <i class="fas fa-info-circle"></i>
-                    </span>
-                    <span>Nessun referto MEST-C registrato.</span>
-                </span>
+            <div class="empty-state">
+                <i class="fas fa-microscope"></i>
+                <p>Nessun referto MEST-C registrato.</p>
             </div>
         {% endif %}
     </div>
 
-    <hr>
-
+    <!-- Andamento Predizioni ESKD -->
     <div class="box">
-        <h3 class="title is-4">
-            <span class="icon-text">
-                <span class="icon">
-                    <i class="fas fa-chart-line"></i>
-                </span>
-                <span>Andamento Predizioni ESKD</span>
-            </span>
+        <h3 class="box-title">
+            <i class="fas fa-chart-line"></i>
+            <span>Andamento Predizioni ESKD</span>
         </h3>
 
         {% if predizioni %}
             <div class="table-container">
-                <table class="table is-fullwidth is-striped is-hoverable">
+                <table class="table is-fullwidth is-hoverable table-modern">
                     <thead>
                         <tr>
                             <th>Data</th>
@@ -530,8 +629,8 @@ h1.title {
                     <tbody>
                     {% for pred in predizioni %}
                         <tr>
-                            <td>{{ pred.data_predizione|date:"d/m/Y H:i" }}</td>
-                            <td>{{ pred.probabilita_eskd|floatformat:2 }}</td>
+                            <td><strong>{{ pred.data_predizione|date:"d/m/Y H:i" }}</strong></td>
+                            <td><strong>{{ pred.probabilita_eskd|floatformat:2 }}%</strong></td>
                             <td>
                                 {% if pred.esito == 'ALTO' %}
                                     <span class="tag is-danger">Rischio Alto</span>
@@ -556,15 +655,13 @@ h1.title {
                                 {% endif %}
                             </td>
                             <td>
-                                <div class="buttons are-small">
-                                    <a href="{% url 'delete_predizione' pred.id %}"
-                                        class="button is-danger"
-                                        onclick="return confirm('Vuoi davvero eliminare questa predizione ESKD?');" title="Elimina">
-                                        <span class="icon">
-                                            <i class="fas fa-trash"></i>
-                                        </span>
-                                    </a>
-                                </div>
+                                <a href="{% url 'delete_predizione' pred.id %}"
+                                    class="button is-small is-danger"
+                                    onclick="return confirm('Vuoi davvero eliminare questa predizione ESKD?');" title="Elimina">
+                                    <span class="icon">
+                                        <i class="fas fa-trash"></i>
+                                    </span>
+                                </a>
                             </td>
                         </tr>
                     {% endfor %}
@@ -572,13 +669,9 @@ h1.title {
                 </table>
             </div>
         {% else %}
-            <div class="notification is-info is-light">
-                <span class="icon-text">
-                    <span class="icon">
-                        <i class="fas fa-info-circle"></i>
-                    </span>
-                    <span>Nessuna predizione ancora registrata per questo paziente.</span>
-                </span>
+            <div class="empty-state">
+                <i class="fas fa-chart-line"></i>
+                <p>Nessuna predizione ancora registrata per questo paziente.</p>
             </div>
         {% endif %}
     </div>
@@ -586,7 +679,7 @@ h1.title {
     <div class="level mt-6">
         <div class="level-left">
             <div class="level-item">
-                <a href="{% url 'lista_pazienti' %}" class="button">
+                <a href="{% url 'lista_pazienti' %}" class="button is-light">
                     <span class="icon">
                         <i class="fas fa-arrow-left"></i>
                     </span>
@@ -594,8 +687,6 @@ h1.title {
                 </a>
             </div>
         </div>
-    </div>
-    
     </div>
 </div>
 
