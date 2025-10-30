@@ -11,15 +11,24 @@
     }
 
     .pazienti-box {
-    background: rgba(255, 255, 255, 0.88);
-    border-radius: 8px;
-    padding: 2.5rem;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
-    backdrop-filter: blur(6px);
-    max-width: 1100px;
-    margin: 4rem auto;
+        background: rgba(255, 255, 255, 0.88);
+        border-radius: 8px;
+        padding: 2.5rem;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+        backdrop-filter: blur(6px);
+        max-width: 1100px;
+        margin: 4rem auto;
     }
 
+    .search-container {
+        background: rgba(255, 255, 255, 0.88);
+        border-radius: 8px;
+        padding: 1.5rem 2.5rem;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+        backdrop-filter: blur(6px);
+        max-width: 1100px;
+        margin: 0 auto 1.5rem auto;
+    }
 
     .page-header {
         display: flex;
@@ -66,6 +75,45 @@
         color: white;
     }
 
+    .search-form {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+    }
+
+    .search-input {
+        flex: 1;
+        border-radius: 10px;
+        padding: 10px 15px;
+        border: 1.5px solid #cdd4dc;
+        transition: all 0.3s ease;
+    }
+
+    .search-input:focus {
+        border-color: #00b09b;
+        box-shadow: 0 0 0 3px rgba(0, 176, 155, 0.15);
+        outline: none;
+    }
+
+    .search-btn {
+        background: linear-gradient(90deg, #3273dc, #5a8fd4);
+        border: none;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 10px;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: 0.3s;
+        cursor: pointer;
+    }
+
+    .search-btn:hover {
+        transform: scale(1.03);
+        opacity: 0.9;
+    }
+
     table {
         background-color: rgba(255, 255, 255, 0.97);
         border-radius: 12px;
@@ -79,8 +127,14 @@
         font-weight: 600;
     }
 
-    .btn-share { background-color: #d1f7d1; color: #166534; }
-    .btn-share:hover { transform: scale(1.05); }
+    .btn-share { 
+        background-color: #d1f7d1; 
+        color: #166534; 
+    }
+    
+    .btn-share:hover { 
+        transform: scale(1.05); 
+    }
 
     .action-btn {
         display: inline-flex;
@@ -94,12 +148,24 @@
         transition: 0.2s;
     }
 
-   
-    .btn-view { background-color: #e6e9ff; color: #000000ce; }
-    .btn-edit { background-color: #fff3cd; color: #000000ce; }
-    .btn-del { background-color: #f8d7da; color: #000000ce; }
+    .btn-view { 
+        background-color: #e6e9ff; 
+        color: #000000ce; 
+    }
+    
+    .btn-edit { 
+        background-color: #fff3cd; 
+        color: #000000ce; 
+    }
+    
+    .btn-del { 
+        background-color: #f8d7da; 
+        color: #000000ce; 
+    }
 
-    .btn-view:hover, .btn-edit:hover, .btn-del:hover {
+    .btn-view:hover, 
+    .btn-edit:hover, 
+    .btn-del:hover {
         transform: scale(1.05);
     }
 
@@ -108,134 +174,130 @@
         transition: background-color 0.3s ease;
     }
 
-    /* Spazio tra sezioni */
     .mt-5 {
         margin-top: 2rem;
     }
 </style>
 
-<div class="container mt-5 pazienti-box">
-    <div class="page-header">
-        <h1 class="page-title">
-            <i class="fas fa-users"></i>
-            Lista Pazienti
-        </h1>
-        <a href="{% url 'nuovo_paziente' %}" class="add-btn">
-            <i class="fas fa-user-plus"></i>
-            Nuovo Paziente
-        </a>
+<div class="container mt-5">
+    <!-- 🔍 Barra di ricerca separata con stessa larghezza -->
+    <div class="search-container">
+        <form method="get" action="{% url 'lista_pazienti' %}" class="search-form">
+            <input 
+                type="text" 
+                name="q" 
+                value="{{ request.GET.q }}" 
+                class="search-input" 
+                placeholder="🔍 Cerca paziente per nome o cognome..."
+            >
+            <button type="submit" class="search-btn">
+                <i class="fas fa-search"></i>
+                <span>Cerca</span>
+            </button>
+        </form>
     </div>
 
-    <!-- 🔍 Barra di ricerca -->
-    <form method="get" action="{% url 'lista_pazienti' %}" 
-      class="mb-4" 
-      style="display: flex; justify-content: center; gap: 10px; align-items: center; max-width: 800px; margin: 0 auto;">
-    <input 
-        type="text" 
-        name="q" 
-        value="{{ request.GET.q }}" 
-        class="input" 
-        placeholder="Cerca paziente per nome o cognome..." 
-        style="flex: 1; border-radius: 10px; padding: 10px; min-width: 400px;"
-    >
-    <button type="submit" class="button is-link" style="border-radius: 10px;">
-        <span class="icon"><i class="fas fa-search"></i></span>
-        <span>Cerca</span>
-        </button>
-    </form>
+    <!-- Box principale lista pazienti -->
+    <div class="pazienti-box">
+        <div class="page-header">
+            <h1 class="page-title">
+                <i class="fas fa-users"></i>
+                Lista Pazienti
+            </h1>
+            <a href="{% url 'nuovo_paziente' %}" class="add-btn">
+                <i class="fas fa-user-plus"></i>
+                Nuovo Paziente
+            </a>
+        </div>
 
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
 
-    {% if messages %}
-        {% for message in messages %}
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                {{ message }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        {% endfor %}
-    {% endif %}
-
-    {% if pazienti %}
-    <div class="table-responsive">
-        <table class="table table-hover align-middle">
-            <thead>
-                <tr>
-                    <th>Nome</th>
-                    <th>Cognome</th>
-                    <th>Età</th>
-                    <th>Sesso</th>
-                    <th>Rischio ESKD</th>
-                    <th class="text-center">Azioni</th>
-                    <th class="text-center">Condiviso con me</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for paziente in pazienti %}
-                    <tr class="{% if request.user in paziente.medici_condivisi.all %}is-shared{% endif %}">
-                        <td>{{ paziente.nome }}</td>
-                        <td>{{ paziente.cognome }}</td>
-                        <td>{{ paziente.eta|default:"-" }}</td>
-                        <td>
-                            {% if paziente.sesso == 'M' %}
-                                👨‍⚕️ Maschio
-                            {% elif paziente.sesso == 'F' %}
-                                👩‍⚕️ Femmina
-                            {% else %}
-                                -
-                            {% endif %}
-                        </td>
-                        <td>
-                            {% with ultima_pred=paziente.predizioni.last %}
-                                {% if ultima_pred %}
-                                    {% if ultima_pred.esito == 'ALTO' %}
-                                        <span class="tag is-danger">Rischio Alto</span>
-                                    {% elif ultima_pred.esito == 'MEDIO' %}
-                                        <span class="tag is-warning">Rischio Medio</span>
-                                    {% else %}
-                                        <span class="tag is-success">Rischio Basso</span>
-                                    {% endif %}
-                                    <small>({{ ultima_pred.probabilita_eskd|floatformat:1 }}%)</small>
-                                {% else %}
-                                    <span class="tag is-light">Nessuna predizione</span>
-                                {% endif %}
-                            {% endwith %}
-                        </td>
-                        <td class="text-center">
-                            <a href="{% url 'dettaglio_paziente' paziente.id %}" class="action-btn btn-view">
-                                👁️ Dettagli
-                            </a>
-                            <a href="{% url 'modifica_paziente' paziente.id %}" class="action-btn btn-edit">
-                                ✏️ Modifica
-                            </a>
-                            <a href="{% url 'condividi_paziente' paziente.id %}" class="action-btn btn-share">
-                                👨‍⚕️👩‍⚕️ Condividi
-                            </a>
-                            <a href="{% url 'elimina_paziente' paziente.id %}" 
-                            class="action-btn btn-del"
-                            onclick="return confirm('Vuoi davvero eliminare {{ paziente.nome }} {{ paziente.cognome }}?');">
-                                🗑️ Elimina
-                            </a>
-                        </td>
-                        <td class="text-center">
-                            {% if request.user in paziente.medici_condivisi.all %}
-                                <span class="icon has-text-info" title="Condiviso tra medici">
-                                    <i class="fas fa-user-md"></i>
-                                    <i class="fas fa-arrow-right" style="margin: 0 5px; opacity: 0.8;"></i>
-                                    <i class="fas fa-user-md"></i>
-                                </span>
-                            {% else %}
-                                <span class="has-text-grey-light">—</span>
-                            {% endif %}
-
-                        </td>
-
+        {% if pazienti %}
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Cognome</th>
+                        <th>Età</th>
+                        <th>Sesso</th>
+                        <th>Rischio ESKD</th>
+                        <th class="text-center">Azioni</th>
+                        <th class="text-center">Condiviso con me</th>
                     </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    {% for paziente in pazienti %}
+                        <tr class="{% if request.user in paziente.medici_condivisi.all %}is-shared{% endif %}">
+                            <td>{{ paziente.nome }}</td>
+                            <td>{{ paziente.cognome }}</td>
+                            <td>{{ paziente.eta|default:"-" }}</td>
+                            <td>
+                                {% if paziente.sesso == 'M' %}
+                                    👨‍⚕️ Maschio
+                                {% elif paziente.sesso == 'F' %}
+                                    👩‍⚕️ Femmina
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% with ultima_pred=paziente.predizioni.last %}
+                                    {% if ultima_pred %}
+                                        {% if ultima_pred.esito == 'ALTO' %}
+                                            <span class="tag is-danger">Rischio Alto</span>
+                                        {% elif ultima_pred.esito == 'MEDIO' %}
+                                            <span class="tag is-warning">Rischio Medio</span>
+                                        {% else %}
+                                            <span class="tag is-success">Rischio Basso</span>
+                                        {% endif %}
+                                        <small>({{ ultima_pred.probabilita_eskd|floatformat:1 }}%)</small>
+                                    {% else %}
+                                        <span class="tag is-light">Nessuna predizione</span>
+                                    {% endif %}
+                                {% endwith %}
+                            </td>
+                            <td class="text-center">
+                                <a href="{% url 'dettaglio_paziente' paziente.id %}" class="action-btn btn-view">
+                                    👁️ Dettagli
+                                </a>
+                                <a href="{% url 'modifica_paziente' paziente.id %}" class="action-btn btn-edit">
+                                    ✏️ Modifica
+                                </a>
+                                <a href="{% url 'condividi_paziente' paziente.id %}" class="action-btn btn-share">
+                                    👨‍⚕️👩‍⚕️ Condividi
+                                </a>
+                                <a href="{% url 'elimina_paziente' paziente.id %}" 
+                                class="action-btn btn-del"
+                                onclick="return confirm('Vuoi davvero eliminare {{ paziente.nome }} {{ paziente.cognome }}?');">
+                                    🗑️ Elimina
+                                </a>
+                            </td>
+                            <td class="text-center">
+                                {% if request.user in paziente.medici_condivisi.all %}
+                                    <span class="icon has-text-info" title="Condiviso tra medici">
+                                        <i class="fas fa-user-md"></i>
+                                        <i class="fas fa-arrow-right" style="margin: 0 5px; opacity: 0.8;"></i>
+                                        <i class="fas fa-user-md"></i>
+                                    </span>
+                                {% else %}
+                                    <span class="has-text-grey-light">—</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
     </div>
-    {% endif %}
-
-    </div>
-
+</div>
 
 {% endblock %}

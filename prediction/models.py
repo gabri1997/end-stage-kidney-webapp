@@ -13,8 +13,16 @@ class Paziente(models.Model):
     email = models.EmailField(blank=True, null=True)
     telefono = models.CharField(max_length=20, blank=True, null=True)
     indirizzo = models.CharField(max_length=255, blank=True, null=True)
+    data_nascita = models.DateField(blank=True, null=True)
     eta = models.PositiveIntegerField(null=True, blank=True)
-
+    def calcola_eta(self):
+        from datetime import date
+        if self.data_nascita:
+            today = date.today()
+            return today.year - self.data_nascita.year - (
+                (today.month, today.day) < (self.data_nascita.month, self.data_nascita.day)
+            )
+        return None
     sesso = models.CharField(
         max_length=1,
         choices=[('M', 'Maschio'), ('F', 'Femmina')],

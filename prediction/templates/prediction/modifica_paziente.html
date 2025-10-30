@@ -37,6 +37,31 @@ h1.title {
     justify-content: flex-end;
     margin-bottom: 1.5rem;
 }
+
+.label {
+    color: #1e4b7a;
+    font-weight: 600;
+}
+
+.help {
+    font-size: 0.85em;
+    color: #6c757d;
+}
+
+.input {
+    border-radius: 10px;
+    border: 1.5px solid #cdd4dc;
+    transition: all 0.3s ease;
+}
+
+.input:focus {
+    border-color: #00b09b;
+    box-shadow: 0 0 0 3px rgba(0, 176, 155, 0.15);
+}
+
+.field {
+    margin-bottom: 1.2rem;
+}
 </style>
 
 <div class="columns is-centered">
@@ -68,7 +93,10 @@ h1.title {
             <!-- FORM -->
             <form method="post">
                 {% csrf_token %}
+                
+                <!-- Campi prima di data_nascita, età e sesso -->
                 {% for field in form %}
+                    {% if field.name not in 'data_nascita,eta,sesso' %}
                     <div class="field">
                         <label class="label">{{ field.label }}</label>
                         <div class="control">
@@ -85,6 +113,63 @@ h1.title {
                             <p class="help">{{ field.help_text }}</p>
                         {% endif %}
                     </div>
+                    
+                    <!-- Inserisci data_nascita, età e sesso subito dopo il campo "cognome" -->
+                    {% if field.name == 'cognome' %}
+                        <!-- Campo data di nascita -->
+                        <div class="field">
+                            <label class="label">Data di nascita</label>
+                            <div class="control has-icons-left">
+                                <input 
+                                    type="date" 
+                                    name="data_nascita" 
+                                    id="id_data_nascita" 
+                                    class="input" 
+                                    value="{{ form.data_nascita.value|date:'Y-m-d'|default_if_none:'' }}"
+                                    required
+                                >
+                                <span class="icon is-small is-left">
+                                    <i class="fas fa-calendar-day"></i>
+                                </span>
+                            </div>
+                            {% if form.data_nascita.errors %}
+                                <p class="help is-danger">{{ form.data_nascita.errors }}</p>
+                            {% endif %}
+                        </div>
+
+                        <!-- Età calcolata automaticamente -->
+                        <div class="field">
+                            <label class="label">Età</label>
+                            <div class="control has-icons-left">
+                                <input 
+                                    type="number" 
+                                    id="id_eta" 
+                                    name="eta" 
+                                    class="input" 
+                                    value="{{ form.eta.value|default_if_none:'' }}" 
+                                    readonly
+                                >
+                                <span class="icon is-small is-left">
+                                    <i class="fas fa-birthday-cake"></i>
+                                </span>
+                            </div>
+                            <p class="help">Calcolata automaticamente dalla data di nascita</p>
+                        </div>
+
+                        <!-- Campo sesso -->
+                        <div class="field">
+                            <label class="label">{{ form.sesso.label }}</label>
+                            <div class="control">
+                                {{ form.sesso.errors }}
+                                {{ form.sesso|addclass:'input' }}
+                            </div>
+                            {% if form.sesso.help_text %}
+                                <p class="help">{{ form.sesso.help_text }}</p>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                    
+                    {% endif %}
                 {% endfor %}
 
                 <!-- PULSANTE SALVA -->
@@ -112,4 +197,35 @@ h1.title {
         </div>
     </div>
 </div>
+
+<script>
+// Calcolo automatico dell'età dalla data di nascita
+document.getElementById('id_data_nascita').addEventListener('change', function() {
+    const dataNascita = new Date(this.value);
+    const oggi = new Date();
+    
+    if (dataNascita && dataNascita <= oggi) {
+        let eta = oggi.getFullYear() - dataNascita.getFullYear();
+        const mesi = oggi.getMonth() - dataNascita.getMonth();
+        
+        // Aggiusta l'età se il compleanno non è ancora passato quest'anno
+        if (mesi < 0 || (mesi === 0 && oggi.getDate() < dataNascita.getDate())) {
+            eta--;
+        }
+        
+        document.getElementById('id_eta').value = eta;
+    } else {
+        document.getElementById('id_eta').value = '';
+    }
+});
+
+// Calcola l'età anche al caricamento della pagina (per modifiche)
+window.addEventListener('DOMContentLoaded', function() {
+    const dataNascitaInput = document.getElementById('id_data_nascita');
+    if (dataNascitaInput.value) {
+        dataNascitaInput.dispatchEvent(new Event('change'));
+    }
+});
+</script>
+
 {% endblock %}

@@ -192,7 +192,30 @@ h1.title {
                             </div>
                         </div>
                     </div>
-
+                        
+                    <div class="field is-horizontal">
+                        <div class="field-label is-normal">
+                            <label class="label">Data di Nascita</label>
+                        </div>
+                        <div class="field-body">
+                            <div class="field">
+                                <p class="control">
+                                    <span class="tag is-info is-medium">
+                                        <span class="icon">
+                                            <i class="fas fa-calendar-day"></i>
+                                        </span>
+                                        <span>
+                                            {% if paziente.calcola_eta %}
+                                                {{ paziente.calcola_eta }} anni
+                                            {% else %}
+                                                    -
+                                            {% endif %}
+                                        </span>
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
                     <div class="field is-horizontal">
                         <div class="field-label is-normal">
                             <label class="label">Età</label>
@@ -210,7 +233,7 @@ h1.title {
                             </div>
                         </div>
                     </div>
-
+                    
                     <div class="field mt-5">
                         <div class="control">
                             <a href="{% url 'modifica_paziente' paziente.id %}" class="button is-warning">

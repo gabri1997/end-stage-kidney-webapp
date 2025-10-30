@@ -13,7 +13,13 @@ class PazienteForm(forms.ModelForm):
             'indirizzo',
             'sesso',
             'eta',
+            'data_nascita',
         ]
+        def calcola_eta(self):
+            if self.data_nascita:
+                today = date.today()
+                return today.year - self.data_nascita.year - ((today.month, today.day) < (self.data_nascita.month, self.data_nascita.day))
+            return None
         # Rimuovi widgets se non hai 'data_nascita' nei fields
         # Oppure aggiungi 'data_nascita' ai fields se esiste nel model
 
