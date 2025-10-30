@@ -177,6 +177,11 @@
     .mt-5 {
         margin-top: 2rem;
     }
+
+    /* Previene il wrap del testo nella colonna Sesso */
+    td:nth-child(4) {
+        white-space: nowrap;
+    }
 </style>
 
 <div class="container mt-5">
@@ -230,7 +235,7 @@
                         <th>Sesso</th>
                         <th>Rischio ESKD</th>
                         <th class="text-center">Azioni</th>
-                        <th class="text-center">Condiviso con me</th>
+                        <th class="text-center">Condivisi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -241,9 +246,9 @@
                             <td>{{ paziente.eta|default:"-" }}</td>
                             <td>
                                 {% if paziente.sesso == 'M' %}
-                                    👨‍⚕️ Maschio
+                                    👨‍⚕ Maschio
                                 {% elif paziente.sesso == 'F' %}
-                                    👩‍⚕️ Femmina
+                                    👩‍⚕ Femmina
                                 {% else %}
                                     -
                                 {% endif %}
@@ -266,18 +271,18 @@
                             </td>
                             <td class="text-center">
                                 <a href="{% url 'dettaglio_paziente' paziente.id %}" class="action-btn btn-view">
-                                    👁️ Dettagli
+                                    👁 Dettagli
                                 </a>
                                 <a href="{% url 'modifica_paziente' paziente.id %}" class="action-btn btn-edit">
-                                    ✏️ Modifica
+                                    ✏ Modifica
                                 </a>
                                 <a href="{% url 'condividi_paziente' paziente.id %}" class="action-btn btn-share">
-                                    👨‍⚕️👩‍⚕️ Condividi
+                                    👨‍⚕👩‍⚕ Condividi
                                 </a>
                                 <a href="{% url 'elimina_paziente' paziente.id %}" 
                                 class="action-btn btn-del"
                                 onclick="return confirm('Vuoi davvero eliminare {{ paziente.nome }} {{ paziente.cognome }}?');">
-                                    🗑️ Elimina
+                                    🗑 Elimina
                                 </a>
                             </td>
                             <td class="text-center">
