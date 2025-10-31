@@ -113,17 +113,36 @@ def nuovo_paziente(request):
 
 @login_required
 def lista_pazienti(request):
-    query = request.GET.get('q','')
+    query = request.GET.get('q', '').strip()
+    
+    # Filtra pazienti del medico o condivisi con lui
     pazienti = Paziente.objects.filter(
         Q(medico=request.user) | Q(medici_condivisi=request.user)
-    ).distinct().order_by('cognome', 'nome')
+    ).distinct()
+    
+    # Applica la ricerca se presente
     if query:
-        pazienti = pazienti.filter(
-            Q(nome__icontains=query) | Q(cognome__icontains=query)
-        )
+        parole = query.split()
+        
+        if len(parole) >= 2:
+            # Ricerca con nome E cognome
+            pazienti = pazienti.filter(
+                Q(nome__icontains=parole[0], cognome__icontains=parole[1]) |
+                Q(nome__icontains=parole[1], cognome__icontains=parole[0]) |
+                Q(nome__icontains=query) |
+                Q(cognome__icontains=query)
+            )
+        else:
+            # Ricerca singola parola
+            pazienti = pazienti.filter(
+                Q(nome__icontains=query) | Q(cognome__icontains=query)
+            )
+    
+    # Ordina i risultati
+    pazienti = pazienti.order_by('cognome', 'nome')
+    
     context = {"pazienti": pazienti}
     return render(request, "prediction/lista_pazienti.html", context)
-    
 
 @login_required
 def dettaglio_paziente(request, paziente_id):
