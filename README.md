@@ -56,24 +56,79 @@ It combines **clinical data management**, **automated classification**, and **da
 
 ---
 
-# ⚙️ System Architecture
+## ⚙️ Architecture Overview
 
-Django acts as both the **frontend and backend** framework.
+Below is a simplified overview of how the system components interact in production.  
+Django acts as both **frontend and backend**, handling authentication, database operations, and HTML rendering.
 
-## Architecture Overview
-```mermaid
-flowchart TD
-    A[User (Browser)] -->|HTTPS Request| B[NGINX Reverse Proxy]
-    B -->|WSGI Socket| C[Gunicorn Application Server]
-    C --> D[Django Framework (Backend + Frontend)]
-    D -->|ORM Query| E[(SQLite Database)]
-    D -->|Prediction Request| F[ESKD Classifier (Python Model)]
-    F -->|Result| D
-    D -->|Template Rendering| G[HTML Page (Frontend)]
-    D --> H[(Local Media Storage)]
-    D -.-> I[Monitoring / Logs]
-    G -->|HTTP Response| B --> A
-```
+         ┌─────────────────────────────┐
+         │         Web Client          │
+         │   (User Browser / HTTPS)    │
+         │                             │
+         └──────────────┬──────────────┘
+                        │Sends requests 
+                        │to Web Server  
+                        ▼
+         ┌─────────────────────────────┐
+         │       NGINX or APACHE       │
+         │ Reverse Proxy & Static Host │
+         └──────────────┬──────────────┘
+                        │Forwards to ...
+                        │   
+                        ▼
+         ┌─────────────────────────────┐
+         │          Gunicorn           │
+         │  WSGI Application Server    │
+         └──────────────┬──────────────┘
+                        │Via WSGI protocol
+                        ▼ forwards to Django
+         ┌─────────────────────────────┐
+         │          Django             │
+         │  Backend + Frontend Logic   │
+         │ - Authentication            │
+         │ - Database Access           │
+         │ - ESKD CNN Prediction       │
+         │ - Template Rendering (HTML) │
+         └──────────────┬──────────────┘
+
+The HTML rendered by Django is then propagated back through the entire pipeline: it is first returned to Gunicorn, then passed to the web server (Apache or NGINX), and finally delivered to the browser, which displays the Django-generated frontend with the computed results.
+---
+
+### 🔍 Description
+
+1. **User (Browser)**  
+   - Accesses the web interface over HTTPS.  
+   - Interacts with Django-rendered HTML pages.  
+
+2. **NGINX OR APACHE**  
+   - It is like a filter from the user and the backend.
+   - Acts as reverse proxy and handles SSL termination.  
+   - Serves static and media files directly.  
+
+3. **Gunicorn**  
+   - WSGI server that runs the Django application.  
+   - Passes requests/responses between NGINX and Django.  
+
+4. **Django (Full-stack)**  
+   - Manages business logic, user authentication, and rendering.  
+   - Handles ORM operations for the database.  
+   - Invokes the **ESKD classifier** for risk predictions.  
+
+5. **SQLite Database**  
+   - Stores patient data, predictions, and user accounts.  
+
+6. **ML Model (Python)**  
+   - Processes clinical data and returns risk classification results.  
+
+7. **Local Storage**  
+   - Keeps uploaded medical reports and images (`MEDIA_ROOT`).  
+
+8. **Monitoring (optional)**  
+   - Tools like Prometheus, Grafana, or Sentry can log system activity and performance.
+
+---
+
+
 
 ## 🖼️ Some Screenshots
 
