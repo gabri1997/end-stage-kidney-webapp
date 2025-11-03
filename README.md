@@ -1,15 +1,102 @@
-1. Installo django
-2. Creo la struttura del progetto con il core di django che in eskd_project, poi in model ho i pesi, in prediction i templates e le views, e poi ho il manage.py 
-3. Verifico che django vada con python manage.py runserver
-4. Creo la mia prima app prediction
-5. Creo i modelli, dopodichè nella mia pipeline ho database, form,  view e template
-6. Ogni volta che modifico il modello Django deve aggiornare la struttura del database creando o cambiando cartelle 
-Ora ho
-- un sistema di login/logout e autenticazione
-- ogni medico (utente) vede solo i suoi pazienti
-- puoi aggiungere pazienti, registrare visite e referti MEST-C
-- un database coerente e relazioni 1-a-molti perfette
-Proseguo con :
-- Aggiungere le funzionalità per modificare o cancellare visite e referti direttamente dalle pagine.
-  - modificare una visita o un referto MEST-C
-  - eliminarli direttamente dalla pagina del paziente
+# 🏥 ESKD Risk Classification Web App
+
+A full-stack **Django web application** for patient management and **End-Stage Kidney Disease (ESKD)** risk classification based on clinical and laboratory data.  
+This project integrates data entry, risk prediction through a machine-learning model, and visualization of patient-specific results — all within a single, secure platform.
+
+---
+
+## 📋 Table of Contents
+
+1. [Overview](#overview)  
+2. [Key Features](#key-features)  
+3. [Actors and Roles](#actors-and-roles)  
+4. [System Architecture](#system-architecture)  
+5. [Production Pipeline](#production-pipeline)  
+6. [Database and Storage](#database-and-storage)  
+7. [Technology Stack](#technology-stack)  
+8. [Deployment Notes](#deployment-notes)  
+9. [Security and Compliance](#security-and-compliance)  
+10. [Future Improvements](#future-improvements)  
+11. [License](#license)
+
+---
+
+## 🧭 Overview
+
+This Django application is designed to support healthcare professionals in managing patient records and predicting the likelihood of progression to **End-Stage Kidney Disease (ESKD)**.  
+It combines **clinical data management**, **automated classification**, and **data visualization** in a single interface.
+
+### Main objectives
+- Centralize patient information and laboratory results.  
+- Enable physicians to run an integrated **ESKD classification model**.  
+- Store predictions and visualize them in the patient dashboard.  
+- Provide an extendable foundation for research and hospital integration.
+
+---
+
+## ✨ Key Features
+
+- **User authentication and authorization** (via Django Auth).  
+- **Patient CRUD** (Create, Read, Update, Delete) operations.  
+- **ESKD risk prediction** using an integrated ML classifier.  
+- **Dynamic dashboard** with patient history and risk visualization.  
+- **Local storage** for medical reports and uploaded images.  
+- **Audit logs** for predictions and user actions.  
+
+---
+
+## 👥 Actors and Roles
+
+| Actor | Description | Permissions |
+|--------|--------------|-------------|
+| **Administrator** | Manages users, roles, and global configurations. | Full access (user and system management). |
+| **Physician / Clinician** | Manages patient records and performs risk classification. | Create/update patients, trigger ML predictions, view results. |
+| **Researcher** | Analyzes aggregated or anonymized results. | Read-only access to data summaries and statistics. |
+| **Patient (optional)** | Can view their own data (if allowed). | Read-only self-access. |
+
+---
+
+## ⚙️ System Architecture
+
+Django acts as both the **frontend and backend** framework.
+
+### Architecture Overview
+
+```mermaid
+flowchart TD
+
+A[👩‍⚕️ User (Browser)] -->|HTTPS Request| B[🌐 NGINX\nReverse Proxy]
+B -->|WSGI Socket| C[🐍 Gunicorn\nApplication Server]
+C --> D[🧩 Django Framework\n(Backend + Frontend)]
+
+D -->|ORM Query| E[(🗄️ SQLite Database)]
+D -->|Prediction Request| F[🧠 ESKD Classifier\n(Python Model)]
+F -->|Result →| D
+D -->|Template Rendering| G[🖥️ HTML Page\n(Frontend)]
+
+D --> H[(🗂️ Local Media Storage)]
+D -.-> I[📈 Monitoring / Logs]
+
+G -->|HTTP Response| B --> A
+
+## 🖼️ Some Screenshots
+
+### 🔐 Dashboard Page
+<p align="center">
+  <img src="/mnt/c/Users/gabri/Desktop/Webapp_eskd/docs/images/Screenshot 2025-11-03 at 15-32-32 Dashboard - ESKD Predictor.png" alt="Dashboard Page" width="60%">
+</p>
+
+### 🏥 Patient List
+<p align="center">
+  <img src="/mnt/c/Users/gabri/Desktop/Webapp_eskd/docs/images/Screenshot 2025-11-03 at 15-33-47 WebApp ESKD.png" alt="Patients List" width="80%">
+</p>
+
+### 🧠 Patient Details
+<p align="center">
+  <img src="/mnt/c/Users/gabri/Desktop/Webapp_eskd/docs/images/Screenshot 2025-11-03 at 15-34-17 Pierluigi Mazzacani - Dettaglio.png" alt="Patient details" width="80%">
+</p>
+
+### 🧠 Patient Details
+<p align="center">
+  <img src="/mnt/c/Users/gabri/Desktop/Webapp_eskd/docs/images/Screenshot 2025-11-03 at 15-34-32 Calcola ESKD - Pierluigi Mazzacani.png" alt="ESKD AI predictor" width="80%">
+</p>
