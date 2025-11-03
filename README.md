@@ -91,7 +91,7 @@ Django acts as both **frontend and backend**, handling authentication, database 
          │ - Template Rendering (HTML) │
          └──────────────┬──────────────┘
 
-The HTML rendered by Django is then propagated back through the entire pipeline: it is first returned to Gunicorn, then passed to the web server (Apache or NGINX), and finally delivered to the browser, which displays the Django-generated frontend with the computed results.
+*** The HTML rendered by Django is then propagated back through the entire pipeline: it is first returned to Gunicorn, then passed to the web server (Apache or NGINX), and finally delivered to the browser, which displays the Django-generated frontend with the computed results. ***
 ---
 
 ### 🔍 Description
