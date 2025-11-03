@@ -62,41 +62,50 @@ Django acts as both the **frontend and backend** framework.
 
 ### Architecture Overview
 
+## ⚙️ Architecture Overview
+
 ```mermaid
 flowchart TD
 
-A[👩‍⚕️ User (Browser)] -->|HTTPS Request| B[🌐 NGINX\nReverse Proxy]
-B -->|WSGI Socket| C[🐍 Gunicorn\nApplication Server]
-C --> D[🧩 Django Framework\n(Backend + Frontend)]
+A[User (Browser)] -->|HTTPS Request| B[NGINX Reverse Proxy]
+B -->|WSGI Socket| C[Gunicorn Application Server]
+C --> D[Django Framework (Backend + Frontend)]
 
-D -->|ORM Query| E[(🗄️ SQLite Database)]
-D -->|Prediction Request| F[🧠 ESKD Classifier\n(Python Model)]
-F -->|Result →| D
-D -->|Template Rendering| G[🖥️ HTML Page\n(Frontend)]
+D -->|ORM Query| E[(SQLite Database)]
+D -->|Prediction Request| F[ESKD Classifier (Python Model)]
+F -->|Result| D
+D -->|Template Rendering| G[HTML Page (Frontend)]
 
-D --> H[(🗂️ Local Media Storage)]
-D -.-> I[📈 Monitoring / Logs]
+D --> H[(Local Media Storage)]
+D -.-> I[Monitoring / Logs]
 
 G -->|HTTP Response| B --> A
 
+
+## 🖼️ Some Screenshots
+
+
+2. Nel README usa **percorsi relativi** (funziona online e in locale):
+
+```markdown
 ## 🖼️ Some Screenshots
 
 ### 🔐 Dashboard Page
 <p align="center">
-  <img src="/mnt/c/Users/gabri/Desktop/Webapp_eskd/docs/images/Screenshot 2025-11-03 at 15-32-32 Dashboard - ESKD Predictor.png" alt="Dashboard Page" width="60%">
+<img src="docs/images/dashboard.png" alt="Dashboard Page" width="60%">
 </p>
 
 ### 🏥 Patient List
 <p align="center">
-  <img src="/mnt/c/Users/gabri/Desktop/Webapp_eskd/docs/images/Screenshot 2025-11-03 at 15-33-47 WebApp ESKD.png" alt="Patients List" width="80%">
+<img src="docs/images/patient_list.png" alt="Patients List" width="80%">
 </p>
 
 ### 🧠 Patient Details
 <p align="center">
-  <img src="/mnt/c/Users/gabri/Desktop/Webapp_eskd/docs/images/Screenshot 2025-11-03 at 15-34-17 Pierluigi Mazzacani - Dettaglio.png" alt="Patient details" width="80%">
+<img src="docs/images/patient_details.png" alt="Patient Details" width="80%">
 </p>
 
-### 🧠 Patient Details
+### 🤖 ESKD Predictor
 <p align="center">
-  <img src="/mnt/c/Users/gabri/Desktop/Webapp_eskd/docs/images/Screenshot 2025-11-03 at 15-34-32 Calcola ESKD - Pierluigi Mazzacani.png" alt="ESKD AI predictor" width="80%">
+<img src="docs/images/prediction_result.png" alt="ESKD AI Predictor" width="80%">
 </p>
