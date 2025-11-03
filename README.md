@@ -129,29 +129,28 @@ The HTML rendered by Django is then propagated back through the entire pipeline:
 ---
 
 
-
 ## 🖼️ Some Screenshots
 
 ### 🔐 Dashboard Page
 
 <p align="center">
-<img src="docs/images/dashboard.png" alt="Dashboard Page" width="60%">
+<img src="docs/images/home.png" alt="Dashboard Page" width="60%">
 </p>
 
 ### 🏥 Patient List
 
 <p align="center">
-<img src="docs/images/patient_list.png" alt="Patients List" width="80%">
+<img src="docs/images/list.png" alt="Patients List" width="80%">
 </p>
 
 ### 🧠 Patient Details
 
 <p align="center">
-<img src="docs/images/patient_details.png" alt="Patient Details" width="80%">
+<img src="docs/images/details.png" alt="Patient Details" width="80%">
 </p>
 
 ### 🤖 ESKD Predictor
 
 <p align="center">
-<img src="docs/images/prediction_result.png" alt="ESKD AI Predictor" width="80%">
+<img src="docs/images/predictor.png" alt="ESKD AI Predictor" width="80%">
 </p>
