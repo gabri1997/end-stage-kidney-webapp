@@ -1,0 +1,32 @@
+version: '3.9'
+
+services:
+  web:
+    build: .
+    container_name: eskd_web
+    command: gunicorn eskd_project.wsgi:application --bind 0.0.0.0:8000
+    volumes:
+      - .:/app
+      - static_volume:/app/staticfiles
+      - media_volume:/app/media
+    environment:
+      - DJANGO_SETTINGS_MODULE=eskd_project.settings
+    ports:
+      - "8000:8000"
+
+  nginx:
+    image: nginx:latest
+    container_name: eskd_nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./staticfiles:/app/staticfiles
+      - ./media:/app/media
+
+    depends_on:
+      - web
+
+volumes:
+  static_volume:
+  media_volume:

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}WebApp ESKD{% endblock %}</title>
+    {% load static %}
+    <link rel="icon" type="image/svg+xml" href="{% static 'prediction/images/favicon.svg' %}">
+    <link rel="icon" type="image/png" href="{% static 'prediction/images/favicon.png' %}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <script defer src="https://use.fontawesome.com/releases/v5.15.4/js/all.js"></script>
+    <style>
+        html, body {
+            background-color: #ffffff;
+            min-height: 100vh;
+        }
+        .file-name {
+            max-width: none !important;
+            white-space: normal !important;
+            overflow: visible !important;
+            }
+        /* Sfondo leggermente più chiaro per i box */
+        .box {
+            background-color: #ffffffcc;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        /* Stili per i box di rischio */
+        .risk-positive {
+            background-color: #fff5f5;
+            border-left: 5px solid #f14668;
+            box-shadow: 0 2px 4px rgba(241,70,104,0.1);
+        }
+        .risk-negative {
+            background-color: #f0fff4;
+            border-left: 5px solid #48c774;
+            box-shadow: 0 2px 4px rgba(72,199,116,0.1);
+        }
+
+        /* Footer migliorato */
+        footer {
+            margin-top: 60px;
+            padding: 2rem 1.5rem;
+            background-color: #ffffff;
+            border-top: 1px solid rgba(0,0,0,0.05);
+            box-shadow: 0 -2px 4px rgba(0,0,0,0.03);
+        }
+
+        /* Effetti hover migliorati */
+        .logout-button {
+            transition: all 0.2s ease-in-out;
+        }
+        .logout-button:hover {
+            transform: scale(1.05);
+        }
+
+        /* Miglioramenti per la leggibilità */
+        .title, .subtitle {
+            color: #363636;
+        }
+        
+        /* Miglioramenti per i form */
+        .input, .textarea, .select select {
+            background-color: #ffffff;
+            border-color: #dbdbdb;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+        }
+        
+        .input:focus, .textarea:focus, .select select:focus {
+            border-color: #3273dc;
+            box-shadow: 0 0 0 0.125em rgba(50,115,220,0.25);
+        }
+        /* Arrotonda tutti i pulsanti allo stesso modo */
+        .button {
+            border-radius: 5px !important; /* puoi regolare il valore (es. 8px, 12px, ecc.) */
+        }
+
+    </style>
+    {% block extra_head %}{% endblock %}
+</head>
+
+<body>
+ 
+    <!-- 🔹 Navbar -->
+<nav class="navbar is-success" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+        {% if user.is_authenticated %}
+            <a class="navbar-item" href="{% url 'home' %}">
+        {% else %}
+            <a class="navbar-item" href="{% url 'login' %}">
+        {% endif %}
+            <span class="icon">
+                <i class="fas fa-brain"></i>
+            </span>
+            <strong class="ml-2">ESKD Predictor</strong>
+        </a>
+
+        {% if user.is_authenticated %}
+        <!-- Hamburger menu for mobile -->
+        <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="mainNavbar">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+        {% endif %}
+    </div>
+
+    <div id="mainNavbar" class="navbar-menu">
+        <!-- 🔹 Sezione sinistra -->
+        <div class="navbar-start">
+            <a class="navbar-item" href="{% url 'home' %}">
+                <span class="icon-text">
+                    <span class="icon"><i class="fas fa-home"></i></span>
+                    <span>Home</span>
+                </span>
+            </a>
+            {% if user.is_authenticated %}
+            <a class="navbar-item" href="{% url 'lista_pazienti' %}">
+                <span class="icon-text">
+                    <span class="icon"><i class="fas fa-users"></i></span>
+                    <span>Pazienti</span>
+                </span>
+            </a>
+            {% endif %}
+        </div>
+
+        <!-- 🔹 Sezione destra -->
+        <div class="navbar-end">
+            <div class="navbar-item">
+                {% if user.is_authenticated %}
+                    <div class="buttons">
+                        <span class="icon-text mr-3">
+                            <span class="icon"><i class="fas fa-user-circle"></i></span>
+                            <span>{{ user.username }}</span>
+                        </span>
+
+                        {% if user.is_staff %}
+                        <a href="{% url 'admin:index' %}" class="button is-light">
+                            <span class="icon"><i class="fas fa-cogs"></i></span>
+                            <span>Admin</span>
+                        </a>
+                        {% endif %}
+
+                        <!-- 🔹 Logout -->
+                        <form method="POST" action="{% url 'logout' %}" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="button is-danger is-light logout-button">
+                                <span class="icon"><i class="fas fa-sign-out-alt"></i></span>
+                                <span>Logout</span>
+                            </button>
+                        </form>
+                    </div>
+                {% else %}
+                    {% if request.resolver_match.url_name != 'login' %}
+                    <div class="buttons">
+                        <a href="{% url 'login' %}" class="button is-light">
+                            <span class="icon"><i class="fas fa-sign-in-alt"></i></span>
+                            <span>Login</span>
+                        </a>
+                    </div>
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</nav>
+
+    <!-- 🔹 Contenuto principale -->
+    <section class="section">
+        <div class="container">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="notification is-success is-light">
+                        <button class="delete"></button>
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            {% block content %}{% endblock %}
+        </div>
+    </section>
+
+  
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Delete notification functionality
+            (document.querySelectorAll('.notification .delete') || []).forEach(($delete) => {
+                const $notification = $delete.parentNode;
+                $delete.addEventListener('click', () => {
+                    $notification.parentNode.removeChild($notification);
+                });
+            });
+
+            // Hamburger menu functionality
+            const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
+            if ($navbarBurgers.length > 0) {
+                $navbarBurgers.forEach(el => {
+                    el.addEventListener('click', () => {
+                        const target = el.dataset.target;
+                        const $target = document.getElementById(target);
+                        el.classList.toggle('is-active');
+                        $target.classList.toggle('is-active');
+                    });
+                });
+            }
+        });
+    </script>
+
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>

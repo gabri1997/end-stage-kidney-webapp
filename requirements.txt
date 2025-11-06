@@ -1,4 +1,10 @@
 django
-pytorch
+gunicorn
+psycopg2-binary
 numpy
 pandas
+joblib
+redis
+django-dramatiq
+torch --index-url https://download.pytorch.org/whl/cpu
+scikit-learn>=1.4.2

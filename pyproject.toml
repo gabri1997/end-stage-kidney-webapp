@@ -1,0 +1,17 @@
+[project]
+name = "end-stage-kidney-webapp"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "django>=5.2.7",
+    "django-dramatiq>=0.14.0",
+    "gunicorn>=23.0.0",
+    "joblib>=1.5.2",
+    "numpy>=2.3.4",
+    "pandas>=2.3.3",
+    "psycopg2-binary>=2.9.11",
+    "redis>=7.0.1",
+    "torch>=2.9.0",
+]
