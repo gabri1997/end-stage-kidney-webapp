@@ -1,5 +1,15 @@
 from django import forms
-from .models import Paziente, Visita, MESTC
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
+from django.contrib.auth.forms import SetPasswordForm
+from .models import Paziente, Visita, MESTC, UserSecurity
+
+# Elenco domande standard disponibili per la domanda di sicurezza
+SECURITY_QUESTIONS = [
+    "Qual è il nome del tuo primo animale domestico?",
+    "In che città sei nato?",
+    "Qual è il cognome da nubile di tua madre?",
+]
 
 class PazienteForm(forms.ModelForm):
     class Meta:
@@ -136,3 +146,99 @@ class CalcolaESKDForm(forms.Form):
     Antihypertensive = forms.BooleanField(label="Terapia Antipertensiva", required=False)
     Immunosuppressants = forms.BooleanField(label="Terapia Immunosoppressiva", required=False)
     FishOil = forms.BooleanField(label="Olio di pesce (Fish Oil)", required=False)
+
+
+class CustomUserCreationForm(UserCreationForm):
+    """User creation form that also collects a mandatory email.
+
+    Notes:
+    - Password reset flow looks up users by email; collecting it at signup ensures it works for doctors.
+    - We don't enforce unique emails at the DB level here; optionally add uniqueness validation below.
+    """
+
+    email = forms.EmailField(required=True, help_text="Richiesto per il reset della password")
+    # Campi per domanda di sicurezza durante la registrazione
+    question = forms.ChoiceField(
+        choices=[(q, q) for q in SECURITY_QUESTIONS] + [("Altro", "Altro (personalizzata)")],
+        label="Domanda di sicurezza",
+        required=True,
+    )
+    custom_question = forms.CharField(required=False, label="Domanda personalizzata")
+    answer = forms.CharField(widget=forms.PasswordInput, label="Risposta alla domanda", required=True)
+
+    class Meta(UserCreationForm.Meta):
+        model = User
+        fields = ("username", "email", "password1", "password2")
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.email = self.cleaned_data["email"]
+        if commit:
+            user.save()
+            # Crea/aggiorna la domanda di sicurezza
+            q = self.cleaned_data.get("custom_question") if self.cleaned_data.get("question") == "Altro" else self.cleaned_data.get("question")
+            ans = self.cleaned_data.get("answer")
+            sec, _ = UserSecurity.objects.get_or_create(user=user)
+            sec.question = q
+            sec.set_answer(ans)
+            sec.save()
+        return user
+
+    def clean_email(self):
+        """Optionally enforce email uniqueness to avoid ambiguity in password reset."""
+        email = self.cleaned_data.get("email")
+        if email and User.objects.filter(email__iexact=email).exists():
+            raise forms.ValidationError("Esiste già un account con questa email.")
+        return email
+
+    def clean(self):
+        cleaned = super().clean()
+        if cleaned.get("question") == "Altro" and not cleaned.get("custom_question"):
+            self.add_error("custom_question", "Inserisci la domanda personalizzata")
+        if not cleaned.get("answer"):
+            self.add_error("answer", "Inserisci la risposta alla domanda")
+        return cleaned
+
+
+class SecurityQuestionSetupForm(forms.Form):
+    question = forms.ChoiceField(choices=[(q, q) for q in SECURITY_QUESTIONS] + [("Altro", "Altro (personalizzata)")], label="Domanda di sicurezza")
+    custom_question = forms.CharField(required=False, label="Domanda personalizzata")
+    answer = forms.CharField(widget=forms.PasswordInput, label="Risposta")
+
+    def clean(self):
+        cleaned = super().clean()
+        if cleaned.get("question") == "Altro" and not cleaned.get("custom_question"):
+            self.add_error("custom_question", "Inserisci la domanda personalizzata")
+        return cleaned
+
+    def save_for_user(self, user: User):
+        question = self.cleaned_data["custom_question"] if self.cleaned_data["question"] == "Altro" else self.cleaned_data["question"]
+        answer = self.cleaned_data["answer"]
+        sec, _created = UserSecurity.objects.get_or_create(user=user)
+        sec.question = question
+        sec.set_answer(answer)
+        sec.save()
+        return sec
+
+
+class SecurityResetStep1Form(forms.Form):
+    username = forms.CharField(label="Nome utente")
+
+
+class SecurityResetStep2Form(SetPasswordForm):
+    answer = forms.CharField(widget=forms.PasswordInput, label="Risposta alla domanda")
+
+    def __init__(self, user, *args, **kwargs):
+        super().__init__(user, *args, **kwargs)
+        # Reorder fields to show 'answer' first, then password fields
+        try:
+            field_order = ["answer"] + [f for f in self.fields if f != "answer"]
+            self.order_fields(field_order)
+        except Exception:
+            # Fallback: rebuild dict preserving desired order
+            fields = self.fields
+            new_fields = {"answer": fields["answer"]}
+            for name, field in fields.items():
+                if name != "answer":
+                    new_fields[name] = field
+            self.fields = new_fields

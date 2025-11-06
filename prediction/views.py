@@ -19,9 +19,13 @@ from django.shortcuts import render, redirect
 from django.db.models import Q
 from django.contrib.auth.models import User
 
+from .forms import CustomUserCreationForm, SecurityQuestionSetupForm, SecurityResetStep1Form, SecurityResetStep2Form
+from .models import UserSecurity
+from django.contrib.auth.forms import SetPasswordForm
+
 def register(request):
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             # Salva l'utente
             user = form.save()
@@ -34,9 +38,95 @@ def register(request):
             # Mostra errori specifici
             messages.error(request, "❌ Errore nella registrazione. Controlla i campi e riprova.")
     else:
-        form = UserCreationForm()
+        form = CustomUserCreationForm()
     
     return render(request, 'register.html', {'form': form})
+
+
+@login_required
+def set_security_question(request):
+    existing = getattr(request.user, "security", None)
+    if request.method == 'POST':
+        form = SecurityQuestionSetupForm(request.POST)
+        if form.is_valid():
+            form.save_for_user(request.user)
+            messages.success(request, "Domanda di sicurezza aggiornata ✅")
+            return redirect('home')
+    else:
+        form = SecurityQuestionSetupForm(initial={
+            'question': existing.question if existing else None,
+        }) if existing else SecurityQuestionSetupForm()
+
+    return render(request, 'registration/security_setup.html', {'form': form})
+
+
+from django.views.decorators.http import require_http_methods
+
+
+@require_http_methods(["GET", "POST"])
+def password_reset_security_start(request):
+    # Step 1: ask for username; if user+security exists, proceed to step 2 showing the question
+    if request.method == 'POST':
+        form = SecurityResetStep1Form(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            from django.contrib.auth import get_user_model
+            UserModel = get_user_model()
+            try:
+                user = UserModel.objects.get(username=username)
+                if not hasattr(user, 'security'):
+                    messages.error(request, "L'account non ha una domanda di sicurezza impostata.")
+                else:
+                    request.session['pwreset_sec_uid'] = user.id
+                    return redirect('password_reset_security_verify')
+            except UserModel.DoesNotExist:
+                # Messaggio generico per non rivelare esistenza utente
+                messages.error(request, "Impossibile procedere con il reset.")
+    else:
+        form = SecurityResetStep1Form()
+
+    return render(request, 'registration/password_reset_security_start.html', {'form': form})
+
+
+@require_http_methods(["GET", "POST"])
+def password_reset_security_verify(request):
+    # Step 2: show question, verify answer, set new password
+    from django.contrib.auth import get_user_model
+    UserModel = get_user_model()
+    uid = request.session.get('pwreset_sec_uid')
+    if not uid:
+        messages.error(request, "Sessione scaduta. Riprova.")
+        return redirect('password_reset_security_start')
+
+    try:
+        user = UserModel.objects.get(id=uid)
+        sec = user.security
+    except (UserModel.DoesNotExist, UserSecurity.DoesNotExist):
+        messages.error(request, "Impossibile procedere con il reset.")
+        return redirect('password_reset_security_start')
+
+    if request.method == 'POST':
+        form = SecurityResetStep2Form(user, request.POST)
+        if form.is_valid():
+            answer = form.cleaned_data['answer']
+            if not sec.check_answer(answer):
+                form.add_error('answer', 'Risposta errata')
+            else:
+                # save new password
+                form.save()
+                # cleanup session
+                request.session.pop('pwreset_sec_uid', None)
+                messages.success(request, "Password aggiornata con successo ✅")
+                return redirect('login')
+    else:
+        form = SecurityResetStep2Form(user)
+
+    context = {
+        'form': form,
+        'question': sec.question,
+        'username': user.username,
+    }
+    return render(request, 'registration/password_reset_security_verify.html', context)
 
 @login_required
 def condividi_paziente(request, paziente_id):

@@ -9,6 +9,8 @@ services:
       - .:/app
       - static_volume:/app/staticfiles
       - media_volume:/app/media
+    env_file:
+      - .env
     environment:
       - DJANGO_SETTINGS_MODULE=eskd_project.settings
     ports:

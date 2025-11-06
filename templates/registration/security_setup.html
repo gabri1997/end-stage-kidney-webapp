@@ -1,0 +1,29 @@
+{% extends "prediction/base.html" %}
+{% load static %}
+{% block title %}Domanda di sicurezza{% endblock %}
+{% block content %}
+<section class="section">
+  <div class="container" style="max-width: 640px;">
+    <h1 class="title is-4">Imposta/aggiorna domanda di sicurezza</h1>
+    <div class="box">
+      <form method="post">
+        {% csrf_token %}
+        <div class="field">
+          <label class="label">Domanda</label>
+          <div class="control">{{ form.question }}</div>
+          {% if form.custom_question %}
+          <div class="control mt-2">{{ form.custom_question }}</div>
+          {% endif %}
+        </div>
+        <div class="field">
+          <label class="label">Risposta</label>
+          <div class="control">{{ form.answer }}</div>
+        </div>
+        <div class="field">
+          <button class="button is-link" type="submit">Salva</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}

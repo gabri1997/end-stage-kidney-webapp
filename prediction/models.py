@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import User
+from django.contrib.auth.hashers import make_password, check_password
 # I modelli sono tabelle nel database che rappresentano dati strutturati.
 # Ogni istanza di un modello corrisponde a una riga nella tabella.
 
@@ -109,3 +110,23 @@ class Predizione(models.Model):
 
     def __str__(self):
         return f"Predizione {self.id} — {self.paziente} ({self.probabilita_eskd:.2f}%)"
+
+
+class UserSecurity(models.Model):
+    """Security question/answer for non-email password reset.
+
+    Store only a hash of the answer. Never store the answer in plaintext.
+    """
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="security")
+    question = models.CharField(max_length=255)
+    answer_hash = models.CharField(max_length=255)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def set_answer(self, raw_answer: str):
+        self.answer_hash = make_password(raw_answer.strip())
+
+    def check_answer(self, raw_answer: str) -> bool:
+        return check_password(raw_answer.strip(), self.answer_hash)
+
+    def __str__(self):
+        return f"Security QA for {self.user.username}"

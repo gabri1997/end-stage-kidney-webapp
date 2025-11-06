@@ -255,7 +255,7 @@
                                     <label class="label custom-label" for="id_username">
                                         <span class="icon-text">
                                             <span class="icon"><i class="fas fa-user"></i></span>
-                                            <span>Username</span>
+                                            <span>Nome utente</span>
                                         </span>
                                     </label>
                                     <div class="control has-icons-left">
@@ -305,7 +305,9 @@
                                     <div class="register-link" style="box-shadow:none; background:none; margin-top:0;">
                                         Non hai un account? <a href="{% url 'register' %}">Registrati qui</a>
                                         <br>
-                                        <small><a href="{% url 'password_reset' %}">Hai dimenticato la password?</a></small>
+                                        <small>
+                                                    <a href="{% url 'password_reset_security_start' %}">Recupero password</a>
+                                                </small>
                                     </div>
                                 </div>
                             </div>

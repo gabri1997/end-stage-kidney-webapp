@@ -264,8 +264,34 @@
                         <div class="column is-half">
                             {{ form.username.errors }}
                             <div class="field">
-                                <label for="id_username" class="label">Username</label>
+                                <label for="id_username" class="label">Nome utente</label>
                                 {{ form.username }}
+                            </div>
+
+                            {{ form.email.errors }}
+                            <div class="field">
+                                <label for="id_email" class="label">Email</label>
+                                {{ form.email }}
+                            </div>
+
+                            <!-- Domanda di sicurezza -->
+                            {{ form.question.errors }}
+                            <div class="field">
+                                <label for="id_question" class="label">Domanda di sicurezza per recupero password</label>
+                                {{ form.question }}
+                            </div>
+
+                            {{ form.custom_question.errors }}
+                            <div class="field">
+                                <label for="id_custom_question" class="label">Domanda personalizzata (se selezioni "Altro")</label>
+                                {{ form.custom_question }}
+                                <p class="help">Compila solo se hai selezionato "Altro".</p>
+                            </div>
+
+                            {{ form.answer.errors }}
+                            <div class="field">
+                                <label for="id_answer" class="label">Risposta alla domanda</label>
+                                {{ form.answer }}
                             </div>
 
                             {{ form.password1.errors }}
@@ -297,7 +323,7 @@
                                     <li>🔠 Includi lettere e numeri.</li>
                                     <li>🔒 Evita password comuni (es. “password123”).</li>
                                     <li>🚫 Non usare solo numeri.</li>
-                                    <li>👤 Non troppo simile al tuo username.</li>
+                                    <li>👤 Non troppo simile al tuo nome utente.</li>
                                 </ul>
                             </div>
                         </div>
