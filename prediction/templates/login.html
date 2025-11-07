@@ -1,78 +1,46 @@
-{% extends "prediction/base.html" %}
 {% load static %}
-{% load form_tags %}
-
-{% block title %}Login - ESKD Predictor{% endblock %}
-
-{% block extra_css %}
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - ESKD Predictor</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
     .login-section {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' version='1.1' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:svgjs='http://svgjs.dev/svgjs' width='1929' height='1080' preserveAspectRatio='none' viewBox='0 0 1929 1080'%3e%3cg mask='url(%26quot%3b%23SvgjsMask1221%26quot%3b)' fill='none'%3e%3crect width='1929' height='1080' x='0' y='0' fill='rgba(158%2c 177%2c 166%2c 1)'%3e%3c/rect%3e%3cpath d='M1000.284%2c400.933C1059.032%2c400.189%2c1109.229%2c360.249%2c1135.883%2c307.89C1160.208%2c260.104%2c1150.858%2c204.584%2c1123.802%2c158.289C1097.034%2c112.486%2c1053.177%2c79.952%2c1000.284%2c75.867C938.809%2c71.119%2c870.398%2c83.428%2c838.615%2c136.263C806.152%2c190.23%2c825.77%2c257.659%2c858.599%2c311.404C889.812%2c362.503%2c940.411%2c401.692%2c1000.284%2c400.933' fill='rgba(28%2c 142%2c 124%2c 0.4)' class='triangle-float3'%3e%3c/path%3e%3cpath d='M217.29358912468865 674.1919124505976L516.2746771063019 820.3676132040654 501.0490431615689 529.8452107473038z' fill='rgba(28%2c 142%2c 124%2c 0.4)' class='triangle-float3'%3e%3c/path%3e%3cpath d='M587.3608991676863 795.8220940842458L453.5601479095287 533.2233340205044 190.96138784578727 667.0240852786619 324.76213910394483 929.6228453424034z' fill='rgba(28%2c 142%2c 124%2c 0.4)' class='triangle-float2'%3e%3c/path%3e%3cpath d='M124.74486642541045 397.46481825347973L351.20601535788114 310.5345278455052 37.81457601743588 171.00366932100903z' fill='rgba(28%2c 142%2c 124%2c 0.4)' class='triangle-float1'%3e%3c/path%3e%3cpath d='M1034.2099764239435 325.9962096965058L799.6062173755386 456.03919684188116 929.6492045209139 690.6429558902862 1164.252963569319 560.5999687449107z' fill='rgba(28%2c 142%2c 124%2c 0.4)' class='triangle-float2'%3e%3c/path%3e%3cpath d='M1606.934%2c1008.7C1694.933%2c1013.251%2c1799.54%2c1014.867%2c1843.349%2c938.412C1887.042%2c862.159%2c1830.868%2c774.032%2c1783.999%2c699.689C1741.428%2c632.163%2c1686.693%2c566.659%2c1606.934%2c563.417C1522.339%2c559.978%2c1444.431%2c610.342%2c1403.045%2c684.202C1362.554%2c756.465%2c1365.321%2c845.832%2c1409.39%2c915.97C1450.869%2c981.985%2c1529.073%2c1004.673%2c1606.934%2c1008.7' fill='rgba(28%2c 142%2c 124%2c 0.4)' class='triangle-float3'%3e%3c/path%3e%3cpath d='M1982.076%2c906.321C2076.411%2c903.784%2c2159.65%2c849.72%2c2207.25%2c768.235C2255.305%2c685.972%2c2264.966%2c584.905%2c2218.381%2c501.8C2170.816%2c416.945%2c2079.315%2c363.814%2c1982.076%2c366.534C1889.042%2c369.136%2c1815.284%2c434.475%2c1767.608%2c514.407C1718.464%2c596.8%2c1688.849%2c696.777%2c1734.904%2c780.936C1782.438%2c867.798%2c1883.094%2c908.983%2c1982.076%2c906.321' fill='rgba(28%2c 142%2c 124%2c 0.4)' class='triangle-float2'%3e%3c/path%3e%3cpath d='M776.7723062063255 660.1286562514578L642.4279194867647 794.4730429710186 776.7723062063255 928.8174296905793 911.1166929258864 794.4730429710186z' fill='rgba(28%2c 142%2c 124%2c 0.4)' class='triangle-float3'%3e%3c/path%3e%3cpath d='M1143.5020642809732 75.86341734054022L929.9031700779723 204.20658113495776 1058.2463338723899 417.8054753379587 1271.8452280753907 289.4623115435411z' fill='rgba(28%2c 142%2c 124%2c 0.4)' class='triangle-float1'%3e%3c/path%3e%3cpath d='M1065.125%2c1064.403C1151.731%2c1068.41%2c1230.721%2c1015.839%2c1273.868%2c940.639C1316.81%2c865.795%2c1318.361%2c773.55%2c1274.711%2c699.117C1231.555%2c625.527%2c1150.36%2c588.299%2c1065.125%2c584.688C972.033%2c580.744%2c865.712%2c597.484%2c822.347%2c679.953C780.553%2c759.434%2c839.41%2c846.827%2c887.358%2c922.755C930.717%2c991.416%2c984.006%2c1060.65%2c1065.125%2c1064.403' fill='rgba(28%2c 142%2c 124%2c 0.4)' class='triangle-float1'%3e%3c/path%3e%3cpath d='M247.78566374738065 87.7147782072662L88.66565676423696 363.3187148027857 364.2695933597564 522.4387217859294 523.3896003429002 246.8347851904099z' fill='rgba(28%2c 142%2c 124%2c 0.4)' class='triangle-float3'%3e%3c/path%3e%3cpath d='M850.7873210785791 613.7553495547427L984.3861850130381 721.9415764218598 1092.5724118801554 588.342712487401 958.9735479456963 480.15648562028366z' fill='rgba(28%2c 142%2c 124%2c 0.4)' class='triangle-float2'%3e%3c/path%3e%3cpath d='M377.90529846533195 382.4172839843543L414.8620724160215 149.08139647568498 181.52618490735216 112.12462252499546 144.56941095666264 345.4605100336648z' fill='rgba(28%2c 142%2c 124%2c 0.4)' class='triangle-float2'%3e%3c/path%3e%3cpath d='M732.7947835814924 122.67993989162463L656.9893324458935-111.38402608942708 510.31069147076863 45.909558921241185z' fill='rgba(28%2c 142%2c 124%2c 0.4)' class='triangle-float1'%3e%3c/path%3e%3c/g%3e%3cdefs%3e%3cmask id='SvgjsMask1221'%3e%3crect width='1929' height='1080' fill='white'%3e%3c/rect%3e%3c/mask%3e%3cstyle%3e %40keyframes float1 %7b 0%25%7btransform: translate(0%2c 0)%7d 50%25%7btransform: translate(-10px%2c 0)%7d 100%25%7btransform: translate(0%2c 0)%7d %7d .triangle-float1 %7b animation: float1 5s infinite%3b %7d %40keyframes float2 %7b 0%25%7btransform: translate(0%2c 0)%7d 50%25%7btransform: translate(-5px%2c -5px)%7d 100%25%7btransform: translate(0%2c 0)%7d %7d .triangle-float2 %7b animation: float2 4s infinite%3b %7d %40keyframes float3 %7b 0%25%7btransform: translate(0%2c 0)%7d 50%25%7btransform: translate(0%2c -10px)%7d 100%25%7btransform: translate(0%2c 0)%7d %7d .triangle-float3 %7b animation: float3 6s infinite%3b %7d %3c/style%3e%3c/defs%3e%3c/svg%3e") no-repeat center center fixed;
+        background-size: cover;
         min-height: 100vh;
         display: flex;
         align-items: center;
         padding: 2rem 1.5rem;
     }
     .login-box {
-        background: white;
+        background: #eceae4;
         border-radius: 20px;
         box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
         overflow: hidden;
         transition: transform 0.3s ease;
+        max-width: 500px;
+        margin: 0 auto;
     }
     .login-box:hover {
         transform: translateY(-5px);
-    }
-    .image-column {
-        position: relative;
-        overflow: hidden;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    .image-column::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: linear-gradient(135deg, rgba(102, 126, 234, 0.8) 0%, rgba(118, 75, 162, 0.8) 100%);
-        z-index: 1;
-    }
-    .image-column img {
-        object-fit: cover;
-        width: 50%;
-        height: auto;
-        max-height: 300px;
-        position: relative;
-        z-index: 0;
-    }
-    .image-overlay {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        z-index: 2;
-        text-align: center;
-        color: white;
-        width: 80%;
-    }
-    .image-overlay h2 {
-        font-size: 2rem;
-        font-weight: 700;
-        margin-bottom: 1rem;
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-    }
-    .image-overlay p {
-        font-size: 1.1rem;
-        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
     }
     .form-column {
         padding: 3rem 2.5rem;
     }
     .login-title {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #2a9b86 0%, #63b068 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
@@ -92,8 +60,8 @@
         font-size: 1rem;
     }
     .custom-input:focus {
-        border-color: #667eea;
-        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        border-color: #2a9b86;
+        box-shadow: 0 0 0 3px rgba(42, 155, 134, 0.15);
     }
     .custom-label {
         font-weight: 600;
@@ -101,19 +69,21 @@
         margin-bottom: 0.5rem;
     }
     .custom-button {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #2a9b86 0%, #63b068 100%);
         border: none;
         border-radius: 10px;
         padding: 0.75rem 2rem;
         font-weight: 600;
         font-size: 1.1rem;
         transition: all 0.3s ease;
-        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        box-shadow: 0 4px 15px rgba(42, 155, 134, 0.4);
+        color: white;
     }
     .custom-button:hover {
         transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
-        background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+        box-shadow: 0 6px 20px rgba(42, 155, 134, 0.6);
+        background: linear-gradient(135deg, #63b068 0%, #2a9b86 100%);
+        color: white;
     }
     .custom-notification {
         border-radius: 10px;
@@ -128,17 +98,17 @@
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     }
     .register-link a {
-        color: #667eea;
+        color: #2a9b86;
         font-weight: 600;
         text-decoration: none;
         transition: color 0.3s ease;
     }
     .register-link a:hover {
-        color: #764ba2;
+        color: #63b068;
         text-decoration: underline;
     }
     .icon-gradient {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #2a9b86 0%, #63b068 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
@@ -161,7 +131,7 @@
         right: 5px;
         top: 50%;
         transform: translateY(-50%);
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #2a9b86 0%, #63b068 100%);
         border: none;
         border-radius: 8px;
         width: 40px;
@@ -171,19 +141,19 @@
         justify-content: center;
         cursor: pointer;
         transition: all 0.3s ease;
-        box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+        box-shadow: 0 2px 8px rgba(42, 155, 134, 0.3);
         color: white;
         z-index: 10;
     }
     
     .password-toggle-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.5);
-        background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+        transform: translateY(-50%) scale(1.05);
+        box-shadow: 0 4px 12px rgba(42, 155, 134, 0.5);
+        background: linear-gradient(135deg, #63b068 0%, #2a9b86 100%);
     }
     
     .password-toggle-btn:active {
-        transform: translateY(0);
+        transform: translateY(-50%) scale(0.98);
     }
     
     .password-toggle-btn i {
@@ -207,33 +177,26 @@
     }
     
     @media screen and (max-width: 768px) {
-        .image-column {
-            display: none;
-        }
         .form-column {
             padding: 2rem 1.5rem;
         }
         .login-title {
             font-size: 2rem;
         }
+        .login-box {
+            margin: 0 1rem;
+        }
     }
 </style>
-{% endblock %}
-
-{% block content %}
+</head>
+<body>
 <section class="login-section">
     <div class="container">
         <div class="columns is-centered">
-            <div class="column is-10-tablet is-8-desktop">
+            <div class="column is-6-tablet is-5-desktop">
                 <div class="login-box">
-                    <div class="columns is-gapless">
-                        <!-- Colonna immagine con overlay -->
-                        <div class="column is-half image-column">
-                            <img src="{% static 'prediction/images/doc.jpeg' %}" alt="Doctor">
-                        </div>
-                        
-                        <!-- Colonna form -->
-                        <div class="column is-half form-column">
+                        <!-- Colonna form centrata -->
+                        <div class="form-column">
                             <div class="has-text-centered">
                                 <span class="icon is-large icon-gradient mb-3">
                                     <i class="fas fa-user-md fa-3x"></i>
@@ -314,7 +277,6 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -353,4 +315,5 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 
-{% endblock %}
+</body>
+</html>
