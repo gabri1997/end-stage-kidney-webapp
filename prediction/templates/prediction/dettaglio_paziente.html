@@ -108,6 +108,15 @@ body {
     margin-bottom: 1rem;
 }
 
+/* Colore arancione personalizzato per rischio MEDIO */
+.is-orange {
+    background-color: #ff9800 !important;
+    color: #fff !important;
+}
+.has-text-orange {
+    color: #ff9800 !important;
+}
+
 .data-field {
     display: flex;
     align-items: center;
@@ -389,10 +398,10 @@ body {
                     </h3>
 
                     <div class="risk-card">
-                        <div class="risk-icon {% if ultima_predizione.esito == 'ALTO' %}has-text-danger{% elif ultima_predizione.esito == 'MEDIO' %}has-text-warning{% else %}has-text-success{% endif %}">
+                        <div class="risk-icon {% if ultima_predizione.esito == 'ALTO' %}has-text-danger{% elif ultima_predizione.esito == 'MEDIO' %}has-text-orange{% else %}has-text-success{% endif %}">
                             <i class="fas {% if ultima_predizione.esito == 'ALTO' %}fa-exclamation-triangle{% elif ultima_predizione.esito == 'MEDIO' %}fa-exclamation-circle{% else %}fa-check-circle{% endif %}"></i>
                         </div>
-                        <div class="risk-percentage {% if ultima_predizione.esito == 'ALTO' %}has-text-danger{% elif ultima_predizione.esito == 'MEDIO' %}has-text-warning{% else %}has-text-success{% endif %}">
+                        <div class="risk-percentage {% if ultima_predizione.esito == 'ALTO' %}has-text-danger{% elif ultima_predizione.esito == 'MEDIO' %}has-text-orange{% else %}has-text-success{% endif %}">
                             {{ ultima_predizione.probabilita_eskd|floatformat:2 }}%
                         </div>
                         <p class="subtitle is-4">
@@ -636,7 +645,7 @@ body {
                                 {% if pred.esito == 'ALTO' %}
                                     <span class="tag is-danger">Rischio Alto</span>
                                 {% elif pred.esito == 'MEDIO' %}
-                                    <span class="tag is-warning">Rischio Medio</span>
+                                    <span class="tag is-orange">Rischio Medio</span>
                                 {% else %}
                                     <span class="tag is-success">Rischio Basso</span>
                                 {% endif %}
