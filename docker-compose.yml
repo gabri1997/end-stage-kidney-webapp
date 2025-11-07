@@ -1,6 +1,15 @@
 version: '3.9'
 
 services:
+  redis:
+    image: redis:7-alpine
+    container_name: eskd_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+
   web:
     build: .
     container_name: eskd_web
@@ -15,6 +24,23 @@ services:
       - DJANGO_SETTINGS_MODULE=eskd_project.settings
     ports:
       - "8000:8000"
+    depends_on:
+      - redis
+
+  dramatiq_worker:
+    build: .
+    container_name: eskd_dramatiq_worker
+    command: python manage.py rundramatiq --processes 2 --threads 4
+    volumes:
+      - .:/app
+      - media_volume:/app/media
+    env_file:
+      - .env
+    environment:
+      - DJANGO_SETTINGS_MODULE=eskd_project.settings
+    depends_on:
+      - redis
+      - web
 
   nginx:
     image: nginx:latest
@@ -25,10 +51,10 @@ services:
       - ./nginx.conf:/etc/nginx/nginx.conf
       - ./staticfiles:/app/staticfiles
       - ./media:/app/media
-
     depends_on:
       - web
 
 volumes:
   static_volume:
   media_volume:
+  redis_data:

@@ -61,7 +61,9 @@
     
     .form-container input[type="text"],
     .form-container input[type="email"],
-    .form-container input[type="password"] {
+    .form-container input[type="password"],
+    .form-container select,
+    .form-container textarea {
         width: 100%;
         border: 2px solid #e8e8e8;
         border-radius: 10px;
@@ -70,6 +72,16 @@
         font-size: 1rem;
         font-family: inherit;
         box-sizing: border-box;
+        background: white;
+    }
+    
+    .form-container select {
+        cursor: pointer;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23667eea' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 1rem center;
+        padding-right: 2.5rem;
     }
     
     .form-container input:focus {
@@ -78,7 +90,24 @@
         box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
     }
     
-    .form-container .helptext {
+    .form-container .field {
+        margin-bottom: 1.5rem;
+    }
+    
+    .form-container .label {
+        display: block;
+        font-weight: 600;
+        color: #363636;
+        margin-bottom: 0.5rem;
+        font-size: 0.95rem;
+    }
+    
+    .form-container .label i {
+        color: #667eea;
+        margin-right: 0.5rem;
+    }
+    
+    .form-container .help {
         display: block;
         font-size: 0.85rem;
         color: #7a7a7a;
@@ -89,17 +118,29 @@
     .form-container ul.errorlist {
         list-style: none;
         padding: 0;
-        margin: 0.5rem 0;
+        margin: 0.5rem 0 1rem 0;
         background: #feecf0;
         border-left: 4px solid #f14668;
-        border-radius: 6px;
+        border-radius: 8px;
         padding: 0.75rem 1rem;
+        animation: shake 0.3s ease-in-out;
+    }
+    
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-5px); }
+        75% { transform: translateX(5px); }
     }
     
     .form-container ul.errorlist li {
         color: #cc0f35;
         font-size: 0.9rem;
         font-weight: 500;
+    }
+    
+    .form-container ul.errorlist li:before {
+        content: "⚠️ ";
+        margin-right: 0.5rem;
     }
     
     .custom-button {
@@ -211,8 +252,55 @@
             margin-bottom: 0.6rem;
             font-size: 0.9rem;
             color: #4a4a4a;
-}
-
+        }
+        
+        /* Stili per toggle password */
+        .password-wrapper {
+            position: relative;
+        }
+        
+        .password-wrapper .control {
+            width: 100%;
+        }
+        
+        .password-wrapper input[type="password"],
+        .password-wrapper input[type="text"] {
+            padding-right: 3.5rem;
+        }
+        
+        .password-toggle-btn {
+            position: absolute;
+            right: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 8px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+            color: white;
+            z-index: 10;
+        }
+        
+        .password-toggle-btn:hover {
+            transform: translateY(-50%) scale(1.05);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.5);
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+        }
+        
+        .password-toggle-btn:active {
+            transform: translateY(-50%) scale(0.95);
+        }
+        
+        .password-toggle-btn i {
+            font-size: 1.1rem;
+        }
 </style>
 {% endblock %}
 
@@ -264,46 +352,90 @@
                         <div class="column is-half">
                             {{ form.username.errors }}
                             <div class="field">
-                                <label for="id_username" class="label">Nome utente</label>
+                                <label for="id_username" class="label">
+                                    <i class="fas fa-user"></i>
+                                    Nome utente
+                                </label>
                                 {{ form.username }}
                             </div>
 
                             {{ form.email.errors }}
                             <div class="field">
-                                <label for="id_email" class="label">Email</label>
+                                <label for="id_email" class="label">
+                                    <i class="fas fa-envelope"></i>
+                                    Email
+                                </label>
                                 {{ form.email }}
+                                <p class="help">Riceverai qui le email per il recupero password.</p>
                             </div>
 
                             <!-- Domanda di sicurezza -->
                             {{ form.question.errors }}
                             <div class="field">
-                                <label for="id_question" class="label">Domanda di sicurezza per recupero password</label>
+                                <label for="id_question" class="label">
+                                    <i class="fas fa-question-circle"></i>
+                                    Domanda di sicurezza per recupero password
+                                </label>
                                 {{ form.question }}
                             </div>
 
                             {{ form.custom_question.errors }}
                             <div class="field">
-                                <label for="id_custom_question" class="label">Domanda personalizzata (se selezioni "Altro")</label>
+                                <label for="id_custom_question" class="label">
+                                    <i class="fas fa-pen"></i>
+                                    Domanda personalizzata (se selezioni "Altro")
+                                </label>
                                 {{ form.custom_question }}
                                 <p class="help">Compila solo se hai selezionato "Altro".</p>
                             </div>
 
                             {{ form.answer.errors }}
                             <div class="field">
-                                <label for="id_answer" class="label">Risposta alla domanda</label>
-                                {{ form.answer }}
+                                <label for="id_answer" class="label">
+                                    <i class="fas fa-key"></i>
+                                    Risposta alla domanda
+                                </label>
+                                <div class="password-wrapper">
+                                    <div class="control">
+                                        {{ form.answer }}
+                                    </div>
+                                    <button type="button" class="password-toggle-btn" data-target="id_answer" title="Mostra/Nascondi risposta">
+                                        <i class="fas fa-eye-slash"></i>
+                                    </button>
+                                </div>
+                                <p class="help">La risposta verrà salvata in modo sicuro e potrai usarla per recuperare l'account.</p>
                             </div>
 
                             {{ form.password1.errors }}
                             <div class="field">
-                                <label for="id_password1" class="label">Password</label>
-                                {{ form.password1 }}
+                                <label for="id_password1" class="label">
+                                    <i class="fas fa-lock"></i>
+                                    Password
+                                </label>
+                                <div class="password-wrapper">
+                                    <div class="control">
+                                        {{ form.password1 }}
+                                    </div>
+                                    <button type="button" class="password-toggle-btn" data-target="id_password1" title="Mostra/Nascondi password">
+                                        <i class="fas fa-eye-slash"></i>
+                                    </button>
+                                </div>
                             </div>
 
                             {{ form.password2.errors }}
                             <div class="field">
-                                <label for="id_password2" class="label">Conferma Password</label>
-                                {{ form.password2 }}
+                                <label for="id_password2" class="label">
+                                    <i class="fas fa-lock"></i>
+                                    Conferma Password
+                                </label>
+                                <div class="password-wrapper">
+                                    <div class="control">
+                                        {{ form.password2 }}
+                                    </div>
+                                    <button type="button" class="password-toggle-btn" data-target="id_password2" title="Mostra/Nascondi password">
+                                        <i class="fas fa-eye-slash"></i>
+                                    </button>
+                                </div>
                             </div>
 
                             <button type="submit" class="custom-button mt-4">
@@ -339,4 +471,71 @@
         </div>
     </div>
 </section>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // Toggle mostra/nascondi password e risposte
+    const toggleButtons = document.querySelectorAll('.password-toggle-btn');
+    
+    toggleButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const targetId = this.getAttribute('data-target');
+            const passwordInput = document.getElementById(targetId);
+            const icon = this.querySelector('i');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            } else {
+                passwordInput.type = 'password';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            }
+        });
+    });
+    
+    // Gestione campo domanda personalizzata
+    const questionSelect = document.getElementById('id_question');
+    const customQuestionField = document.querySelector('[for="id_custom_question"]').parentElement;
+    
+    if (questionSelect && customQuestionField) {
+        // Nascondi il campo inizialmente se non è selezionato "Altro"
+        const toggleCustomQuestion = () => {
+            const selectedValue = questionSelect.value;
+            if (selectedValue && selectedValue.includes('Altro')) {
+                customQuestionField.style.display = 'block';
+                customQuestionField.style.animation = 'fadeIn 0.3s ease-in-out';
+            } else {
+                customQuestionField.style.display = 'none';
+            }
+        };
+        
+        toggleCustomQuestion(); // Controlla lo stato iniziale
+        questionSelect.addEventListener('change', toggleCustomQuestion);
+    }
+    
+    // Animazione al submit
+    const form = document.querySelector('form');
+    const submitBtn = form.querySelector('button[type="submit"]');
+    
+    form.addEventListener('submit', function(e) {
+        submitBtn.innerHTML = '<span class="icon"><i class="fas fa-spinner fa-spin"></i></span><span>Creazione in corso...</span>';
+        submitBtn.disabled = true;
+    });
+});
+</script>
+
+<style>
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+</style>
 {% endblock %}

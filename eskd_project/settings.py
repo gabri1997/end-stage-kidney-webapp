@@ -165,7 +165,8 @@ LOGIN_URL = 'login'
 DRAMATIQ_BROKER = {
     "BROKER": "dramatiq.brokers.redis.RedisBroker",
     "OPTIONS": {
-        "url": "redis://127.0.0.1:6379/0",
+        # Usa 'redis' come hostname dentro Docker, '127.0.0.1' per sviluppo locale
+        "url": os.getenv("REDIS_URL", "redis://redis:6379/0"),
     },
     "MIDDLEWARE": [
         "dramatiq.middleware.Prometheus",
