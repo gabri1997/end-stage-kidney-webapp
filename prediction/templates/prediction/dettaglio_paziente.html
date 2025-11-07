@@ -1,5 +1,6 @@
 {% extends 'prediction/base.html' %}
 {% load static %}
+{% load form_tags %}
 {% block title %}{{ paziente.nome }} {{ paziente.cognome }} - Dettaglio{% endblock %}
 
 {% block content %}
@@ -403,13 +404,13 @@ body {
                                 Rischio Basso
                             {% endif %}
                         </p>
-                        {% if ultima_predizione.anni_eskd %}
-                            <div class="notification is-light mt-3">
+                        {% if ultima_predizione.anni_eskd is not None %}
+                            <div class="notification {{ ultima_predizione.anni_eskd|anni_eskd_colore }} is-light mt-3">
                                 <span class="icon-text">
                                     <span class="icon">
                                         <i class="fas fa-clock"></i>
                                     </span>
-                                    <span><strong>Stima tempo ESKD:</strong> {{ ultima_predizione.anni_eskd|floatformat:1 }} anni</span>
+                                    <span><strong>Stima tempo ESKD:</strong> {{ ultima_predizione.anni_eskd|anni_eskd_fascia }}</span>
                                 </span>
                             </div>
                         {% endif %}
@@ -641,8 +642,8 @@ body {
                                 {% endif %}
                             </td>
                             <td>
-                                {% if pred.anni_eskd %}
-                                    <span class="tag is-info">{{ pred.anni_eskd|floatformat:1 }} anni</span>
+                                {% if pred.anni_eskd is not None %}
+                                    <span class="tag {{ pred.anni_eskd|anni_eskd_colore }}">{{ pred.anni_eskd|anni_eskd_fascia }}</span>
                                 {% else %}
                                     <span class="tag is-light">-</span>
                                 {% endif %}
