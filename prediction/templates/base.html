@@ -7,20 +7,41 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
     <script defer src="https://use.fontawesome.com/releases/v5.15.4/js/all.js"></script>
     <style>
+        /* Navbar con gradiente viola-blu */
+        .navbar.is-gradient-purple {
+            background: linear-gradient(135deg, #48c78e 0%, #48c78e 100%);
+        }
+        
+        .navbar.is-gradient-purple .navbar-item,
+        .navbar.is-gradient-purple .navbar-link {
+            color: white;
+        }
+        
+        .navbar.is-gradient-purple .navbar-item:hover,
+        .navbar.is-gradient-purple .navbar-link:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        
+        .navbar.is-gradient-purple .navbar-brand .navbar-item {
+            color: white;
+            font-weight: bold;
+        }
+        
         .risk-positive {
             background-color: #fee;
             border-left: 5px solid #f14668;
         }
         .risk-negative {
             background-color: #efe;
-            border-left: 5px solid #48c774;
+            border-left: 5px solid rgb(72, 199, 116);
         }
     </style>
     {% block extra_head %}{% endblock %}
 </head>
 
 <body>
-    <nav class="navbar is-primary" role="navigation" aria-label="main navigation">
+    <nav class="navbar is-gradient-purple" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
             <a class="navbar-item" href="{% url 'lista_pazienti' %}">
                 <span class="icon">
