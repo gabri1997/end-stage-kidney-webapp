@@ -306,8 +306,10 @@
                                         Non hai un account? <a href="{% url 'register' %}">Registrati qui</a>
                                         <br>
                                         <small>
-                                                    <a href="{% url 'password_reset_security_start' %}">Recupero password</a>
-                                                </small>
+                                            <a href="{% url 'password_reset' %}">Password dimenticata (via email)?</a>
+                                            ·
+                                            <a href="{% url 'password_reset_security_start' %}">Recupero con domanda</a>
+                                        </small>
                                     </div>
                                 </div>
                             </div>

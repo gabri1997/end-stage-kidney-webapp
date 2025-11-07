@@ -23,7 +23,26 @@ urlpatterns = [
     path("predizione/<int:predizione_id>/delete/", views.delete_predizione, name="delete_predizione"),
     path('pazienti/<int:paziente_id>/elimina/', views.elimina_paziente, name='elimina_paziente'),
     path('pazienti/<int:paziente_id>/condividi/', views.condividi_paziente, name='condividi_paziente'),
-    # Email-based password reset temporarily disabled
+    
+    # Reset password via email
+    path("password_reset/", auth_views.PasswordResetView.as_view(
+        template_name="registration/password_reset_form.html",
+        email_template_name="registration/password_reset_email.html",
+        subject_template_name="registration/password_reset_subject.txt",
+        success_url="/password_reset/done/",
+    ), name="password_reset"),
+
+    path("password_reset/done/", auth_views.PasswordResetDoneView.as_view(
+        template_name="registration/password_reset_done.html"
+    ), name="password_reset_done"),
+
+    path("reset/<uidb64>/<token>/", auth_views.PasswordResetConfirmView.as_view(
+        template_name="registration/password_reset_confirm.html"
+    ), name="password_reset_confirm"),
+
+    path("reset/done/", auth_views.PasswordResetCompleteView.as_view(
+        template_name="registration/password_reset_complete.html"
+    ), name="password_reset_complete"),
 
     # Reset password senza email (domanda di sicurezza)
     path("password_reset_security/", views.password_reset_security_start, name="password_reset_security_start"),
