@@ -16,9 +16,12 @@ RUN pip install -r requirements.txt
 # Now copy the rest of the project
 COPY . .
 
+# Create logs directory
+RUN mkdir -p /app/logs && chmod 755 /app/logs
+
 # Collect static files at build time
 RUN python manage.py collectstatic --noinput
 
-# Run gunicorn
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "eskd_project.wsgi:application"]
+# Run gunicorn with better logging
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--workers", "3", "--access-logfile", "-", "--error-logfile", "-", "eskd_project.wsgi:application"]
 

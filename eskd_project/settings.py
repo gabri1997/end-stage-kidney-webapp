@@ -28,11 +28,27 @@ SECRET_KEY = os.getenv(
 )
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG', 'False').lower() in ('true', '1', 'yes')
 
-ALLOWED_HOSTS = ['*']
-CSRF_TRUSTED_ORIGINS = ["http://155.185.49.200"]
+# In produzione, specifica solo gli host consentiti
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '155.185.49.200,localhost,127.0.0.1').split(',')
+
+CSRF_TRUSTED_ORIGINS = [
+    "http://155.185.49.200",
+    "https://155.185.49.200",  # Per quando aggiungerai HTTPS
+]
+
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
+# Security Headers (importanti per produzione)
+if not DEBUG:
+    SECURE_SSL_REDIRECT = True  # Reindirizza HTTP -> HTTPS
+    SESSION_COOKIE_SECURE = True  # Cookie solo su HTTPS
+    CSRF_COOKIE_SECURE = True  # CSRF cookie solo su HTTPS
+    SECURE_HSTS_SECONDS = 31536000  # HTTP Strict Transport Security
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+    X_FRAME_OPTIONS = 'DENY'  # Previene clickjacking
 
 
 # Application definition
@@ -182,3 +198,45 @@ EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS", "True").lower() in {"1", "true", "yes
 EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER", "gabrielerosati97@gmail.com")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD", "")
 DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", EMAIL_HOST_USER)
+
+
+# Logging Configuration
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '[{levelname}] {asctime} {module} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        },
+        'file': {
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': BASE_DIR / 'logs' / 'django.log',
+            'maxBytes': 1024 * 1024 * 10,  # 10 MB
+            'backupCount': 5,
+            'formatter': 'verbose',
+        },
+    },
+    'root': {
+        'handlers': ['console', 'file'],
+        'level': 'INFO' if not DEBUG else 'DEBUG',
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console', 'file'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'prediction': {
+            'handlers': ['console', 'file'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+    },
+}
