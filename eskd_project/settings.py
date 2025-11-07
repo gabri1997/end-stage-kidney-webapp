@@ -42,12 +42,12 @@ SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 # Security Headers (importanti per produzione)
 if not DEBUG:
-    SECURE_SSL_REDIRECT = True  # Reindirizza HTTP -> HTTPS
-    SESSION_COOKIE_SECURE = True  # Cookie solo su HTTPS
-    CSRF_COOKIE_SECURE = True  # CSRF cookie solo su HTTPS
-    SECURE_HSTS_SECONDS = 31536000  # HTTP Strict Transport Security
-    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-    SECURE_HSTS_PRELOAD = True
+    # SECURE_SSL_REDIRECT = True  # ⚠️ DISABILITATO: Attivare SOLO dopo aver configurato HTTPS/SSL
+    # SESSION_COOKIE_SECURE = True  # ⚠️ DISABILITATO: Attivare con HTTPS
+    # CSRF_COOKIE_SECURE = True  # ⚠️ DISABILITATO: Attivare con HTTPS
+    # SECURE_HSTS_SECONDS = 31536000  # ⚠️ DISABILITATO: Attivare con HTTPS
+    # SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    # SECURE_HSTS_PRELOAD = True
     X_FRAME_OPTIONS = 'DENY'  # Previene clickjacking
 
 
