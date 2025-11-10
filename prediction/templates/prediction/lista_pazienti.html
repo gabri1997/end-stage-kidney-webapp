@@ -12,23 +12,49 @@
     
 
     .pazienti-box {
-        background: rgba(255, 255, 255, 0.88);
-        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 16px;
         padding: 2.5rem;
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
-        backdrop-filter: blur(6px);
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+        backdrop-filter: blur(10px);
         max-width: 1100px;
         margin: 4rem auto;
+        animation: fadeInUp 0.6s ease-out;
+        border: 1px solid rgba(255, 255, 255, 0.8);
     }
 
     .search-container {
-        background: rgba(255, 255, 255, 0.88);
-        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 16px;
         padding: 1.5rem 2.5rem;
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
-        backdrop-filter: blur(6px);
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+        backdrop-filter: blur(10px);
         max-width: 1100px;
         margin: 0 auto 1.5rem auto;
+        animation: fadeInDown 0.5s ease-out;
+        border: 1px solid rgba(255, 255, 255, 0.8);
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes fadeInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
 
     .page-header {
@@ -47,39 +73,77 @@
         opacity: 0.6;
     }
     .page-title {
-        color: #1e4b7a;
+        color: #1c8e7c;
         font-weight: 700;
         display: flex;
         align-items: center;
         gap: 10px;
         margin: 0;
+        animation: slideInLeft 0.5s ease-out;
     }
 
     .page-title i {
         font-size: 1.6em;
-        color: #17a2b8;
+        color: #1c8e7c;
+        animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes slideInLeft {
+        from {
+            opacity: 0;
+            transform: translateX(-30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    @keyframes pulse {
+        0%, 100% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.1);
+        }
     }
 
     .add-btn {
-        background: linear-gradient(90deg, #00b09b, #91b35775);
+        background: linear-gradient(135deg, #1c8e7c, #26c6b8);
         border: none;
         color: white;
-        padding: 10px 18px;
-        border-radius: 8px;
+        padding: 12px 22px;
+        border-radius: 12px;
         font-weight: bold;
         display: inline-flex;
         align-items: center;
         gap: 8px;
         font-size: 0.95em;
-        transition: 0.3s;
+        transition: all 0.3s ease;
         text-decoration: none;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 6px 20px rgba(28, 142, 124, 0.3);
+        animation: slideInRight 0.5s ease-out;
     }
 
     .add-btn:hover {
-        transform: scale(1.03);
-        opacity: 0.9;
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 10px 30px rgba(28, 142, 124, 0.4);
         color: white;
+    }
+
+    .add-btn:active {
+        transform: translateY(-1px) scale(1.02);
+    }
+
+    @keyframes slideInRight {
+        from {
+            opacity: 0;
+            transform: translateX(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
     }
 
     .search-form {
@@ -90,35 +154,43 @@
 
     .search-input {
         flex: 1;
-        border-radius: 10px;
-        padding: 10px 15px;
-        border: 1.5px solid #cdd4dc;
+        border-radius: 12px;
+        padding: 12px 18px;
+        border: 2px solid #e0e0e0;
         transition: all 0.3s ease;
+        font-size: 1rem;
+        background: white;
     }
 
     .search-input:focus {
-        border-color: #00b09b;
-        box-shadow: 0 0 0 3px rgba(0, 176, 155, 0.15);
+        border-color: #1c8e7c;
+        box-shadow: 0 0 0 4px rgba(28, 142, 124, 0.15);
         outline: none;
+        transform: translateY(-2px);
     }
 
     .search-btn {
-        background: linear-gradient(90deg, #3273dc, #5a8fd4);
+        background: linear-gradient(135deg, #1c8e7c, #26c6b8);
         border: none;
         color: white;
-        padding: 10px 20px;
-        border-radius: 10px;
+        padding: 12px 24px;
+        border-radius: 12px;
         font-weight: 600;
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        transition: 0.3s;
+        transition: all 0.3s ease;
         cursor: pointer;
+        box-shadow: 0 4px 15px rgba(28, 142, 124, 0.3);
     }
 
     .search-btn:hover {
-        transform: scale(1.03);
-        opacity: 0.9;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(28, 142, 124, 0.4);
+    }
+
+    .search-btn:active {
+        transform: translateY(0);
     }
 
     table {
@@ -129,9 +201,47 @@
     }
 
     th {
-        background-color: #e9f5ff;
-        color: #1e777a;
-        font-weight: 600;
+        background: linear-gradient(135deg, #e0f7f4, #d4f4f0);
+        color: #1c8e7c;
+        font-weight: 700;
+        font-size: 0.95rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        padding: 1rem !important;
+        border-bottom: 2px solid #1c8e7c;
+    }
+
+    tbody tr {
+        transition: all 0.3s ease;
+        animation: fadeIn 0.5s ease-out backwards;
+    }
+
+    tbody tr:nth-child(1) { animation-delay: 0.05s; }
+    tbody tr:nth-child(2) { animation-delay: 0.1s; }
+    tbody tr:nth-child(3) { animation-delay: 0.15s; }
+    tbody tr:nth-child(4) { animation-delay: 0.2s; }
+    tbody tr:nth-child(5) { animation-delay: 0.25s; }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    tbody tr:hover {
+        background-color: rgba(28, 142, 124, 0.08) !important;
+        transform: translateX(5px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    td {
+        padding: 1rem !important;
+        vertical-align: middle !important;
     }
 
     /* Dimensioni uniformi per i tag di rischio */
@@ -139,18 +249,42 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        width: 90px; /* larghezza fissa per uniformità */
-        height: 30px; /* altezza coerente */
-        font-weight: 600;
+        width: 90px;
+        height: 32px;
+        font-weight: 700;
         font-size: 0.85rem;
-        padding: 0; /* rimuove padding extra della classe tag */
-        border-radius: 6px;
+        padding: 0;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
     }
 
-    /* Colore arancione più vivido per il tag "Medio" */
+    .risk-tag:hover {
+        transform: translateY(-2px) scale(1.05);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    }
+
+    /* Colori vibranti per i tag */
+    .risk-tag.is-danger {
+        background: linear-gradient(135deg, #ff4757, #ff6b81) !important;
+        color: white !important;
+    }
+
     .risk-tag.is-warning {
-        background-color: #ff9800 !important;
-        color: #ffffff !important;
+        background: linear-gradient(135deg, #ff9800, #ffa726) !important;
+        color: white !important;
+    }
+
+    .risk-tag.is-success {
+        background: linear-gradient(135deg, #1c8e7c, #26c6b8) !important;
+        color: white !important;
+    }
+
+    .risk-tag.is-light {
+        background: linear-gradient(135deg, #e0e0e0, #bdbdbd) !important;
+        color: #424242 !important;
     }
 
     .btn-share { 
@@ -167,37 +301,43 @@
         align-items: center;
         justify-content: center;
         gap: 5px;
-        font-size: 0.9em;
-        padding: 6px 10px;
-        border-radius: 6px;
+        font-size: 0.85em;
+        padding: 8px 14px;
+        border-radius: 8px;
         text-decoration: none;
-        transition: 0.2s;
+        transition: all 0.3s ease;
+        font-weight: 600;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        margin: 2px;
     }
 
     .btn-view { 
-        background-color: #e6e9ff; 
-        color: #000000ce; 
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
     }
     
     .btn-edit { 
-        background-color: #fff3cd; 
-        color: #000000ce; 
+        background: linear-gradient(135deg, #f093fb, #f5576c);
+        color: white;
     }
     
     .btn-del { 
-        background-color: #f8d7da; 
-        color: #000000ce; 
+        background: linear-gradient(135deg, #fa709a, #fee140);
+        color: white;
     }
 
-    .btn-view:hover, 
-    .btn-edit:hover, 
-    .btn-del:hover {
-        transform: scale(1.05);
+    .btn-share { 
+        background: linear-gradient(135deg, #1c8e7c, #26c6b8);
+        color: white;
     }
 
-    .is-shared {
-        background-color: rgba(0, 209, 178, 0.15) !important;
-        transition: background-color 0.3s ease;
+    .action-btn:hover {
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .action-btn:active {
+        transform: translateY(-1px) scale(1.02);
     }
 
     .mt-5 {
@@ -208,6 +348,61 @@
     td:nth-child(4) {
         white-space: nowrap;
     }
+
+    /* Contatore pazienti animato */
+    .patient-count {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #1c8e7c, #26c6b8);
+        color: white;
+        font-size: 0.9em;
+        font-weight: 700;
+        padding: 4px 12px;
+        border-radius: 20px;
+        margin-left: 10px;
+        min-width: 40px;
+        box-shadow: 0 4px 12px rgba(28, 142, 124, 0.3);
+        animation: bounceIn 0.8s ease-out;
+    }
+
+    @keyframes bounceIn {
+        0% {
+            opacity: 0;
+            transform: scale(0.3);
+        }
+        50% {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+        70% {
+            transform: scale(0.9);
+        }
+        100% {
+            transform: scale(1);
+        }
+    }
+
+    /* Effetti shimmer per gli elementi condivisi */
+    @keyframes shimmer {
+        0% {
+            background-position: -1000px 0;
+        }
+        100% {
+            background-position: 1000px 0;
+        }
+    }
+
+    .is-shared {
+        background: linear-gradient(90deg, 
+            rgba(28, 142, 124, 0.08) 0%, 
+            rgba(38, 198, 184, 0.15) 50%, 
+            rgba(28, 142, 124, 0.08) 100%);
+        background-size: 1000px 100%;
+        animation: shimmer 3s infinite linear;
+        border-left: 4px solid #1c8e7c !important;
+    }
+
 </style>
 
 <div class="container mt-5">
@@ -234,6 +429,7 @@
             <h1 class="page-title">
                 <i class="fas fa-users"></i>
                 Lista Pazienti
+                <span class="patient-count" data-count="{{ pazienti|length }}">0</span>
             </h1>
             <a href="{% url 'nuovo_paziente' %}" class="add-btn">
                 <i class="fas fa-user-plus"></i>
@@ -329,5 +525,75 @@
         {% endif %}
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Animazione contatore pazienti
+    const counterEl = document.querySelector('.patient-count');
+    if (counterEl) {
+        const target = parseInt(counterEl.getAttribute('data-count') || '0', 10);
+        const duration = 1200;
+        let start = null;
+
+        const animate = (timestamp) => {
+            if (!start) start = timestamp;
+            const progress = Math.min((timestamp - start) / duration, 1);
+            const current = Math.floor(progress * target);
+            counterEl.textContent = current;
+            
+            if (progress < 1) {
+                requestAnimationFrame(animate);
+            } else {
+                counterEl.textContent = target;
+            }
+        };
+
+        requestAnimationFrame(animate);
+    }
+
+    // Aggiungi effetto ripple ai bottoni
+    const buttons = document.querySelectorAll('.action-btn, .add-btn, .search-btn');
+    buttons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            const ripple = document.createElement('span');
+            const rect = this.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height);
+            const x = e.clientX - rect.left - size / 2;
+            const y = e.clientY - rect.top - size / 2;
+            
+            ripple.style.cssText = `
+                position: absolute;
+                width: ${size}px;
+                height: ${size}px;
+                border-radius: 50%;
+                background: rgba(255, 255, 255, 0.6);
+                transform: scale(0);
+                animation: ripple 0.6s ease-out;
+                left: ${x}px;
+                top: ${y}px;
+                pointer-events: none;
+            `;
+            
+            this.style.position = 'relative';
+            this.style.overflow = 'hidden';
+            this.appendChild(ripple);
+            
+            setTimeout(() => ripple.remove(), 600);
+        });
+    });
+});
+
+// CSS per l'effetto ripple
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes ripple {
+        to {
+            transform: scale(4);
+            opacity: 0;
+        }
+    }
+`;
+document.head.appendChild(style);
+</script>
 
 {% endblock %}
