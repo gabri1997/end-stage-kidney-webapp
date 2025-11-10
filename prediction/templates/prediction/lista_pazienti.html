@@ -264,15 +264,14 @@
                                 {% with ultima_pred=paziente.predizioni.last %}
                                     {% if ultima_pred %}
                                         {% if ultima_pred.esito == 'ALTO' %}
-                                            <span class="tag is-danger">Rischio Alto</span>
+                                            <span class="tag is-danger" title="Rischio Alto">Alto</span>
                                         {% elif ultima_pred.esito == 'MEDIO' %}
-                                            <span class="tag is-warning">Rischio Medio</span>
+                                            <span class="tag is-warning" title="Rischio Medio">Medio</span>
                                         {% else %}
-                                            <span class="tag is-success">Rischio Basso</span>
+                                            <span class="tag is-success" title="Rischio Basso">Basso</span>
                                         {% endif %}
-                                        <small>({{ ultima_pred.probabilita_eskd|floatformat:1 }}%)</small>
                                     {% else %}
-                                        <span class="tag is-light">Nessuna predizione</span>
+                                        <span class="tag is-light" title="Ancora nessuna predizione">—</span>
                                     {% endif %}
                                 {% endwith %}
                             </td>
