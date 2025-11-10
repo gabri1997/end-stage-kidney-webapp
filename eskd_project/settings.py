@@ -31,7 +31,14 @@ SECRET_KEY = os.getenv(
 DEBUG = os.getenv('DEBUG', 'False').lower() in ('true', '1', 'yes')
 
 # In produzione, specifica solo gli host consentiti
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '155.185.49.200,localhost,127.0.0.1').split(',')
+ALLOWED_HOSTS = [
+    "localhost",
+    "127.0.0.1",
+    "eskd.ing.unimo.it",
+    "eskd.ing.unimore.it",
+    "155.185.49.200"
+]
+
 
 CSRF_TRUSTED_ORIGINS = [
     "http://155.185.49.200",
