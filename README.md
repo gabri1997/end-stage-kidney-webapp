@@ -7,17 +7,17 @@ This project integrates data entry, risk prediction through a machine-learning m
 
 ## 📋 Table of Contents
 
-1. [Overview](#overview)  
-2. [Key Features](#key-features)  
-3. [Actors and Roles](#actors-and-roles)  
-4. [System Architecture](#system-architecture)  
-5. [Production Pipeline](#production-pipeline)  
-6. [Database and Storage](#database-and-storage)  
-7. [Technology Stack](#technology-stack)  
-8. [Deployment Notes](#deployment-notes)  
-9. [Security and Compliance](#security-and-compliance)  
+1.  [Overview](#overview)  
+2.  [Key Features](#key-features)  
+3.  [Actors and Roles](#actors-and-roles)  
+4.  [System Architecture](#system-architecture)  
+5.  [Production Pipeline](#production-pipeline)  
+6.  [Database and Storage](#database-and-storage)  
+7.  [Technology Stack](#technology-stack)  
+8.  [Deployment Notes](#deployment-notes)  
+9.  [Security and Compliance](#security-and-compliance)  
 10. [Future Improvements](#future-improvements)  
-11. [License](#license)
+
 
 ---
 
@@ -47,7 +47,7 @@ It combines **clinical data management**, **automated classification**, and **da
 
 ## 👥 Actors and Roles
 
-| Actor | Description | Permissions |
+|  Actor | Description  | Permissions |
 |--------|--------------|-------------|
 | **Administrator** | Manages users, roles, and global configurations. | Full access (user and system management). |
 | **Physician / Clinician** | Manages patient records and performs risk classification. | Create/update patients, trigger ML predictions, view results. |
@@ -91,7 +91,7 @@ Django acts as both **frontend and backend**, handling authentication, database 
          │ - Template Rendering (HTML) │
          └──────────────┬──────────────┘
 
-*** The HTML rendered by Django is then propagated back through the entire pipeline: it is first returned to Gunicorn, then passed to the web server (Apache or NGINX), and finally delivered to the browser, which displays the Django-generated frontend with the computed results. ***
+The HTML rendered by Django is then propagated back through the entire pipeline: it is first returned to Gunicorn, then passed to the web server (Apache or NGINX), and finally delivered to the browser, which displays the Django-generated frontend with the computed results. 
 ---
 
 ### 🔍 Description
@@ -100,7 +100,7 @@ Django acts as both **frontend and backend**, handling authentication, database 
    - Accesses the web interface over HTTPS.  
    - Interacts with Django-rendered HTML pages.  
 
-2. **NGINX OR APACHE**  
+2. **NGINX
    - It is like a filter from the user and the backend.
    - Acts as reverse proxy and handles SSL termination.  
    - Serves static and media files directly.  
@@ -123,8 +123,6 @@ Django acts as both **frontend and backend**, handling authentication, database 
 7. **Local Storage**  
    - Keeps uploaded medical reports and images (`MEDIA_ROOT`).  
 
-8. **Monitoring (optional)**  
-   - Tools like Prometheus, Grafana, or Sentry can log system activity and performance.
 
 ---
 
