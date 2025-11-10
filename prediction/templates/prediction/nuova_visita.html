@@ -3,6 +3,22 @@
 
 {% block title %}Nuova Visita - {{ paziente.nome }} {{ paziente.cognome }}{% endblock %}
 
+{% block extra_css %}
+<style>
+    .file-name {
+        max-width: 250px !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        white-space: nowrap !important;
+        display: inline-block !important;
+    }
+    .file.has-name .file-name {
+        flex-grow: 0 !important;
+        flex-shrink: 1 !important;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="columns is-centered">
     <div class="column is-two-thirds">
@@ -27,8 +43,8 @@
                                     {% if field.name == 'note' %}
                                         {{ field|addclass:'textarea' }}
                                     {% elif field.name == 'referto' %}
-                                    <div class="file has-name">
-                                        <label class="file-label">
+                                    <div class="file has-name is-fullwidth">
+                                        <label class="file-label" style="width: 100%;">
                                             <input class="file-input" type="file" name="{{ field.name }}" id="id_{{ field.name }}">
                                             <span class="file-cta">
                                                 <span class="file-icon">
@@ -38,7 +54,7 @@
                                                     Scegli un file...
                                                 </span>
                                             </span>
-                                            <span class="file-name">Nessun file selezionato</span>
+                                            <span class="file-name" style="max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Nessun file selezionato</span>
                                         </label>
                                     </div>
                                     {% else %}
@@ -95,7 +111,14 @@ document.addEventListener('DOMContentLoaded', function() {
     
     fileInput.addEventListener('change', function() {
         if (fileInput.files.length > 0) {
-            fileName.textContent = fileInput.files[0].name;
+            let name = fileInput.files[0].name;
+            // Tronca il nome se è troppo lungo (max 40 caratteri)
+            if (name.length > 40) {
+                const ext = name.split('.').pop();
+                const baseName = name.substring(0, name.lastIndexOf('.'));
+                name = baseName.substring(0, 35) + '...' + ext;
+            }
+            fileName.textContent = name;
         } else {
             fileName.textContent = 'Nessun file selezionato';
         }

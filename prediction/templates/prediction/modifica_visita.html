@@ -6,11 +6,17 @@
 {% block content %}
 
 <style>
-/* 🔹 correzione nome file */
+/* 🔹 correzione nome file lungo */
 .file-name {
-  max-width: none !important;
-  white-space: normal !important;
-  overflow: visible !important;
+  max-width: 250px !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  display: inline-block !important;
+}
+.file.has-name .file-name {
+  flex-grow: 0 !important;
+  flex-shrink: 1 !important;
 }
 </style>
 
@@ -38,14 +44,14 @@
                                     {% if field.name == 'note' %}
                                         {{ field|addclass:'textarea' }}
                                     {% elif field.name == 'referto' %}
-                                        <div class="file has-name">
-                                            <label class="file-label">
+                                        <div class="file has-name is-fullwidth">
+                                            <label class="file-label" style="width: 100%;">
                                                 <input class="file-input" type="file" name="referto" id="id_referto">
                                                 <span class="file-cta">
                                                     <span class="file-icon"><i class="fas fa-upload"></i></span>
                                                     <span class="file-label">Scegli un file...</span>
                                                 </span>
-                                                <span class="file-name" id="file-name">
+                                                <span class="file-name" id="file-name" style="max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
                                                     {% if visita.referto %}
                                                         {{ visita.referto.name|slice:"14:" }}
                                                     {% else %}
@@ -119,7 +125,14 @@ document.addEventListener('DOMContentLoaded', function() {
     
     fileInput.addEventListener('change', function() {
         if (fileInput.files.length > 0) {
-            fileName.textContent = fileInput.files[0].name;
+            let name = fileInput.files[0].name;
+            // Tronca il nome se è troppo lungo (max 40 caratteri)
+            if (name.length > 40) {
+                const ext = name.split('.').pop();
+                const baseName = name.substring(0, name.lastIndexOf('.'));
+                name = baseName.substring(0, 35) + '...' + ext;
+            }
+            fileName.textContent = name;
         } else {
             fileName.textContent = defaultFileName;
         }
