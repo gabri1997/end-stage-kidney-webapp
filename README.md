@@ -3,24 +3,6 @@
 A full-stack **Django web application** for patient management and **End-Stage Kidney Disease (ESKD)** risk classification based on clinical and laboratory data.  
 This project integrates data entry, risk prediction through a machine-learning model, and visualization of patient-specific results — all within a single, secure platform.
 
----
-
-## 📋 Table of Contents
-
-1.  [Overview](#overview)  
-2.  [Key Features](#key-features)  
-3.  [Actors and Roles](#actors-and-roles)  
-4.  [System Architecture](#system-architecture)  
-5.  [Production Pipeline](#production-pipeline)  
-6.  [Database and Storage](#database-and-storage)  
-7.  [Technology Stack](#technology-stack)  
-8.  [Deployment Notes](#deployment-notes)  
-9.  [Security and Compliance](#security-and-compliance)  
-10. [Future Improvements](#future-improvements)  
-
-
----
-
 ## 🧭 Overview
 
 This Django application is designed to support healthcare professionals in managing patient records and predicting the likelihood of progression to **End-Stage Kidney Disease (ESKD)**.  
@@ -60,27 +42,34 @@ It combines **clinical data management**, **automated classification**, and **da
 
 Below is a simplified overview of how the system components interact in production.  
 Django acts as both **frontend and backend**, handling authentication, database operations, and HTML rendering.
+The use of Docker simplifies the portability and usage of the web application, specifically, I adopted 4 separate containers:
+- One for Django and Gunicorn
+- One for NGINX
+- One for Dramatiq (to handle in background multiple request of the Eskd prediction)
+- One for Redis
+After that, the use of Https ensure the encryption of the data (Certbot to have the SSL certificate from Let's Encrypt).
+
 
          ┌─────────────────────────────┐
          │         Web Client          │
          │   (User Browser / HTTPS)    │
          │                             │
          └──────────────┬──────────────┘
-                        │Sends requests 
-                        │to Web Server  
+                        │ Sends requests 
+                        │ to Web Server  
                         ▼
          ┌─────────────────────────────┐
-         │       NGINX or APACHE       │
+         │            NGINX            │
          │ Reverse Proxy & Static Host │
          └──────────────┬──────────────┘
-                        │Forwards to ...
+                        │ Forwards to ...
                         │   
                         ▼
          ┌─────────────────────────────┐
          │          Gunicorn           │
          │  WSGI Application Server    │
          └──────────────┬──────────────┘
-                        │Via WSGI protocol
+                        │ Via WSGI protocol
                         ▼ forwards to Django
          ┌─────────────────────────────┐
          │          Django             │
@@ -88,10 +77,11 @@ Django acts as both **frontend and backend**, handling authentication, database 
          │ - Authentication            │
          │ - Database Access           │
          │ - ESKD CNN Prediction       │
+         │   (Dramatiq + Redis)        │
          │ - Template Rendering (HTML) │
          └──────────────┬──────────────┘
 
-The HTML rendered by Django is then propagated back through the entire pipeline: it is first returned to Gunicorn, then passed to the web server (Apache or NGINX), and finally delivered to the browser, which displays the Django-generated frontend with the computed results. 
+The HTML rendered by Django is then propagated back through the entire pipeline: it is first returned to Gunicorn, then passed to the web server (NGINX), and finally delivered to the browser, which displays the Django-generated frontend with the computed results. 
 ---
 
 ### 🔍 Description
@@ -100,7 +90,7 @@ The HTML rendered by Django is then propagated back through the entire pipeline:
    - Accesses the web interface over HTTPS.  
    - Interacts with Django-rendered HTML pages.  
 
-2. **NGINX
+2. **NGINX**
    - It is like a filter from the user and the backend.
    - Acts as reverse proxy and handles SSL termination.  
    - Serves static and media files directly.  
@@ -112,16 +102,17 @@ The HTML rendered by Django is then propagated back through the entire pipeline:
 4. **Django (Full-stack)**  
    - Manages business logic, user authentication, and rendering.  
    - Handles ORM operations for the database.  
-   - Invokes the **ESKD classifier** for risk predictions.  
+   - Invokes the **ESKD classifier** for risk predictions.
+   - Works with Dramatiq and Redis for prediction handling
 
-5. **SQLite Database**  
+5. **PostgreSQL Database**  
    - Stores patient data, predictions, and user accounts.  
 
 6. **ML Model (Python)**  
    - Processes clinical data and returns risk classification results.  
 
 7. **Local Storage**  
-   - Keeps uploaded medical reports and images (`MEDIA_ROOT`).  
+   - Keeps uploaded medical reports and images.  
 
 
 ---
