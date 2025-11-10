@@ -70,7 +70,8 @@ After that, the use of Https ensure the encryption of the data (Certbot to have 
          │  WSGI Application Server    │
          └──────────────┬──────────────┘
                         │ Via WSGI protocol
-                        ▼ forwards to Django
+                        │ forwards to Django
+                        ▼ 
          ┌─────────────────────────────┐
          │          Django             │
          │  Backend + Frontend Logic   │
