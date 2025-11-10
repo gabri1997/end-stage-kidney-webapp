@@ -1,10 +1,4 @@
-{% extends "prediction/base.html" %}
-{% load static %}
-
-{% block title %}Conferma Eliminazione - {{ paziente.nome }} {{ paziente.cognome }}{% endblock %}
-
-{% block content %}
-<style>
+/* Modern Forms Shared Styles */
 body {
     background: 
         linear-gradient(135deg, rgba(161, 154, 154, 0.597), rgba(238, 240, 241, 0.504)),
@@ -13,123 +7,145 @@ body {
     background-blend-mode: overlay !important;
 }
 
-.delete-container {
-    max-width: 600px;
-    margin: 5rem auto;
-    background: rgba(255, 255, 255, 0.95);
-    border-radius: 20px;
-    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
-    padding: 3rem 2.5rem;
-    text-align: center;
+.box {
+    background-color: rgba(255, 255, 255, 0.95);
+    border-radius: 16px;
+    padding: 2.5rem;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.8);
-    animation: scaleIn 0.5s ease-out;
+    animation: fadeInUp 0.6s ease-out;
 }
 
-@keyframes scaleIn {
+@keyframes fadeInUp {
     from {
         opacity: 0;
-        transform: scale(0.8);
+        transform: translateY(30px);
     }
     to {
         opacity: 1;
-        transform: scale(1);
+        transform: translateY(0);
     }
 }
 
-.delete-icon {
-    color: #ff4757;
-    font-size: 4rem;
-    margin-bottom: 1.5rem;
-    animation: shake 0.8s ease-in-out;
-}
-
-@keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
-    20%, 40%, 60%, 80% { transform: translateX(10px); }
-}
-
-.delete-container h2 {
-    font-size: 2rem;
-    font-weight: 700;
-    margin-bottom: 1rem;
+.title {
     color: #1c8e7c;
+    animation: slideInLeft 0.6s ease-out;
 }
 
-.delete-container p {
-    font-size: 1.2rem;
-    margin-bottom: 2rem;
-    color: #3d3d3d;
-    line-height: 1.6;
+.title .icon {
+    color: #1c8e7c;
+    animation: pulse 2s ease-in-out infinite;
 }
 
-.delete-buttons {
-    display: flex;
-    justify-content: center;
-    gap: 1.5rem;
-    margin-top: 2rem;
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
 }
 
-.button-delete {
-    background: linear-gradient(135deg, #ff4757, #ff6b81);
-    color: #fff;
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+}
+
+.label {
+    color: #1c8e7c;
     font-weight: 700;
-    border: none;
+    font-size: 0.95rem;
+}
+
+.input, .textarea, .select select {
     border-radius: 12px;
-    padding: 1rem 2rem;
+    border: 2px solid #e0e0e0;
     transition: all 0.3s ease;
-    box-shadow: 0 6px 20px rgba(255, 71, 87, 0.3);
-    font-size: 1.1rem;
 }
 
-.button-delete:hover {
-    background: linear-gradient(135deg, #ff6b81, #ff4757);
-    transform: translateY(-3px) scale(1.05);
-    box-shadow: 0 10px 30px rgba(255, 71, 87, 0.5);
-    color: #fff;
+.input:focus, .textarea:focus, .select select:focus {
+    border-color: #1c8e7c;
+    box-shadow: 0 0 0 4px rgba(28, 142, 124, 0.15);
+    transform: translateY(-2px);
 }
 
-.button-cancel {
+.button.is-primary {
     background: linear-gradient(135deg, #1c8e7c, #26c6b8);
+    border: none;
     color: white;
     font-weight: 700;
-    border: none;
     border-radius: 12px;
-    padding: 1rem 2rem;
+    padding: 0.8rem 1.5rem;
     transition: all 0.3s ease;
-    box-shadow: 0 6px 20px rgba(28, 142, 124, 0.3);
-    font-size: 1.1rem;
+    box-shadow: 0 4px 15px rgba(28, 142, 124, 0.3);
 }
 
-.button-cancel:hover {
+.button.is-primary:hover {
     background: linear-gradient(135deg, #26c6b8, #1c8e7c);
     transform: translateY(-3px) scale(1.05);
-    box-shadow: 0 10px 30px rgba(28, 142, 124, 0.5);
-    color: white;
+    box-shadow: 0 8px 25px rgba(28, 142, 124, 0.4);
 }
-</style>
 
-<div class="delete-container">
-    <span class="delete-icon">
-        <i class="fas fa-exclamation-triangle"></i>
-    </span>
-    <h2>Conferma eliminazione paziente</h2>
-    <p>Sei sicuro di voler eliminare <strong>{{ paziente.nome }} {{ paziente.cognome }}</strong>?<br>
-    Questa operazione <strong>non può essere annullata</strong>.</p>
+.button.is-light {
+    border-radius: 12px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
 
-    <form method="POST">
-        {% csrf_token %}
-        <div class="delete-buttons">
-            <button type="submit" class="button-delete">
-                <span class="icon"><i class="fas fa-trash-alt"></i></span>
-                <span>Elimina definitivamente</span>
-            </button>
-            <a href="{% url 'lista_pazienti' %}" class="button-cancel">
-                <span class="icon"><i class="fas fa-arrow-left"></i></span>
-                <span>Annulla</span>
-            </a>
-        </div>
-    </form>
-</div>
-{% endblock %}
+.button.is-light:hover {
+    background-color: #e8e8e8;
+    transform: translateY(-2px);
+}
+
+.button.is-danger {
+    background: linear-gradient(135deg, #ff4757, #ff6b81);
+    border: none;
+    color: white;
+    font-weight: 700;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(255, 71, 87, 0.3);
+}
+
+.button.is-danger:hover {
+    background: linear-gradient(135deg, #ff6b81, #ff4757);
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 8px 25px rgba(255, 71, 87, 0.4);
+}
+
+.field {
+    animation: fadeInLeft 0.5s ease-out backwards;
+}
+
+.field:nth-child(1) { animation-delay: 0.05s; }
+.field:nth-child(2) { animation-delay: 0.1s; }
+.field:nth-child(3) { animation-delay: 0.15s; }
+.field:nth-child(4) { animation-delay: 0.2s; }
+.field:nth-child(5) { animation-delay: 0.25s; }
+.field:nth-child(6) { animation-delay: 0.3s; }
+.field:nth-child(7) { animation-delay: 0.35s; }
+
+@keyframes fadeInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes ripple {
+    to {
+        transform: scale(4);
+        opacity: 0;
+    }
+}
