@@ -2,6 +2,60 @@
 
 {% block title %}Conferma Eliminazione Visita - {{ paziente.nome }} {{ paziente.cognome }}{% endblock %}
 
+{% block extra_css %}
+<style>
+/* Mobile Responsive Styles */
+@media screen and (max-width: 768px) {
+    .columns.is-centered {
+        margin: 0 !important;
+        padding: 0.5rem !important;
+    }
+
+    .column.is-half {
+        width: 100% !important;
+    }
+
+    .box {
+        margin: 0 0.5rem !important;
+        padding: 1.25rem !important;
+    }
+
+    .title {
+        font-size: 1.25rem !important;
+    }
+
+    .title .icon {
+        font-size: 1em !important;
+    }
+
+    .is-size-5 {
+        font-size: 1rem !important;
+    }
+
+    .field.is-grouped {
+        flex-direction: column !important;
+    }
+
+    .field.is-grouped .control {
+        width: 100% !important;
+        margin-bottom: 0.5rem;
+    }
+
+    .button {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* Tablet */
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+    .column.is-half {
+        width: 75% !important;
+    }
+}
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="columns is-centered">
     <div class="column is-half">

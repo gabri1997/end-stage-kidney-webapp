@@ -1,11 +1,158 @@
-<h2>Predizione rischio ESKD per {{ paziente.nome }} {{ paziente.cognome }}</h2>
+{% extends 'prediction/base.html' %}
 
-<p><strong>Visita del:</strong> {{ visita.data_visita }}</p>
-{% if mestc %}
-  <p><strong>Referto MEST-C:</strong> M{{ mestc.M }} E{{ mestc.E }} S{{ mestc.S }} T{{ mestc.T }} C{{ mestc.C }}</p>
-{% endif %}
+{% block title %}Esito Predizione - {{ paziente.nome }} {{ paziente.cognome }}{% endblock %}
 
-<p><strong>Probabilità:</strong> {{ rischio|floatformat:2 }}%</p>
-<p><strong>Esito:</strong> {{ esito }}</p>
+{% block extra_css %}
+<style>
+.predizione-container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 2rem;
+}
 
-<a href="{% url 'dettaglio_paziente' paziente.id %}">⬅️ Torna al paziente</a>
+.predizione-box {
+    background: white;
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+}
+
+.predizione-title {
+    color: #1c8e7c;
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.predizione-data {
+    margin: 1.5rem 0;
+}
+
+.data-item {
+    margin-bottom: 1rem;
+    padding: 0.75rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.data-label {
+    font-weight: 600;
+    color: #495057;
+}
+
+.data-value {
+    color: #1c8e7c;
+    font-size: 1.1rem;
+}
+
+.rischio-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: linear-gradient(135deg, #1c8e7c, #26c6b8);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    margin-top: 1.5rem;
+}
+
+.back-btn:hover {
+    background: linear-gradient(135deg, #26c6b8, #1c8e7c);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(28, 142, 124, 0.3);
+    color: white;
+}
+
+/* Mobile Responsive */
+@media screen and (max-width: 768px) {
+    .predizione-container {
+        margin: 0.5rem !important;
+        padding: 0 !important;
+    }
+
+    .predizione-box {
+        padding: 1.25rem !important;
+        border-radius: 12px !important;
+    }
+
+    .predizione-title {
+        font-size: 1.25rem !important;
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .data-item {
+        padding: 0.5rem !important;
+    }
+
+    .data-label {
+        font-size: 0.9rem !important;
+    }
+
+    .data-value {
+        font-size: 1rem !important;
+    }
+
+    .rischio-value {
+        font-size: 1.25rem !important;
+    }
+
+    .back-btn {
+        width: 100%;
+        justify-content: center;
+        padding: 12px 16px !important;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="predizione-container">
+    <div class="predizione-box">
+        <h2 class="predizione-title">
+            <i class="fas fa-brain"></i>
+            Predizione rischio ESKD per {{ paziente.nome }} {{ paziente.cognome }}
+        </h2>
+
+        <div class="predizione-data">
+            <div class="data-item">
+                <span class="data-label">Visita del:</span>
+                <span class="data-value">{{ visita.data_visita|date:"d/m/Y" }}</span>
+            </div>
+
+            {% if mestc %}
+            <div class="data-item">
+                <span class="data-label">Referto MEST-C:</span>
+                <span class="data-value">M{{ mestc.M }} E{{ mestc.E }} S{{ mestc.S }} T{{ mestc.T }} C{{ mestc.C }}</span>
+            </div>
+            {% endif %}
+
+            <div class="data-item">
+                <span class="data-label">Probabilità:</span>
+                <span class="data-value rischio-value">{{ rischio|floatformat:2 }}%</span>
+            </div>
+
+            <div class="data-item">
+                <span class="data-label">Esito:</span>
+                <span class="data-value">{{ esito }}</span>
+            </div>
+        </div>
+
+        <a href="{% url 'dettaglio_paziente' paziente.id %}" class="back-btn">
+            <i class="fas fa-arrow-left"></i>
+            Torna al paziente
+        </a>
+    </div>
+</div>
+{% endblock %}

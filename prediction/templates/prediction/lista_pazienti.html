@@ -349,6 +349,119 @@
         white-space: nowrap;
     }
 
+    /* Mobile Responsive Styles */
+    @media screen and (max-width: 768px) {
+        .search-container,
+        .pazienti-box {
+            margin: 0 0.5rem 1rem 0.5rem !important;
+            padding: 1.25rem !important;
+            border-radius: 12px !important;
+        }
+
+        .page-header {
+            flex-direction: column;
+            align-items: flex-start !important;
+            gap: 1rem;
+        }
+
+        .page-title {
+            font-size: 1.25rem !important;
+            flex-wrap: wrap;
+        }
+
+        .page-title i {
+            font-size: 1.2em !important;
+        }
+
+        .patient-count {
+            font-size: 0.75em !important;
+            padding: 2px 8px !important;
+            margin-left: 5px !important;
+        }
+
+        .add-btn {
+            width: 100%;
+            justify-content: center;
+            padding: 10px 16px !important;
+            font-size: 0.9em !important;
+        }
+
+        /* Search form su mobile */
+        .search-form {
+            flex-direction: column;
+        }
+
+        .search-input {
+            width: 100%;
+            margin-bottom: 0.5rem;
+            font-size: 16px !important; /* Previene zoom iOS */
+        }
+
+        .search-btn {
+            width: 100%;
+            justify-content: center;
+        }
+
+        /* Tabella responsive - scroll orizzontale */
+        .table-responsive {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        table {
+            min-width: 900px; /* Forza scroll orizzontale */
+            font-size: 0.8rem !important;
+        }
+
+        th, td {
+            padding: 0.75rem 0.5rem !important;
+        }
+
+        /* Risk tags più piccoli su mobile */
+        .risk-tag {
+            width: 70px !important;
+            height: 26px !important;
+            font-size: 0.75rem !important;
+        }
+
+        /* Action buttons più compatti */
+        .action-btn {
+            font-size: 0.75em !important;
+            padding: 6px 8px !important;
+            margin: 1px !important;
+        }
+
+        /* Icone condivisione più piccole */
+        .dashed-line {
+            width: 20px !important;
+        }
+
+        /* Nascondi alcune colonne su schermi molto piccoli */
+        @media screen and (max-width: 480px) {
+            td:nth-child(3), /* Età */
+            th:nth-child(3) {
+                display: none;
+            }
+        }
+    }
+
+    /* Tablet */
+    @media screen and (min-width: 769px) and (max-width: 1024px) {
+        .search-container,
+        .pazienti-box {
+            max-width: 95%;
+        }
+
+        table {
+            font-size: 0.9rem !important;
+        }
+
+        .action-btn {
+            font-size: 0.8em !important;
+            padding: 6px 10px !important;
+        }
+    }
+
     /* Contatore pazienti animato */
     .patient-count {
         display: inline-flex;

@@ -76,6 +76,127 @@
             border-radius: 5px !important; /* puoi regolare il valore (es. 8px, 12px, ecc.) */
         }
 
+        /* Responsive Mobile Styles */
+        @media screen and (max-width: 768px) {
+            /* Riduci padding e margini su mobile */
+            .section {
+                padding: 1rem 0.75rem !important;
+            }
+
+            .container {
+                padding: 0 0.75rem !important;
+            }
+
+            .box {
+                padding: 1.25rem !important;
+                margin-bottom: 1rem !important;
+            }
+
+            /* Titoli più piccoli su mobile */
+            .title.is-1 {
+                font-size: 2rem !important;
+            }
+
+            .title.is-2 {
+                font-size: 1.75rem !important;
+            }
+
+            .title.is-3 {
+                font-size: 1.5rem !important;
+            }
+
+            .title.is-4 {
+                font-size: 1.25rem !important;
+            }
+
+            /* Tabelle responsive */
+            .table-container {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            table {
+                font-size: 0.85rem !important;
+            }
+
+            table th,
+            table td {
+                padding: 0.5rem !important;
+                white-space: nowrap;
+            }
+
+            /* Bottoni stack verticalmente su mobile */
+            .buttons {
+                flex-direction: column !important;
+            }
+
+            .buttons .button {
+                width: 100% !important;
+                margin-bottom: 0.5rem !important;
+            }
+
+            .field.is-grouped {
+                flex-direction: column !important;
+            }
+
+            .field.is-grouped .control {
+                width: 100% !important;
+                margin-bottom: 0.5rem !important;
+            }
+
+            .field.is-grouped .control .button {
+                width: 100% !important;
+            }
+
+            /* Hero responsive */
+            .hero-body {
+                padding: 1.5rem 1rem !important;
+            }
+
+            /* Colonne stack su mobile */
+            .columns.is-mobile:not(.is-desktop) {
+                display: flex !important;
+                flex-wrap: wrap !important;
+            }
+
+            /* Nascondi elementi non essenziali su schermi piccoli */
+            .is-hidden-mobile {
+                display: none !important;
+            }
+
+            /* Font sizes più leggibili */
+            body {
+                font-size: 14px !important;
+            }
+
+            /* Input e form elements */
+            .input,
+            .textarea,
+            .select select {
+                font-size: 16px !important; /* Previene zoom su iOS */
+            }
+
+            /* Navbar mobile */
+            .navbar-menu {
+                box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            }
+
+            .navbar-item {
+                padding: 0.75rem 1rem !important;
+            }
+        }
+
+        /* Tablet responsive (768px - 1024px) */
+        @media screen and (min-width: 769px) and (max-width: 1024px) {
+            .section {
+                padding: 2rem 1.5rem !important;
+            }
+
+            .box {
+                padding: 1.75rem !important;
+            }
+        }
+
     </style>
     {% block extra_head %}{% endblock %}
 </head>

@@ -108,6 +108,78 @@ body {
     box-shadow: 0 10px 30px rgba(28, 142, 124, 0.5);
     color: white;
 }
+
+/* Mobile Responsive Styles */
+@media screen and (max-width: 768px) {
+    .delete-container {
+        margin: 2rem 0.5rem !important;
+        padding: 2rem 1.5rem !important;
+        max-width: 95% !important;
+    }
+
+    .delete-icon {
+        font-size: 4rem !important;
+    }
+
+    .delete-container h2 {
+        font-size: 1.5rem !important;
+    }
+
+    .delete-container p {
+        font-size: 1rem !important;
+        margin-bottom: 1.5rem !important;
+    }
+
+    .delete-buttons {
+        flex-direction: column !important;
+        gap: 1rem !important;
+        margin-top: 1.5rem !important;
+    }
+
+    .button-delete,
+    .button-cancel {
+        width: 100% !important;
+        padding: 14px 20px !important;
+        font-size: 1rem !important;
+        justify-content: center;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    /* Hide text on very small screens, keep icons */
+    @media screen and (max-width: 480px) {
+        .delete-container {
+            margin: 1rem 0.5rem !important;
+            padding: 1.5rem 1rem !important;
+        }
+
+        .delete-icon {
+            font-size: 3rem !important;
+        }
+
+        .delete-container h2 {
+            font-size: 1.25rem !important;
+        }
+
+        .delete-container p {
+            font-size: 0.95rem !important;
+        }
+    }
+}
+
+/* Tablet */
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+    .delete-container {
+        max-width: 650px !important;
+        padding: 3rem 2.5rem !important;
+    }
+
+    .delete-icon {
+        font-size: 5rem !important;
+    }
+}
+
 </style>
 
 <div class="delete-container">

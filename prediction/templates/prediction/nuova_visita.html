@@ -158,6 +158,142 @@
     .file-cta:hover {
         background: linear-gradient(135deg, #764ba2, #667eea);
     }
+
+    /* Mobile Responsive Styles */
+    @media screen and (max-width: 768px) {
+        body {
+            padding: 0 !important;
+        }
+
+        .columns.is-centered {
+            margin: 0 !important;
+            padding: 0.5rem !important;
+        }
+
+        .column.is-two-thirds {
+            width: 100% !important;
+            padding: 0 !important;
+        }
+
+        .top-action {
+            margin: 0 0.5rem 1rem 0.5rem !important;
+        }
+
+        .button span {
+            font-size: 0.9em !important;
+        }
+
+        .custom-box {
+            margin: 0 0.5rem !important;
+            padding: 1.25rem !important;
+            border-radius: 12px !important;
+        }
+
+        .header-bar {
+            padding: 0 0 1rem 0 !important;
+        }
+
+        .title.is-4 {
+            font-size: 1.15rem !important;
+        }
+
+        .title.is-4 i {
+            font-size: 1em !important;
+        }
+
+        /* Form fields - stack columns */
+        .columns {
+            display: flex !important;
+            flex-direction: column !important;
+        }
+
+        .column {
+            width: 100% !important;
+            padding: 0 !important;
+        }
+
+        .field {
+            margin-bottom: 1.25rem !important;
+        }
+
+        .label {
+            font-size: 0.9rem !important;
+        }
+
+        .input,
+        .textarea,
+        .select select {
+            font-size: 16px !important; /* Previene zoom iOS */
+            padding: 10px 12px !important;
+        }
+
+        .help {
+            font-size: 0.8em !important;
+        }
+
+        /* File upload */
+        .file {
+            width: 100%;
+        }
+
+        .file-name {
+            max-width: 150px !important;
+        }
+
+        .file-cta {
+            font-size: 0.9em !important;
+        }
+
+        /* Buttons full-width */
+        .field.is-grouped {
+            flex-direction: column !important;
+            align-items: stretch !important;
+        }
+
+        .field.is-grouped .control {
+            width: 100% !important;
+            margin: 0 0 0.5rem 0 !important;
+        }
+
+        .button {
+            width: 100%;
+            justify-content: center;
+            padding: 12px 16px !important;
+        }
+
+        /* Hide button text on very small screens */
+        @media screen and (max-width: 480px) {
+            .top-action .button span:not(.icon) {
+                display: none;
+            }
+
+            .title.is-4 {
+                font-size: 1rem !important;
+            }
+
+            .file-name {
+                max-width: 100px !important;
+            }
+        }
+    }
+
+    /* Tablet */
+    @media screen and (min-width: 769px) and (max-width: 1024px) {
+        .column.is-two-thirds {
+            width: 85% !important;
+        }
+
+        .custom-box {
+            padding: 1.75rem !important;
+        }
+
+        .input,
+        .textarea,
+        .select select {
+            font-size: 0.95rem !important;
+        }
+    }
+
 </style>
 {% endblock %}
 
