@@ -265,12 +265,13 @@ services:
 
 | Priorità | Miglioria | Effort | Impatto | Deadline |
 |----------|-----------|--------|---------|----------|
-| 🔴 CRITICA | HTTPS/SSL | 2h | Security | Immediato |
-| 🔴 CRITICA | Backup DB | 1h | Data Loss | Questa settimana |
-| 🔴 CRITICA | SECRET_KEY | 5min | Security | Oggi |
-| 🟡 ALTA | Rate Limiting | 1h | Security | 1 settimana |
-| 🟡 ALTA | Health Checks | 30min | Reliability | 1 settimana |
-| 🟢 MEDIA | PostgreSQL in Docker | 2h | Management | 2 settimane |
+| 🔴 CRITICA | HTTPS/SSL | 2h | Security | Immediato | fatto bro
+| 🔴 CRITICA | Backup DB | 1h | Data Loss | Questa settimana | bho non serve
+| 🔴 CRITICA | SECRET_KEY | 5min | Security | Oggi | 
+| 🟡 ALTA | Rate Limiting | 1h | Security | 1 settimana | non so cosa si
+| 🟡 ALTA | Health Checks | 30min | Reliability | 1 settimana | non so cosa sia 
+| 🟢 MEDIA | PostgreSQL in Docker | 2h | Management | 2 settimane | fatto bro 
+# Roba inutile 
 | 🔵 BASSA | Cache Redis | 3h | Performance | Quando necessario |
 | 🔵 BASSA | API REST | 8h | Features | Futuro |
 | 🔵 BASSA | Tests | Ongoing | Quality | Ongoing |
