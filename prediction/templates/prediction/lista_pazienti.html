@@ -134,6 +134,19 @@
         font-weight: 600;
     }
 
+    /* Dimensioni uniformi per i tag di rischio */
+    .risk-tag {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 90px; /* larghezza fissa per uniformità */
+        height: 30px; /* altezza coerente */
+        font-weight: 600;
+        font-size: 0.85rem;
+        padding: 0; /* rimuove padding extra della classe tag */
+        border-radius: 6px;
+    }
+
     .btn-share { 
         background-color: #d1f7d1; 
         color: #166534; 
@@ -264,14 +277,14 @@
                                 {% with ultima_pred=paziente.predizioni.last %}
                                     {% if ultima_pred %}
                                         {% if ultima_pred.esito == 'ALTO' %}
-                                            <span class="tag is-danger" title="Rischio Alto">Alto</span>
+                                            <span class="tag risk-tag is-danger" title="Rischio Alto">Alto</span>
                                         {% elif ultima_pred.esito == 'MEDIO' %}
-                                            <span class="tag is-warning" title="Rischio Medio">Medio</span>
+                                            <span class="tag risk-tag is-warning" title="Rischio Medio">Medio</span>
                                         {% else %}
-                                            <span class="tag is-success" title="Rischio Basso">Basso</span>
+                                            <span class="tag risk-tag is-success" title="Rischio Basso">Basso</span>
                                         {% endif %}
                                     {% else %}
-                                        <span class="tag is-light" title="Ancora nessuna predizione">—</span>
+                                        <span class="tag risk-tag is-light" title="Ancora nessuna predizione">—</span>
                                     {% endif %}
                                 {% endwith %}
                             </td>
