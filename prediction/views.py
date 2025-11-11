@@ -621,3 +621,119 @@ def elimina_paziente(request, paziente_id):
 
     # Se si accede via GET, mostra la pagina di conferma
     return render(request, "prediction/confirm_delete_paziente.html", {"paziente": paziente})
+
+
+@login_required
+def calcola_eskd_rapido(request):
+    """
+    View per il calcolo ESKD rapido senza registrare un paziente.
+    Permette di inserire i dati clinici e ottenere immediatamente una predizione.
+    """
+    from .forms import CalcoloESKDRapidoForm
+    
+    if request.method == "POST":
+        form = CalcoloESKDRapidoForm(request.POST)
+        if form.is_valid():
+            form_data = form.cleaned_data
+            
+            # Prepara i dati per il modello
+            # Converte sesso in formato numerico (M=0, F=1)
+            sesso = form_data.get("sesso", "M")
+            
+            # Gestione dati MEST-C (possono essere vuoti)
+            M_val = int(form_data.get("M")) if form_data.get("M") else 0
+            E_val = int(form_data.get("E")) if form_data.get("E") else 0
+            S_val = int(form_data.get("S")) if form_data.get("S") else 0
+            T_val = int(form_data.get("T")) if form_data.get("T") else 0
+            C_val = int(form_data.get("C")) if form_data.get("C") else 0
+            
+            # Calcola creatinina approssimativa da eGFR ed età
+            # Formula inversa semplificata: Creatinina ≈ (140 - età) / eGFR
+            # (formula molto approssimativa per avere un valore)
+            eta = form_data.get("eta", 50)
+            egfr = form_data.get("egfr", 60)
+            creatinina_stimata = max(0.5, (140 - eta) / (egfr * 1.2))  # stima molto grezza
+            
+            # Determina ipertensione dai valori pressori
+            pressione_sistolica = form_data.get("pressione_sistolica", 120)
+            pressione_diastolica = form_data.get("pressione_diastolica", 80)
+            iperteso = 1 if (pressione_sistolica >= 140 or pressione_diastolica >= 90) else 0
+            
+            # Gestione terapie
+            antihypertensive = 1 if form_data.get("Antihypertensive", False) else 0
+            immunosuppressants = 1 if form_data.get("Immunosuppressants", False) else 0
+            fish_oil = 1 if form_data.get("FishOil", False) else 0
+            
+            # Costruzione dizionario dati per il modello
+            data = {
+                "sesso": sesso,
+                "eta": float(eta),
+                "iperteso": iperteso,
+                "M": M_val,
+                "E": E_val,
+                "S": S_val,
+                "T": T_val,
+                "C": C_val,
+                "proteinuria": float(form_data.get("proteinuria", 0)),
+                "creatinina": float(creatinina_stimata),
+                # Terapie dal form
+                "Antihypertensive": antihypertensive,
+                "Immunosuppressants": immunosuppressants,
+                "FishOil": fish_oil,
+            }
+            
+            # Esegui la predizione
+            result = predict_risk(data)
+            probabilita = result["probabilita"]
+            esito = result["esito"]
+            
+            # Prepara i dati da mostrare nella pagina dei risultati
+            dati_display = {
+                "sesso": "Maschio" if sesso == "M" else "Femmina",
+                "eta": eta,
+                "pressione_sistolica": pressione_sistolica,
+                "pressione_diastolica": pressione_diastolica,
+                "egfr": egfr,
+                "proteinuria": form_data.get("proteinuria"),
+                "albumina": form_data.get("albumina"),
+                "emoglobina": form_data.get("emoglobina"),
+            }
+            
+            # Aggiungi dati MEST-C solo se presenti
+            if M_val or E_val or S_val or T_val or C_val:
+                dati_display.update({
+                    "M": M_val,
+                    "E": E_val,
+                    "S": S_val,
+                    "T": T_val,
+                    "C": C_val,
+                })
+            
+            # Aggiungi terapie ai dati visualizzati
+            terapie = []
+            if antihypertensive:
+                terapie.append("Antipertensiva")
+            if immunosuppressants:
+                terapie.append("Immunosoppressori")
+            if fish_oil:
+                terapie.append("Olio di Pesce")
+            
+            if terapie:
+                dati_display["terapie"] = terapie  # Lista invece di stringa
+                dati_display["terapie_str"] = ", ".join(terapie)  # Anche la stringa per visualizzazione semplice
+            else:
+                dati_display["terapie"] = []
+                dati_display["terapie_str"] = "Nessuna terapia"
+            
+            return render(request, "prediction/risultato_eskd_rapido.html", {
+                "probabilita": probabilita,
+                "esito": esito,
+                "dati": dati_display,
+            })
+    else:
+        form = CalcoloESKDRapidoForm()
+    
+    return render(request, "prediction/calcola_eskd_rapido.html", {
+        "form": form,
+    })
+

@@ -242,3 +242,102 @@ class SecurityResetStep2Form(SetPasswordForm):
                 if name != "answer":
                     new_fields[name] = field
             self.fields = new_fields
+
+
+class CalcoloESKDRapidoForm(forms.Form):
+    """Form per il calcolo ESKD rapido senza registrare un paziente"""
+    
+    # Dati demografici
+    sesso = forms.ChoiceField(
+        choices=[('M', 'Maschio'), ('F', 'Femmina')],
+        label='Sesso',
+        widget=forms.Select(attrs={'class': 'input'})
+    )
+    eta = forms.IntegerField(
+        label='Età',
+        min_value=0,
+        max_value=120,
+        widget=forms.NumberInput(attrs={'class': 'input', 'placeholder': 'es. 45'})
+    )
+    
+    # Dati clinici
+    pressione_sistolica = forms.IntegerField(
+        label='Pressione Sistolica (mmHg)',
+        min_value=0,
+        widget=forms.NumberInput(attrs={'class': 'input', 'placeholder': 'es. 120'})
+    )
+    pressione_diastolica = forms.IntegerField(
+        label='Pressione Diastolica (mmHg)',
+        min_value=0,
+        widget=forms.NumberInput(attrs={'class': 'input', 'placeholder': 'es. 80'})
+    )
+    egfr = forms.FloatField(
+        label='eGFR (mL/min/1.73m²)',
+        min_value=0,
+        widget=forms.NumberInput(attrs={'class': 'input', 'step': '0.01', 'placeholder': 'es. 60.5'})
+    )
+    proteinuria = forms.FloatField(
+        label='Proteinuria (g/24h)',
+        min_value=0,
+        widget=forms.NumberInput(attrs={'class': 'input', 'step': '0.01', 'placeholder': 'es. 0.5'})
+    )
+    albumina = forms.FloatField(
+        label='Albumina (g/dL)',
+        min_value=0,
+        widget=forms.NumberInput(attrs={'class': 'input', 'step': '0.01', 'placeholder': 'es. 4.0'})
+    )
+    emoglobina = forms.FloatField(
+        label='Emoglobina (g/dL)',
+        min_value=0,
+        widget=forms.NumberInput(attrs={'class': 'input', 'step': '0.01', 'placeholder': 'es. 13.5'})
+    )
+    
+    # Dati MEST-C (opzionali)
+    M = forms.ChoiceField(
+        choices=[('', 'Non disponibile'), ('0', '0'), ('1', '1')],
+        required=False,
+        label='M',
+        widget=forms.Select(attrs={'class': 'select'})
+    )
+    E = forms.ChoiceField(
+        choices=[('', 'Non disponibile'), ('0', '0'), ('1', '1')],
+        required=False,
+        label='E',
+        widget=forms.Select(attrs={'class': 'select'})
+    )
+    S = forms.ChoiceField(
+        choices=[('', 'Non disponibile'), ('0', '0'), ('1', '1')],
+        required=False,
+        label='S',
+        widget=forms.Select(attrs={'class': 'select'})
+    )
+    T = forms.ChoiceField(
+        choices=[('', 'Non disponibile'), ('0', '0'), ('1', '1'), ('2', '2')],
+        required=False,
+        label='T',
+        widget=forms.Select(attrs={'class': 'select'})
+    )
+    C = forms.ChoiceField(
+        choices=[('', 'Non disponibile'), ('0', '0'), ('1', '1'), ('2', '2')],
+        required=False,
+        label='C',
+        widget=forms.Select(attrs={'class': 'select'})
+    )
+    
+    # Terapie in corso
+    Antihypertensive = forms.BooleanField(
+        required=False,
+        label='Terapia Antipertensiva',
+        widget=forms.CheckboxInput(attrs={'class': 'checkbox'})
+    )
+    Immunosuppressants = forms.BooleanField(
+        required=False,
+        label='Immunosoppressori',
+        widget=forms.CheckboxInput(attrs={'class': 'checkbox'})
+    )
+    FishOil = forms.BooleanField(
+        required=False,
+        label='Olio di Pesce (Fish Oil)',
+        widget=forms.CheckboxInput(attrs={'class': 'checkbox'})
+    )
+

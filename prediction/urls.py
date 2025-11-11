@@ -24,6 +24,9 @@ urlpatterns = [
     path('pazienti/<int:paziente_id>/elimina/', views.elimina_paziente, name='elimina_paziente'),
     path('pazienti/<int:paziente_id>/condividi/', views.condividi_paziente, name='condividi_paziente'),
     
+    # Calcolo ESKD Rapido (senza paziente)
+    path('calcola-eskd-rapido/', views.calcola_eskd_rapido, name='calcola_eskd_rapido'),
+    
     # Reset password via email
     path("password_reset/", auth_views.PasswordResetView.as_view(
         template_name="registration/password_reset_form.html",

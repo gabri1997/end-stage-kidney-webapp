@@ -1,0 +1,677 @@
+{% extends 'prediction/base.html' %}
+
+{% block title %}Risultato Calcolo ESKD Rapido{% endblock %}
+
+{% block extra_css %}
+<style>
+/* Modern Background with Mesh Gradient */
+body {
+    background: 
+        radial-gradient(at 0% 0%, rgba(28, 142, 124, 0.15) 0px, transparent 50%),
+        radial-gradient(at 100% 0%, rgba(102, 126, 234, 0.15) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(118, 75, 162, 0.15) 0px, transparent 50%),
+        radial-gradient(at 0% 100%, rgba(240, 147, 251, 0.15) 0px, transparent 50%),
+        linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+    background-attachment: fixed;
+    min-height: 100vh;
+}
+
+.result-wrapper {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 1rem;
+    animation: fadeIn 0.6s ease-out;
+}
+
+/* Hero Section with Glass Effect */
+.hero-section {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(20px);
+    border-radius: 24px;
+    padding: 3rem;
+    margin-bottom: 2rem;
+    box-shadow: 
+        0 20px 60px rgba(0, 0, 0, 0.1),
+        0 0 0 1px rgba(255, 255, 255, 0.5) inset;
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 6px;
+    background: linear-gradient(90deg, #1c8e7c, #26c6b8, #667eea, #764ba2);
+    background-size: 200% 100%;
+    animation: shimmer 3s linear infinite;
+}
+
+@keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+
+.hero-title {
+    font-size: 2rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #1c8e7c, #667eea);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.hero-title i {
+    font-size: 2.5rem;
+    background: linear-gradient(135deg, #1c8e7c, #26c6b8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.hero-subtitle {
+    color: #6c757d;
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+/* Risk Card - Redesigned */
+.risk-card {
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border-radius: 24px;
+    padding: 3rem;
+    margin-bottom: 2rem;
+    box-shadow: 
+        0 10px 40px rgba(0, 0, 0, 0.08),
+        0 0 0 1px rgba(28, 142, 124, 0.1) inset;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+    position: relative;
+    overflow: hidden;
+}
+
+.risk-card::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(135deg, #1c8e7c, #26c6b8, #667eea);
+    border-radius: 24px;
+    z-index: -1;
+    opacity: 0.3;
+}
+
+.risk-circle-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.risk-circle {
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    background: white;
+    box-shadow: 
+        0 20px 60px rgba(0, 0, 0, 0.15),
+        inset 0 0 0 8px rgba(28, 142, 124, 0.1);
+}
+
+.risk-circle::before {
+    content: '';
+    position: absolute;
+    inset: -10px;
+    border-radius: 50%;
+    padding: 10px;
+    background: linear-gradient(135deg, #1c8e7c, #26c6b8, #667eea);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    animation: rotate 3s linear infinite;
+}
+
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.risk-percentage-big {
+    font-size: 3.5rem;
+    font-weight: 900;
+    line-height: 1;
+    margin-bottom: 0.25rem;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+.risk-circle .risk-percentage-big.basso {
+    color: #1c8e7c !important;
+}
+
+.risk-circle .risk-percentage-big.medio {
+    color: #ff9800 !important;
+}
+
+.risk-circle .risk-percentage-big.alto {
+    color: #ff4757 !important;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+.risk-label-small {
+    font-size: 0.9rem;
+    color: #6c757d;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.risk-badge-large {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 2.5rem;
+    border-radius: 100px;
+    font-size: 1.4rem;
+    font-weight: 700;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    animation: bounceIn 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.risk-badge-large.alto {
+    background: linear-gradient(135deg, #ff4757, #ff6b81);
+    color: white;
+}
+
+.risk-badge-large.medio {
+    background: linear-gradient(135deg, #ff9800, #ffb74d);
+    color: white;
+}
+
+@keyframes bounceIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.3);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.05);
+    }
+    70% { transform: scale(0.9); }
+    100% { transform: scale(1); }
+}
+
+/* Data Cards Grid */
+.data-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.data-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 
+        0 10px 30px rgba(0, 0, 0, 0.08),
+        0 0 0 1px rgba(28, 142, 124, 0.1) inset;
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    animation: fadeIn 0.6s ease-out backwards;
+}
+
+.data-card:nth-child(1) { animation-delay: 0.1s; }
+.data-card:nth-child(2) { animation-delay: 0.2s; }
+.data-card:nth-child(3) { animation-delay: 0.3s; }
+.data-card:nth-child(4) { animation-delay: 0.4s; }
+
+.data-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 
+        0 20px 50px rgba(0, 0, 0, 0.15),
+        0 0 0 1px rgba(28, 142, 124, 0.2) inset;
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #e9ecef;
+}
+
+.card-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #1c8e7c, #26c6b8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.5rem;
+    box-shadow: 0 8px 20px rgba(28, 142, 124, 0.3);
+    flex-shrink: 0;
+}
+
+.card-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #2d3748;
+    margin: 0;
+}
+
+.card-content {
+    display: grid;
+    gap: 0.75rem;
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem;
+    background: #f8f9fa;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
+
+.info-row:hover {
+    background: #e9f5f3;
+    transform: translateX(5px);
+}
+
+.info-label {
+    font-size: 0.95rem;
+    color: #6c757d;
+    font-weight: 600;
+}
+
+.info-value {
+    font-size: 1rem;
+    color: #2d3748;
+    font-weight: 700;
+}
+
+/* Therapy Tags */
+.therapy-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1rem;
+}
+
+.therapy-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: linear-gradient(135deg, #e9f5f3, #d4f1eb);
+    border-radius: 50px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #1c8e7c;
+    border: 2px solid #26c6b8;
+    transition: all 0.3s ease;
+}
+
+.therapy-tag:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 15px rgba(28, 142, 124, 0.2);
+}
+
+.therapy-tag i {
+    font-size: 1.1em;
+}
+
+/* Action Buttons */
+.action-buttons {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+}
+
+.btn-modern {
+    flex: 1;
+    min-width: 200px;
+    padding: 1.25rem 2rem;
+    border-radius: 14px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-modern::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.btn-modern:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+.btn-modern:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+}
+
+.btn-modern:active {
+    transform: translateY(-1px);
+}
+
+.btn-modern i {
+    font-size: 1.2em;
+    position: relative;
+    z-index: 1;
+}
+
+.btn-modern span {
+    position: relative;
+    z-index: 1;
+}
+
+.btn-primary-gradient {
+    background: linear-gradient(135deg, #1c8e7c, #26c6b8);
+    color: white;
+}
+
+.btn-secondary-gradient {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .hero-section {
+        padding: 2rem 1.5rem;
+    }
+    
+    .hero-title {
+        font-size: 1.6rem;
+    }
+    
+    .risk-circle {
+        width: 180px;
+        height: 180px;
+    }
+    
+    .risk-percentage-big {
+        font-size: 2.8rem;
+    }
+    
+    .risk-badge-large {
+        font-size: 1.1rem;
+        padding: 0.85rem 2rem;
+    }
+    
+    .data-cards {
+        grid-template-columns: 1fr;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+    }
+    
+    .btn-modern {
+        min-width: 100%;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="result-wrapper">
+    <!-- Hero Section -->
+    <div class="hero-section">
+        <h1 class="hero-title">
+            <i class="fas fa-chart-line"></i>
+            Analisi Predittiva ESKD
+        </h1>
+        <p class="hero-subtitle">Risultato del Calcolo Rapido</p>
+    </div>
+
+    <!-- Risk Card with Circular Progress -->
+    <div class="risk-card">
+        <div class="risk-circle-container">
+            <div class="risk-circle">
+                <div class="risk-percentage-big {% if esito == 'ALTO' %}alto{% elif esito == 'MEDIO' %}medio{% else %}basso{% endif %}" id="percentageDisplay">0%</div>
+                <div class="risk-label-small">Rischio ESKD</div>
+            </div>
+        </div>
+        
+        <div style="text-align: center;">
+            {% if esito == 'ALTO' %}
+                <div class="risk-badge-large alto">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <span>Rischio Alto</span>
+                </div>
+            {% elif esito == 'MEDIO' %}
+                <div class="risk-badge-large medio">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span>Rischio Medio</span>
+                </div>
+            {% else %}
+                <div class="risk-badge-large basso">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Rischio Basso</span>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Data Cards -->
+    <div class="data-cards">
+        <!-- Demographic Card -->
+        <div class="data-card">
+            <div class="card-header">
+                <div class="card-icon">
+                    <i class="fas fa-user"></i>
+                </div>
+                <h3 class="card-title">Dati Demografici</h3>
+            </div>
+            <div class="card-content">
+                <div class="info-row">
+                    <span class="info-label">Sesso</span>
+                    <span class="info-value">{{ dati.sesso }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Età</span>
+                    <span class="info-value">{{ dati.eta }} anni</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Clinical Card -->
+        <div class="data-card">
+            <div class="card-header">
+                <div class="card-icon">
+                    <i class="fas fa-heartbeat"></i>
+                </div>
+                <h3 class="card-title">Dati Clinici</h3>
+            </div>
+            <div class="card-content">
+                <div class="info-row">
+                    <span class="info-label">Pressione Sistolica</span>
+                    <span class="info-value">{{ dati.pressione_sistolica }} mmHg</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Pressione Diastolica</span>
+                    <span class="info-value">{{ dati.pressione_diastolica }} mmHg</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">eGFR</span>
+                    <span class="info-value">{{ dati.egfr }} mL/min/1.73m²</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Proteinuria</span>
+                    <span class="info-value">{{ dati.proteinuria }} g/24h</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Albumina</span>
+                    <span class="info-value">{{ dati.albumina }} g/dL</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Emoglobina</span>
+                    <span class="info-value">{{ dati.emoglobina }} g/dL</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- MEST-C Card (if data exists) -->
+        {% if dati.M is defined or dati.E is defined or dati.S is defined or dati.T is defined or dati.C is defined %}
+        <div class="data-card">
+            <div class="card-header">
+                <div class="card-icon">
+                    <i class="fas fa-microscope"></i>
+                </div>
+                <h3 class="card-title">Dati Istologici MEST-C</h3>
+            </div>
+            <div class="card-content">
+                <div class="info-row">
+                    <span class="info-label">M (Mesangiale)</span>
+                    <span class="info-value">{{ dati.M|default:"Non specificato" }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">E (Endocapillare)</span>
+                    <span class="info-value">{{ dati.E|default:"Non specificato" }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">S (Segmentale)</span>
+                    <span class="info-value">{{ dati.S|default:"Non specificato" }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">T (Tubulare)</span>
+                    <span class="info-value">{{ dati.T|default:"Non specificato" }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">C (Crescentica)</span>
+                    <span class="info-value">{{ dati.C|default:"Non specificato" }}</span>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Therapy Card -->
+        <div class="data-card">
+            <div class="card-header">
+                <div class="card-icon">
+                    <i class="fas fa-pills"></i>
+                </div>
+                <h3 class="card-title">Terapie in Corso</h3>
+            </div>
+            <div class="card-content">
+                {% if dati.terapie %}
+                <div class="therapy-tags">
+                    {% for terapia in dati.terapie %}
+                        <div class="therapy-tag">
+                            <i class="fas fa-capsules"></i>
+                            <span>{{ terapia }}</span>
+                        </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="info-row">
+                    <span class="info-label">Status</span>
+                    <span class="info-value">Nessuna terapia attiva</span>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+        <a href="{% url 'calcola_eskd_rapido' %}" class="btn-modern btn-secondary-gradient">
+            <i class="fas fa-redo"></i>
+            <span>Nuovo Calcolo</span>
+        </a>
+        <a href="{% url 'home' %}" class="btn-modern btn-primary-gradient">
+            <i class="fas fa-home"></i>
+            <span>Torna alla Home</span>
+        </a>
+    </div>
+</div>
+
+<script>
+// Animated percentage counter
+document.addEventListener('DOMContentLoaded', function() {
+    const targetPercentage = parseFloat("{{ probabilita }}");
+    const display = document.getElementById('percentageDisplay');
+    let current = 0;
+    const duration = 2000;
+    const increment = targetPercentage / (duration / 16);
+    
+    function updateCounter() {
+        current += increment;
+        if (current < targetPercentage) {
+            display.textContent = Math.round(current) + '%';
+            requestAnimationFrame(updateCounter);
+        } else {
+            display.textContent = targetPercentage.toFixed(1) + '%';
+        }
+    }
+    
+    updateCounter();
+});
+</script>
+{% endblock %}
